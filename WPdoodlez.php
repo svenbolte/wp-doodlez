@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP doodlez
- * Plugin URI: http://robert.kolatzek.org/WPdoodlez
+ * Plugin URI: https://github.com/Kolatzek/WPdoodlez
  * Description: Doodle like finding meeting date 
  * Author: Robert Kolatzek
  * Version: 1.0
