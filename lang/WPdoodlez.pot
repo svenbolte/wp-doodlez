@@ -1,0 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-10 23:41+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: wpdoodle-template.php:45
+msgid "Voting"
+msgstr ""
+
+#: wpdoodle-template.php:48
+msgid "User name"
+msgstr ""
+
+#: wpdoodle-template.php:54
+msgid "Manage vote"
+msgstr ""
+
+#: wpdoodle-template.php:63
+msgid "Your name"
+msgstr ""
+
+#: wpdoodle-template.php:77
+msgid "Vote!"
+msgstr ""
+
+#: wpdoodle-template.php:109
+msgid "delete"
+msgstr ""
+
+#: wpdoodle-template.php:116
+msgid "edit"
+msgstr ""
+
+#: wpdoodle-template.php:125
+msgid "total votes"
+msgstr ""
+
+#: wpdoodle-template.php:141
+msgid "Edit"
+msgstr ""
+
+#: wpdoodlez_post_type.php:8
+msgid "All Doodles"
+msgstr ""
+
+#: wpdoodlez_post_type.php:9
+msgid "Show Doodle"
+msgstr ""
+
+#: wpdoodlez_post_type.php:10
+msgid "New Doodle"
+msgstr ""
+
+#: wpdoodlez_post_type.php:11
+msgid "Add Doodle "
+msgstr ""
+
+#: wpdoodlez_post_type.php:12
+msgid "Edit Doodle"
+msgstr ""
+
+#: wpdoodlez_post_type.php:13
+msgid "Update Doodle"
+msgstr ""
+
+#: wpdoodlez_post_type.php:14
+msgid "Search Doodles"
+msgstr ""
+
+#: wpdoodlez_post_type.php:15
+msgid "Not found"
+msgstr ""
+
+#: wpdoodlez_post_type.php:16
+msgid "Not found in trash"
+msgstr ""

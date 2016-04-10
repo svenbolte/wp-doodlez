@@ -5,15 +5,15 @@ $labels = [
     'singular_name'      => 'WPdoodle',
     'menu_name'          => 'Doodle',
     'parent_item_colon'  => '',
-    'all_items'          => __wpd( 'Alle Doodles' ),
-    'view_item'          => __wpd( 'Doodle ansehen' ),
-    'add_new_item'       => __wpd( 'Neuer Doodle' ),
-    'add_new'            => __wpd( 'Doodle Hinzufügen' ),
-    'edit_item'          => __wpd( 'Doodle bearbeiten' ),
+    'all_items'          => __wpd( 'All Doodles' ),
+    'view_item'          => __wpd( 'Show Doodle' ),
+    'add_new_item'       => __wpd( 'New Doodle' ),
+    'add_new'            => __wpd( 'Add Doodle ' ),
+    'edit_item'          => __wpd( 'Edit Doodle' ),
     'update_item'        => __wpd( 'Update Doodle' ),
-    'search_items'       => __wpd( 'Doodles suchen' ),
-    'not_found'          => __wpd( 'Nicht gefunden' ),
-    'not_found_in_trash' => __wpd( 'Nicht gefunden im Papierkorb' ),
+    'search_items'       => __wpd( 'Search Doodles' ),
+    'not_found'          => __wpd( 'Not found' ),
+    'not_found_in_trash' => __wpd( 'Not found in trash' ),
 ];
 
 $args = [

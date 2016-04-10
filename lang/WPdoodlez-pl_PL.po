@@ -1,0 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-10 23:42+0200\n"
+"PO-Revision-Date: 2016-04-10 23:48+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.4\n"
+"Last-Translator: Dr. Robert Kolatzek <robert-translate@kolatzek.org>\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: pl_PL\n"
+
+#: wpdoodle-template.php:45
+msgid "Voting"
+msgstr "Głosowanie"
+
+#: wpdoodle-template.php:48
+msgid "User name"
+msgstr "Głosujący"
+
+#: wpdoodle-template.php:54
+msgid "Manage vote"
+msgstr "zarządzaj głosami"
+
+#: wpdoodle-template.php:63
+msgid "Your name"
+msgstr "Nazywam się"
+
+#: wpdoodle-template.php:77
+msgid "Vote!"
+msgstr "Głosuję!"
+
+#: wpdoodle-template.php:109
+msgid "delete"
+msgstr "usuń"
+
+#: wpdoodle-template.php:116
+msgid "edit"
+msgstr "popraw"
+
+#: wpdoodle-template.php:125
+msgid "total votes"
+msgstr "Oddanych głosów"
+
+#: wpdoodle-template.php:141
+msgid "Edit"
+msgstr "Zmień"
+
+#: wpdoodlez_post_type.php:8
+msgid "All Doodles"
+msgstr "Dodaj Doodle"
+
+#: wpdoodlez_post_type.php:9
+msgid "Show Doodle"
+msgstr "Pokaż Doodle"
+
+#: wpdoodlez_post_type.php:10
+msgid "New Doodle"
+msgstr "Nowy Doodle"
+
+#: wpdoodlez_post_type.php:11
+msgid "Add Doodle "
+msgstr "Dodaj Doodle"
+
+#: wpdoodlez_post_type.php:12
+msgid "Edit Doodle"
+msgstr "Zmień Doodle"
+
+#: wpdoodlez_post_type.php:13
+msgid "Update Doodle"
+msgstr "Zapisz Doodle"
+
+#: wpdoodlez_post_type.php:14
+msgid "Search Doodles"
+msgstr "Szukaj Doodle"
+
+#: wpdoodlez_post_type.php:15
+msgid "Not found"
+msgstr "Doodle nie znaleziono"
+
+#: wpdoodlez_post_type.php:16
+msgid "Not found in trash"
+msgstr "Doodle nie znaleziono w śmietniku"

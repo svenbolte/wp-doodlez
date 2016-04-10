@@ -108,6 +108,16 @@ function wpdoodlez_cookie() {
         }
     }
 }
-
 add_action( 'init', 'wpdoodlez_cookie' );
+
+
+add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
+/**
+ * Load plugin textdomain.
+ *
+ * @since 1.0.0
+ */
+function WPdoodlez_load_textdomain() {
+  load_plugin_textdomain( 'WPdoodlez', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' ); 
+}
 ?>
