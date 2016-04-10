@@ -65,7 +65,7 @@ function save_vote() {
         wp_die();
     }
     update_option( 'wpdoodlez_' . $_POST[ 'data' ][ 'wpdoodle' ], $values );
-    setcookie( 'wpdoodlez-' . $_POST[ 'data' ][ 'wpdoodle' ], $name, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN );
+    setcookie( 'wpdoodlez-' . $_POST[ 'data' ][ 'wpdoodle' ], $name, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
     echo json_encode( array( 'save' => true ) );
     wp_die();
 }
@@ -104,7 +104,7 @@ function wpdoodlez_cookie() {
     include('wpdoodlez_post_type.php');
     foreach ( $_COOKIE as $key => $value ) {
         if ( preg_match( '/wpdoodlez\-.+/i', $key ) ) {
-            setcookie( $key, $value, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN );
+            setcookie( $key, $value, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
         }
     }
 }

@@ -141,7 +141,7 @@ get_header();
     <?php edit_post_link( __wpd( 'Edit' ), '<span class="edit-link">', '</span>' ); ?>
                 </footer><!-- .entry-footer -->
                 <script>
-                    var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
+                    var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ); ?>';
                     var wpdoodle = '<?php echo md5( AUTH_KEY . get_the_ID() ); ?>';
                     /* disable insert/edit form after a vote -> line with edit button */
                     if ( jQuery( 'button.wpdoodlez-edit' ).length > 0 ) {
