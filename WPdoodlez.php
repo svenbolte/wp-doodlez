@@ -65,7 +65,7 @@ function wpdoodlez_save_vote() {
     ) {
         $values[ $name ] = array();
         foreach ( $_POST[ 'data' ][ 'vote' ] as $option ) {
-            $values[ $name ][ (string)$option[ 'name' ] ] =  sanitize_option($option[ 'value' ]);
+            $values[ $name ][ (string)$option[ 'name' ] ] =  sanitize_text_field($option[ 'value' ]);
         }
     } else {
         echo json_encode( array( 'save' => false ) );
