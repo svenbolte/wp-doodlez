@@ -29,7 +29,6 @@ add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
  * Register WPdoodle post type and refresh rewrite rules
  */
 function wpdoodlez_rewrite_flush() {
-    wpdoodlez_init();
     flush_rewrite_rules();
 }
 
@@ -55,17 +54,18 @@ add_filter( 'single_template', 'wpdoodlez_template' );
  * Save a single vote as ajax request and set cookie with given user name
  */
 function wpdoodlez_save_vote() {
-    $values = get_option( 'wpdoodlez_' . (string)$_POST[ 'data' ][ 'wpdoodle' ], array() );
+    $values = get_option( 'wpdoodlez_' . strval($_POST[ 'data' ][ 'wpdoodle' ]), array() );
     $name   = sanitize_text_field( $_POST[ 'data' ][ 'name' ]);
     /* insert only without cookie (or empty name in cookie)
      * update only with same name in cookie
      */
-    if ( (isset( $values[ $name ] ) && (string)$_COOKIE[ 'wpdoodlez-' . $_POST[ 'data' ][ 'wpdoodle' ] ] == $name) ||
-    (!isset( $values[ $name ] ) && empty( (string)$_COOKIE[ 'wpdoodlez-' . $_POST[ 'data' ][ 'wpdoodle' ] ] ))
+    $nameInCookie = strval($_COOKIE[ 'wpdoodlez-' . $_POST[ 'data' ][ 'wpdoodle' ] ]);
+    if ( (isset( $values[ $name ] ) && $nameInCookie == $name) ||
+    (!isset( $values[ $name ] ) && empty( $nameInCookie ))
     ) {
         $values[ $name ] = array();
         foreach ( $_POST[ 'data' ][ 'vote' ] as $option ) {
-            $values[ $name ][ (string)$option[ 'name' ] ] =  sanitize_text_field($option[ 'value' ]);
+            $values[ $name ][ strval($option[ 'name' ]) ] =  sanitize_text_field($option[ 'value' ]);
         }
     } else {
         echo json_encode( array( 'save' => false ) );
