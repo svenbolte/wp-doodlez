@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/Kolatzek/WPdoodlez
  * Description: Doodle like finding meeting date 
  * Author: Robert Kolatzek
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author URI: http://robert.kolatzek.org
  * License: GPL 2
  */
@@ -24,15 +24,6 @@ function WPdoodlez_load_textdomain() {
   load_plugin_textdomain( 'WPdoodlez', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' ); 
 }
 add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
-
-/**
- * Register WPdoodle post type and refresh rewrite rules
- */
-function wpdoodlez_rewrite_flush() {
-    flush_rewrite_rules();
-}
-
-register_activation_hook( __FILE__, 'wpdoodlez_rewrite_flush' );
 
 /**
  * Register own template for doodles
@@ -117,4 +108,14 @@ function wpdoodlez_cookie() {
 }
 add_action( 'init', 'wpdoodlez_cookie' );
 
+/**
+ * Register WPdoodle post type and refresh rewrite rules
+ */
+function wpdoodlez_rewrite_flush() {
+    wpdoodlez_cookie();
+    flush_rewrite_rules();
+}
+
+register_activation_hook( __FILE__, 'wpdoodlez_rewrite_flush' );
+add_action( 'after_switch_theme', 'wpdoodlez_rewrite_flush' );
 ?>
