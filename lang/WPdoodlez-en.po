@@ -1,92 +1,91 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: WPdoodlez\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-10 23:41+0200\n"
+"POT-Creation-Date: 2016-06-08 21:44+0200\n"
 "PO-Revision-Date: 2016-06-08 21:58+0200\n"
-"Last-Translator: Dr. Robert Kolatzek <robert-translate@kolatzek.org>\n"
 "Language-Team: \n"
-"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.7.1\n"
-"X-Poedit-Basepath: ..\n"
+"Last-Translator: Dr. Robert Kolatzek <robert-translate@kolatzek.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-SearchPath-0: wpdoodle-template.php\n"
-"X-Poedit-SearchPath-1: WPdoodlez.php\n"
-"X-Poedit-SearchPath-2: wpdoodlez_post_type.php\n"
-"X-Poedit-SearchPathExcluded-0: lang\n"
+"Language: en_001\n"
 
 #: wpdoodle-template.php:45
 msgid "Voting"
-msgstr "Abstimmung"
+msgstr "Voting"
 
 #: wpdoodle-template.php:48
 msgid "User name"
-msgstr "Name"
+msgstr "User name"
 
 #: wpdoodle-template.php:54
 msgid "Manage vote"
-msgstr "Verwalten"
+msgstr "Manage votes"
 
 #: wpdoodle-template.php:63
 msgid "Your name"
-msgstr "Dein Name"
+msgstr "Your name"
 
 #: wpdoodle-template.php:77
 msgid "Vote!"
-msgstr "Abstimmen!"
+msgstr "Vote!"
 
 #: wpdoodle-template.php:109
 msgid "delete"
-msgstr "löschen"
+msgstr "dalete"
 
 #: wpdoodle-template.php:116
 msgid "edit"
-msgstr "bearbeiten"
+msgstr "edit"
 
 #: wpdoodle-template.php:125
 msgid "total votes"
-msgstr "Stimmen insgesamt"
+msgstr "total votes"
 
 #: wpdoodle-template.php:141
 msgid "Edit"
-msgstr "WPdoodle Bearbeiten"
+msgstr "Edit"
 
 #: wpdoodlez_post_type.php:8
 msgid "All WPdoodlez"
-msgstr "Alle WPdoodlez"
+msgstr "All WPdoodlez"
 
 #: wpdoodlez_post_type.php:9
 msgid "Show WPdoodle"
-msgstr "Zeige WPdoodlez"
+msgstr "Show WPdoodle"
 
 #: wpdoodlez_post_type.php:10
 msgid "New WPdoodle"
-msgstr "Neuer WPdoodle"
+msgstr "New WPdoodle"
 
 #: wpdoodlez_post_type.php:11
 msgid "Add WPdoodle "
-msgstr "WPdoodle hinzufügen"
+msgstr "Add WPdoodle"
 
 #: wpdoodlez_post_type.php:12
 msgid "Edit WPdoodle"
-msgstr "WPdoodle bearbeiten"
+msgstr "Edit WPdoodle"
 
 #: wpdoodlez_post_type.php:13
 msgid "Update WPdoodle"
-msgstr "WPdoodle updaten"
+msgstr "Update WPdoodle"
 
 #: wpdoodlez_post_type.php:14
 msgid "Search WPdoodlez"
-msgstr "Suche WPdoodlez"
+msgstr "Search WPdoodlez"
 
 #: wpdoodlez_post_type.php:15
 msgid "Not found"
-msgstr "Nicht gefunden"
+msgstr "Not found"
 
 #: wpdoodlez_post_type.php:16
 msgid "Not found in trash"
-msgstr "Nicht gefunden im Papierkorb"
+msgstr "Not found in trash"

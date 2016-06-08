@@ -8,12 +8,12 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-04-10 23:42+0200\n"
-"PO-Revision-Date: 2016-04-10 23:48+0200\n"
+"PO-Revision-Date: 2016-06-08 21:58+0200\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Last-Translator: Dr. Robert Kolatzek <robert-translate@kolatzek.org>\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "Language: pl_PL\n"
@@ -55,37 +55,37 @@ msgid "Edit"
 msgstr "Zmień"
 
 #: wpdoodlez_post_type.php:8
-msgid "All Doodles"
-msgstr "Dodaj Doodle"
+msgid "All WPdoodlez"
+msgstr "Dodaj WPdoodle"
 
 #: wpdoodlez_post_type.php:9
-msgid "Show Doodle"
-msgstr "Pokaż Doodle"
+msgid "Show WPdoodle"
+msgstr "Pokaż WPdoodle"
 
 #: wpdoodlez_post_type.php:10
-msgid "New Doodle"
-msgstr "Nowy Doodle"
+msgid "New WPdoodle"
+msgstr "Nowy WPdoodle"
 
 #: wpdoodlez_post_type.php:11
-msgid "Add Doodle "
-msgstr "Dodaj Doodle"
+msgid "Add WPdoodle "
+msgstr "Dodaj WPdoodle"
 
 #: wpdoodlez_post_type.php:12
-msgid "Edit Doodle"
-msgstr "Zmień Doodle"
+msgid "Edit WPdoodle"
+msgstr "Zmień WPdoodle"
 
 #: wpdoodlez_post_type.php:13
-msgid "Update Doodle"
-msgstr "Zapisz Doodle"
+msgid "Update WPdoodle"
+msgstr "Zapisz WPdoodle"
 
 #: wpdoodlez_post_type.php:14
-msgid "Search Doodles"
-msgstr "Szukaj Doodle"
+msgid "Search WPdoodlez"
+msgstr "Szukaj WPdoodle"
 
 #: wpdoodlez_post_type.php:15
 msgid "Not found"
-msgstr "Doodle nie znaleziono"
+msgstr "Nie znaleziono ani jednego WPdoodle"
 
 #: wpdoodlez_post_type.php:16
 msgid "Not found in trash"
-msgstr "Doodle nie znaleziono w śmietniku"
+msgstr "Nie znaleziono w śmietniku"

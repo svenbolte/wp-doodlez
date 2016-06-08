@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-10 23:41+0200\n"
+"POT-Creation-Date: 2016-06-08 21:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,31 +54,31 @@ msgid "Edit"
 msgstr ""
 
 #: wpdoodlez_post_type.php:8
-msgid "All Doodles"
+msgid "All WPdoodlez"
 msgstr ""
 
 #: wpdoodlez_post_type.php:9
-msgid "Show Doodle"
+msgid "Show WPdoodle"
 msgstr ""
 
 #: wpdoodlez_post_type.php:10
-msgid "New Doodle"
+msgid "New WPdoodle"
 msgstr ""
 
 #: wpdoodlez_post_type.php:11
-msgid "Add Doodle "
+msgid "Add WPdoodle "
 msgstr ""
 
 #: wpdoodlez_post_type.php:12
-msgid "Edit Doodle"
+msgid "Edit WPdoodle"
 msgstr ""
 
 #: wpdoodlez_post_type.php:13
-msgid "Update Doodle"
+msgid "Update WPdoodle"
 msgstr ""
 
 #: wpdoodlez_post_type.php:14
-msgid "Search Doodles"
+msgid "Search WPdoodlez"
 msgstr ""
 
 #: wpdoodlez_post_type.php:15

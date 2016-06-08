@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/RobertKolatzek/
 Tags: doodle, poll, question, meeting
 Requires at least: 4.4
 Tested up to: 4.5
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,3 +43,6 @@ Fix for plugin activation. Sorry for the mess!
 
 = 1.0.2 =
 Fix registering rewrite rule in activation
+
+= 1.0.3 = 
+Translate word "Doodle" as "WPdoodle" because of trade mark collision

@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/Kolatzek/WPdoodlez
  * Description: Doodle like finding meeting date 
  * Author: Robert Kolatzek
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author URI: http://robert.kolatzek.org
  * License: GPL 2
  */
