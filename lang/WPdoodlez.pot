@@ -8,49 +8,53 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-08 21:57+0200\n"
+"POT-Creation-Date: 2016-08-12 22:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: wpdoodle-template.php:45
+#: wpdoodle-template.php:50
 msgid "Voting"
 msgstr ""
 
-#: wpdoodle-template.php:48
+#: wpdoodle-template.php:53
 msgid "User name"
 msgstr ""
 
-#: wpdoodle-template.php:54
+#: wpdoodle-template.php:59
 msgid "Manage vote"
 msgstr ""
 
-#: wpdoodle-template.php:63
+#: wpdoodle-template.php:68
 msgid "Your name"
 msgstr ""
 
-#: wpdoodle-template.php:77
+#: wpdoodle-template.php:82
 msgid "Vote!"
 msgstr ""
 
-#: wpdoodle-template.php:109
+#: wpdoodle-template.php:115
 msgid "delete"
 msgstr ""
 
-#: wpdoodle-template.php:116
+#: wpdoodle-template.php:122
 msgid "edit"
 msgstr ""
 
-#: wpdoodle-template.php:125
+#: wpdoodle-template.php:131
 msgid "total votes"
 msgstr ""
 
-#: wpdoodle-template.php:141
+#: wpdoodle-template.php:147
 msgid "Edit"
+msgstr ""
+
+#: WPdoodlez.php:65
+msgid "You have already voted but your vote was deleted. Your name was: "
 msgstr ""
 
 #: wpdoodlez_post_type.php:8

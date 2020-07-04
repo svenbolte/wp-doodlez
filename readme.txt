@@ -1,10 +1,9 @@
 === Plugin Name ===
-Contributors: robert_kolatzek
-Donate link: https://www.paypal.me/RobertKolatzek/
+Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 Requires at least: 4.4
-Tested up to: 4.5
-Stable tag: 1.0.3
+Tested up to: 5.4.2
+Stable tag: 1.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Everyone knows [doodle](https://doodle.com) It's a cute plattform to poll, to find the best meeting date or place, to make a decision with many people.
 
-This plugin give you a possibility, to create very simple doodles in your wordpress installation.
+With this plugin you can create very simple doodles in your wordpress installation.
 
 WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
 
@@ -29,7 +28,7 @@ WPdoodlez are own post type and very similar to a post. A WPdoodle extends a pos
 
 == Installation ==
 
-After install this plugin you will see "Doodle" item in the menu on the left site. 
+After install this plugin you will see "WPDoodle" item in the menu on the left site. 
 
 == Screenshots ==
 
@@ -46,3 +45,34 @@ Fix registering rewrite rule in activation
 
 = 1.0.3 = 
 Translate word "Doodle" as "WPdoodle" because of trade mark collision
+
+= 1.0.4 =
+Bugfix: Load and execute javascript after loading jQuery -> external file
+
+New: Load css from a file 
+
+New: Overwrite plugins css with own css definistions in user.css (loading only if exists)
+
+= 1.0.5 =
+Bugfix: Loading js file
+
+New: highlight your vote by using css class "myvote"
+
+= 1.0.6 =
+Error message by second voting try. (After deleting a vote cookies are still
+in the browser of the person, which vote was deleted. She/he can not vote any more
+and doesn't know why. The message in a javascrip alert fix this bad behaviour.)
+
+= 1.0.7 =
+= 1.0.8 =
+Update latest installable version to 4.7 without changing anything but documentation
+
+= 1.0.9 =
+= 1.0.10 =
+Update latest tag to 4.9.6
+
+= 9.1.13 =
+Template updated to match current requirements
+changed Custom file type to add post pic, category, tags, editor for Post Content, Archive
+Adds Bar chart, when ChartsCodes Plugin is present
+Tested with WP 5.4.2

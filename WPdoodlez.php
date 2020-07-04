@@ -1,13 +1,17 @@
 <?php
 /**
- * Plugin Name: WP doodlez
- * Plugin URI: https://github.com/Kolatzek/WPdoodlez
+ * Plugin Name: WP Doodlez
+ * Plugin URI: https://github.com/svenbolte/WPdoodlez
  * Description: Doodle like finding meeting date 
- * Author: Robert Kolatzek
- * Version: 1.0.3
- * Author URI: http://robert.kolatzek.org
+ * Contributors: Robert Kolatzek, PBMod
+ * Author: PBMod
+ * Version: 9.1.18
+ * Author URI: https://github.com/svenbolte/WPdoodlez
  * License: GPL 2
- */
+ * Tested up to: 5.4.2
+ * Requires at least: 4.0
+ * Requires PHP: 5.3
+*/
 
 /**
  * Translate string
@@ -59,7 +63,11 @@ function wpdoodlez_save_vote() {
             $values[ $name ][ strval($option[ 'name' ]) ] =  sanitize_text_field($option[ 'value' ]);
         }
     } else {
-        echo json_encode( array( 'save' => false ) );
+        echo json_encode( 
+            array( 
+                'save' => false , 
+                'msg' => wpd_translate( 'You have already voted but your vote was deleted. Your name was: ' ).$nameInCookie ) 
+        );
         wp_die();
     }
     update_option( 'wpdoodlez_' . (string)$_POST[ 'data' ][ 'wpdoodle' ], $values );
