@@ -5,8 +5,8 @@
  * Description: Doodle like finding meeting date 
  * Contributors: Robert Kolatzek, PBMod
  * Author: PBMod
- * Version: 9.1.18
- * Author URI: https://github.com/svenbolte/WPdoodlez
+ * Version: 9.1.0.10.21
+ * Author URI: https://github.com/svenbolte
  * License: GPL 2
  * Tested up to: 5.4.2
  * Requires at least: 4.0

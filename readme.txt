@@ -3,7 +3,7 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 Requires at least: 4.4
 Tested up to: 5.4.2
-Stable tag: 1.0.10
+Stable tag: 9.1.0.10.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,11 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 2.  View in the **backend**
 
 == Changelog ==
+
+= 9.1.0.10.21 =
+own styling in template and theme integration for penguin
+do not count custom data types set by various other plugins like twitter feed
+add integration of chartscodes plugin to show pie charts of voting
 
 = 1.0.1 =
 Fix for plugin activation. Sorry for the mess!
