@@ -159,9 +159,22 @@ get_header();
 									$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 									foreach ( $votes as $name => $vote ) {
 										?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
-												class="<?php echo $myname == $name ? 'myvote' : ''; ?>">
+												class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
 											<td><?php
-												echo $name;
+												echo substr($name,0,20);
+												// Wenn ipflag plugin aktiv
+												if( class_exists( 'ipflag' ) ) {
+													global $ipflag;
+													if(isset($ipflag) && is_object($ipflag)){
+														if(($info = $ipflag->get_info($name)) != false){
+															echo ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
+														} else { echo ' '. $ipflag->get_flag($info, '') . ' '; }
+													} 
+												}	
+
+										
+										
+										
 												?></td>
 											<?php
 											foreach ( $suggestions as $key => $value ) {
