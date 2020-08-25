@@ -160,23 +160,19 @@ get_header();
 									foreach ( $votes as $name => $vote ) {
 										?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
 												class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
-											<td><?php
-												echo substr($name,0,20);
+												<?php
+												echo '<td>' . substr($name,0,20);
 												// Wenn ipflag plugin aktiv
 												if( class_exists( 'ipflag' ) ) {
 													global $ipflag;
+													$nameip = substr($name,21,strlen($name)-21);
 													if(isset($ipflag) && is_object($ipflag)){
-														if(($info = $ipflag->get_info($name)) != false){
+														if(($info = $ipflag->get_info($nameip)) != false){
 															echo ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
 														} else { echo ' '. $ipflag->get_flag($info, '') . ' '; }
 													} 
 												}	
-
-										
-										
-										
-												?></td>
-											<?php
+											echo '</td>';
 											foreach ( $suggestions as $key => $value ) {
 												if ($key != "post_views_count" && $key != "likes") {
 													?><td>

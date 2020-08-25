@@ -33,6 +33,9 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 
 == Changelog ==
 
+= 9.1.0.10.25 =
+if chartscodes plugin is installed, the voters country/flag be displayed (got from filtered/shortened ip)
+
 = 9.1.0.10.23 =
 If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries
 if custom fields are dates e.g  name: 12.12.2020    value: ja then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates
