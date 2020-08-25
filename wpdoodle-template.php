@@ -88,15 +88,17 @@ get_header();
                     if ( !post_password_required() ) {
 					
 						// Wenn Feldnamen vote1...20, dann eine Umfrage machen, sonst eine Terminabstimmung
-						if (!empty($suggestions[vote1][0]) && !isset($_GET['admin']) ) {
+						$polli = array_key_exists('vote1', $suggestions);
+						if (  $polli  && !isset($_GET['admin']) ) {
 							$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 							foreach ( $votes as $name => $vote ) {
 								foreach ( $suggestions as $key => $value ) {
 									if ($key != "post_views_count" && $key != "likes") {
-										if ( $vote[ $key ] ) {	$votes_cout[ $key ] ++; }
+										if ( !empty($vote[ $key ]) ) {	$votes_cout[ $key ] ++; }
 									}	
 								}
 							}	
+                            $pielabel = ''; $piesum = '';
 							foreach ( $votes_cout as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes" ) {
 									$pielabel.=$key.','; $piesum .= $value.','; 
@@ -166,7 +168,7 @@ get_header();
 												if ($key != "post_views_count" && $key != "likes") {
 													?><td>
 														<?php
-														if ( $vote[ $key ] ) {
+														if ( !empty($vote[ $key ]) ) {
 															$votes_cout[ $key ] ++;
 															?>
 														<label 
@@ -204,7 +206,8 @@ get_header();
                                 <tr>
                                     <th><?php echo wpd_translate( 'total votes' ); ?></th>
                                     <?php
-                                        foreach ( $votes_cout as $key => $value ) {
+                                        $pielabel = ''; $piesum = '';
+										foreach ( $votes_cout as $key => $value ) {
 											if ($key != "post_views_count" && $key != "likes" ) {
 	                                            ?><th id="total-<?php echo $key; ?>"><?php echo $value;  $pielabel.=$key.','; $piesum .= $value.','; ?></th><?php
 											} }

@@ -66,7 +66,9 @@ function wpdoodle_doku() {
 If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
 if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
 then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
-<br><h2>	Highlights</h2>
+<br>
+User parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
+<h2>	Highlights</h2>
 * A link to WPdoodle is public but not published everywhere<br>
 * A WPdoodle can be in a review and be published at given time<br>
 * A WPdoodle can have own URL <br>
