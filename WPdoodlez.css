@@ -8,17 +8,14 @@
 }
 
 .wpdoodle .entry-content table > thead > tr > th {
-    padding: 1.5ex;
     text-align: center;
 }
 
 .wpdoodle .entry-content table > tbody > tr > td {
-    padding: 1.5ex;
     text-align: center;
 }
 
 .wpdoodle .entry-content table > tfoot > tr > th {
-    padding: 1.5ex;
     text-align: center;
 }
 
@@ -26,13 +23,10 @@
     text-align: right;
 }
 
-.wpdoodle .entry-content #wpdoodlez-form {
-    border: solid #333 1px;
-}
 
 .wpdoodle table > tbody > tr.myvote > td, .wpdoodle table > tbody > tr.myvote > td * {
     font-weight: bold;
 }
 .wpdoodle table > tbody > tr.myvote:hover * {
-    color: red;
+    color: #aaa;
 }

@@ -3,7 +3,7 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 Requires at least: 4.4
 Tested up to: 5.4.2
-Stable tag: 9.1.0.10.21
+Stable tag: 9.1.0.10.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,11 +12,12 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Everyone knows [doodle](https://doodle.com) It's a cute plattform to poll, to find the best meeting date or place, to make a decision with many people.
 
-With this plugin you can create very simple doodles in your wordpress installation.
+With this plugin you can create very simple doodles in your wordpress installation. If choosing custom fields names: vote0...votexxx a survey poll is done and the
+voters stored anonymized.
 
 WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
 
-* A link to WPdoodle ist public but not published everywhere
+* A link to WPdoodle is public but not published everywhere
 * A WPdoodle can be in a review and be published at given time
 * A WPdoodle can have own URL 
 * Poll users must not be valid logged in wordpress users
@@ -30,12 +31,11 @@ WPdoodlez are own post type and very similar to a post. A WPdoodle extends a pos
 
 After install this plugin you will see "WPDoodle" item in the menu on the left site. 
 
-== Screenshots ==
-
-1.  View in the **frontend**
-2.  View in the **backend**
-
 == Changelog ==
+
+= 9.1.0.10.23 =
+If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries
+if custom fields are dates e.g  name: 12.12.2020    value: ja then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates
 
 = 9.1.0.10.21 =
 own styling in template and theme integration for penguin

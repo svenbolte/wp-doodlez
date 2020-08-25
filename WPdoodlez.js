@@ -9,7 +9,7 @@ jQuery(function(){
         var answers = row.find( 'td > label > input' );
         var name = row.find( '#wpdoodlez-name' ).val();
 
-        if ( name.match( /[a-zA-Z0-9]+/g ) ) {
+		if ( name.match( /[a-zA-Z0-9]+/g ) ) {
             jQuery.post(
                 wpdoodle_ajaxurl,
                 {
@@ -28,6 +28,33 @@ jQuery(function(){
                 );
         }
     } );
+	
+    /* save poll vote */
+    jQuery( '#wpdoodlez_poll' ).on( 'click', function ( event ) {
+        var xtable = jQuery( event.target ).closest( 'table' );
+        var answers = xtable.find( 'td > label > input' );
+        var name = xtable.find( '#wpdoodlez-name' ).val();
+		//if ( name.match( /[a-zA-Z0-9]+/g ) ) {
+            jQuery.post(
+                wpdoodle_ajaxurl,
+                {
+                    'action': 'wpdoodlez_save_poll',
+                    'data': { 'wpdoodle': wpdoodle, 'name': name, 'vote': answers.serializeArray() }
+                },
+                function ( response ) {
+                    if ( response.save == true ) {
+                        document.location.reload( true );
+                    }
+                    else {
+                        window.alert(response.msg);
+                    }
+                },
+                'json'
+                );
+		//}
+	} );
+	
+	
     /* delete vote */
     jQuery( '.wpdoodlez-delete' ).on( 'click', function ( event ) {
         var name = jQuery( this ).data( 'vote' );

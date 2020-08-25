@@ -5,12 +5,12 @@
  * Description: Doodle like finding meeting date 
  * Contributors: Robert Kolatzek, PBMod
  * Author: PBMod
- * Version: 9.1.0.10.22
+ * Version: 9.1.0.10.24
  * Author URI: https://github.com/svenbolte
  * License: GPL 2
  * Tested up to: 5.5
- * Requires at least: 4.0
- * Requires PHP: 5.3
+ * Requires at least: 4.6
+ * Requires PHP: 5.5
 */
 
 /**
@@ -29,6 +29,7 @@ function WPdoodlez_load_textdomain() {
 }
 add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
 
+
 /**
  * Register own template for doodles
  * @global post $post
@@ -45,12 +46,28 @@ function wpdoodlez_template( $single_template ) {
 
 add_filter( 'single_template', 'wpdoodlez_template' );
 
+	// IP-Adresse des Users bekommen
+	function get_the_user_ip() {
+		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+			//check ip from share internet
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+			} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			//to check ip is pass from proxy
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			} else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		// letzte Stelle der IP anonymisieren (0 setzen)	
+		$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
+		return apply_filters( 'wpb_get_ip', $ip );
+	}
+
 /**
  * Save a single vote as ajax request and set cookie with given user name
  */
 function wpdoodlez_save_vote() {
     $values = get_option( 'wpdoodlez_' . strval($_POST[ 'data' ][ 'wpdoodle' ]), array() );
-    $name   = sanitize_text_field( $_POST[ 'data' ][ 'name' ]);
+	$name   = sanitize_text_field( $_POST[ 'data' ][ 'name' ]);
     /* insert only without cookie (or empty name in cookie)
      * update only with same name in cookie
      */
@@ -78,6 +95,26 @@ function wpdoodlez_save_vote() {
 
 add_action( 'wp_ajax_wpdoodlez_save', 'wpdoodlez_save_vote' );
 add_action( 'wp_ajax_nopriv_wpdoodlez_save', 'wpdoodlez_save_vote' );
+
+/**
+ * Save a single poll as ajax request and set cookie with given user name
+ */
+function wpdoodlez_save_poll() {
+    $values = get_option( 'wpdoodlez_' . strval($_POST[ 'data' ][ 'wpdoodle' ]), array() );
+	$name   = sanitize_text_field( $_POST[ 'data' ][ 'name' ]);
+    $values[ $name ] = array();
+    foreach ( $_POST[ 'data' ][ 'vote' ] as $option ) {
+    $values[ $name ][ strval($option[ 'name' ]) ] =  sanitize_text_field($option[ 'value' ]);
+	}
+	update_option( 'wpdoodlez_' . (string)$_POST[ 'data' ][ 'wpdoodle' ], $values );
+    echo json_encode( array( 'save' => true ) );
+    wp_die();
+}
+add_action( 'wp_ajax_wpdoodlez_save_poll', 'wpdoodlez_save_poll' );
+add_action( 'wp_ajax_nopriv_wpdoodlez_save_poll', 'wpdoodlez_save_poll' );
+
+
+
 
 /**
  * Delete a given vote identified by user name. Possible for all wp user with *delete_published_posts* right
@@ -115,6 +152,7 @@ function wpdoodlez_cookie() {
     }
 }
 add_action( 'init', 'wpdoodlez_cookie' );
+
 
 /**
  * Register WPdoodle post type and refresh rewrite rules

@@ -7,9 +7,6 @@
 wp_enqueue_script( "jquery" );
 wp_enqueue_script( "WPdoodlez", plugins_url( 'WPdoodlez.js', __FILE__ ), array('jquery'), null, true);
 wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array(), null, 'all');
-if(file_exists(dirname(__FILE__).'user.css')) {
-    wp_enqueue_style( "WPdoodlez_user", plugins_url( 'user.css', __FILE__ ), array(), null, 'all');
-}
 get_header();
 ?>
 
@@ -85,94 +82,124 @@ get_header();
                             $votes_cout[ $key ]  = 0;
                         }
                     }
-                    // print_r($suggestions);
+                     // print_r($suggestions);
+						
                     /* password protected? */
                     if ( !post_password_required() ) {
-                        ?>
-                        <h4><?php echo wpd_translate( 'Voting' ); ?></h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th><?php echo wpd_translate( 'User name' ); ?></th>
-                                    <?php
-                                        foreach ( $suggestions as $key => $value ) {
-											if ($key != "post_views_count" && $key != "likes" ) {
-	                                            ?><th><?php echo $key; ?></th><?php
-											}	
-                                        }
-                                        ?>
-                                    <th><?php echo wpd_translate( 'Manage vote' ); ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
-                                ?>
-                                <tr id="wpdoodlez-form">
-                                    <td><input type="text" 
-                                               placeholder="<?php echo wpd_translate( 'Your name' ) ?>" 
-                                               class="wpdoodlez-input"
-                                               id="wpdoodlez-name" size="10"></td>
-                                        <?php
-                                        foreach ( $suggestions as $key => $value ) {
-											if ($key != "post_views_count" && $key != "likes"  ) {
-	                                            ?><td><label> <input type="checkbox" name="<?php echo $key; ?>" class="wpdoodlez-input">
-                                        <?php
-												echo $value[ 0 ]; ?></label>
-                                        </td><?php
+					
+						// Wenn Feldnamen vote1...20, dann eine Umfrage machen, sonst eine Terminabstimmung
+						if (!empty($suggestions[vote1][0]) && !isset($_GET['admin']) ) {
+							$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+							foreach ( $votes as $name => $vote ) {
+								foreach ( $suggestions as $key => $value ) {
+									if ($key != "post_views_count" && $key != "likes") {
+										if ( $vote[ $key ] ) {	$votes_cout[ $key ] ++; }
+									}	
+								}
+							}	
+							foreach ( $votes_cout as $key => $value ) {
+								if ($key != "post_views_count" && $key != "likes" ) {
+									$pielabel.=$key.','; $piesum .= $value.','; 
+								}
+							}
+							$hashuser = substr(md5(time()),1,20) . '-' . get_the_user_ip();
+							echo '<br><table id="pollselect"><thead><th colspan=3>Ihre Auswahl bitte</th></thead>';	
+							foreach ( $suggestions as $key => $value ) {
+								 if ($key != "post_views_count" && $key != "likes" ) {
+                                        echo'<tr><td><label><input type="checkbox" name="'.$key.'" class="wpdoodlez-input"></td><td>';
+										echo $value[ 0 ] .'</label></td><td>'.$votes_cout[ $key ].'</td></tr>';
+								 }	
+							 }
+							echo '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
+							echo '<button id="wpdoodlez_poll">' . wpd_translate( 'Vote!' ) . '</button></td></tr>';
+							echo '</table>';
+						} else {
+						// Dies nur ausführen, wenn Feldnamen nicht vote1...20
+							?>
+							<h4><?php echo wpd_translate( 'Voting' ); ?></h4>
+							<table>
+								<thead>
+									<tr>
+										<th><?php echo wpd_translate( 'User name' ); ?></th>
+										<?php
+											foreach ( $suggestions as $key => $value ) {
+												if ($key != "post_views_count" && $key != "likes" ) {
+													?><th><?php echo $key; ?></th><?php
+												}	
 											}
-                                    }
-                                    ?><td>
-                                        <button id="wpdoodlez_vote"><?php echo wpd_translate( 'Vote!' ); ?>
-                                        </button></td><?php ?>
-                                </tr>
-                                <?php
-                                $votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
-                                foreach ( $votes as $name => $vote ) {
-                                    ?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
-                                            class="<?php echo $myname == $name ? 'myvote' : ''; ?>">
-                                        <td><?php
-                                            echo $name;
-                                            ?></td>
-                                        <?php
-                                        foreach ( $suggestions as $key => $value ) {
-											if ($key != "post_views_count" && $key != "likes") {
-												?><td>
-                                                    <?php
-                                                    if ( $vote[ $key ] ) {
-                                                        $votes_cout[ $key ] ++;
-                                                        ?>
-                                                    <label 
-                                                        data-key="<?php echo $key; ?>"
-                                                        ><?php echo $value[ 0 ]; ?></label><?php
-                                                    } else {
-                                                        ?>
-                                                    <label></label><?php }
-                                                    ?>
-                                            </td><?php
-	                                        }
-										}	
-                                        ?>
-								<td><?php
-                                            if ( current_user_can( 'delete_published_posts' ) ) {
-                                                ?>
-                                                <button class="wpdoodlez-delete" 
-                                                        data-vote="<?php echo md5( $name ); ?>" 
-                                                        data-realname="<?php echo $name; ?>"
-                                                        ><?php echo wpd_translate( 'delete' ); ?></button><?php
-                                                    }
-                                                    if ( $myname == $name ) {
-                                                        ?>
-                                                <button class="wpdoodlez-edit" 
-                                                        data-vote="<?php echo md5( $name ); ?>" 
-                                                        data-realname="<?php echo $name; ?>"
-                                                        ><?php echo wpd_translate( 'edit' ); ?></button><?php
-                                            }
-                                            ?></td>
-                                    </tr><?php
-                                }
-                                ?>
-                            </tbody>
+											?>
+										<th><?php echo wpd_translate( 'Manage vote' ); ?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									$myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
+									?>
+									<tr id="wpdoodlez-form">
+										<td><input type="text" 
+												   placeholder="<?php echo wpd_translate( 'Your name' ) ?>" 
+												   class="wpdoodlez-input"
+												   id="wpdoodlez-name" size="10"></td>
+											<?php
+											foreach ( $suggestions as $key => $value ) {
+												if ($key != "post_views_count" && $key != "likes"  ) {
+													?><td><label> <input type="checkbox" name="<?php echo $key; ?>" class="wpdoodlez-input">
+											<?php
+													echo $value[ 0 ]; ?></label>
+											</td><?php
+												}
+										}
+										?><td>
+											<button id="wpdoodlez_vote"><?php echo wpd_translate( 'Vote!' ); ?>
+											</button></td>
+									</tr>
+									<?php
+									$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+									foreach ( $votes as $name => $vote ) {
+										?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
+												class="<?php echo $myname == $name ? 'myvote' : ''; ?>">
+											<td><?php
+												echo $name;
+												?></td>
+											<?php
+											foreach ( $suggestions as $key => $value ) {
+												if ($key != "post_views_count" && $key != "likes") {
+													?><td>
+														<?php
+														if ( $vote[ $key ] ) {
+															$votes_cout[ $key ] ++;
+															?>
+														<label 
+															data-key="<?php echo $key; ?>"
+															><?php echo $value[ 0 ]; ?></label><?php
+														} else {
+															?>
+														<label></label><?php }
+														?>
+												</td><?php
+												}
+											}	
+											?>
+									<td><?php
+												if ( current_user_can( 'delete_published_posts' ) ) {
+													?>
+													<button class="wpdoodlez-delete" 
+															data-vote="<?php echo md5( $name ); ?>" 
+															data-realname="<?php echo $name; ?>"
+															><?php echo wpd_translate( 'delete' ); ?></button><?php
+														}
+														if ( $myname == $name ) {
+															?>
+													<button class="wpdoodlez-edit" 
+															data-vote="<?php echo md5( $name ); ?>" 
+															data-realname="<?php echo $name; ?>"
+															><?php echo wpd_translate( 'edit' ); ?></button><?php
+												}
+												?></td>
+										</tr><?php
+									}
+									?>
+								</tbody>
                             <tfoot>
                                 <tr>
                                     <th><?php echo wpd_translate( 'total votes' ); ?></th>
@@ -185,13 +212,17 @@ get_header();
                                     <td></td>
                                 </tr>
                             </tfoot>
+							<?php   
+							}     //    Ende Terminabstimmung oder Umfrage, nun Fusszeile
+							?>
+								
                         </table>
                         <?php
 						// Chart Pie anzeigen zu den Ergebnissen
 						$piesum = rtrim($piesum, ",");
 						$pielabel = rtrim($pielabel, ",");
 						if( class_exists( 'PB_ChartsCodes' ) ) {
-							echo do_shortcode('[chartscodes title="Abstimm-Kuchengrafik" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
+							echo do_shortcode('[chartscodes accentcolor="1" title="Abstimm-Kuchengrafik" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 						}	
 					
 					}
@@ -212,7 +243,10 @@ get_header();
             if ( comments_open() || get_comments_number() ) :
                 comments_template();
             endif;
-        // End the loop.
+        
+		setPostViews(get_the_ID());
+		
+		// End the loop.
         endwhile;
         ?>
 		
