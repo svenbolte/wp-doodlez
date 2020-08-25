@@ -224,7 +224,7 @@ get_header();
 						// Chart Pie anzeigen zu den Ergebnissen
 						$piesum = rtrim($piesum, ",");
 						$pielabel = rtrim($pielabel, ",");
-						if( class_exists( 'PB_ChartsCodes' ) ) {
+						if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) ) {
 							echo do_shortcode('[chartscodes accentcolor="1" title="Abstimm-Kuchengrafik" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 						}	
 					
