@@ -83,10 +83,17 @@ get_header();
                         }
                     }
                      // print_r($suggestions);
+					// admin Details link für polls
+					if (is_user_logged_in()) {
+						if (!isset($_GET['admin']) ) {
+							echo '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), $wp->request ).'">' . wpd_translate( 'poll details' ) . '</a>';	
+						} else {
+							echo '<span style="float:right"><a href="'.$wp->request .'">' . wpd_translate( 'poll results' ) . '</a>';	
+						}	
+					}	
 						
                     /* password protected? */
                     if ( !post_password_required() ) {
-					
 						// Wenn Feldnamen vote1...20, dann eine Umfrage machen, sonst eine Terminabstimmung
 						$polli = array_key_exists('vote1', $suggestions);
 						if (  $polli  && !isset($_GET['admin']) ) {
@@ -105,7 +112,7 @@ get_header();
 								}
 							}
 							$hashuser = substr(md5(time()),1,20) . '-' . get_the_user_ip();
-							echo '<br><table id="pollselect"><thead><th colspan=3>Ihre Auswahl bitte</th></thead>';	
+							echo '<br><table id="pollselect"><thead><th colspan=3>' . wpd_translate( 'your choice' ) . '</th></thead>';	
 							foreach ( $suggestions as $key => $value ) {
 								 if ($key != "post_views_count" && $key != "likes" ) {
                                         echo'<tr><td><label><input type="checkbox" name="'.$key.'" class="wpdoodlez-input"></td><td>';
@@ -162,8 +169,8 @@ get_header();
 												class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
 												<?php
 												echo '<td>' . substr($name,0,20);
-												// Wenn ipflag plugin aktiv
-												if( class_exists( 'ipflag' ) ) {
+												// Wenn ipflag plugin aktiv und user angemeldet
+												if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
 													global $ipflag;
 													$nameip = substr($name,21,strlen($name)-21);
 													if(isset($ipflag) && is_object($ipflag)){
@@ -234,16 +241,14 @@ get_header();
 						$piesum = rtrim($piesum, ",");
 						$pielabel = rtrim($pielabel, ",");
 						if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) ) {
-							echo do_shortcode('[chartscodes accentcolor="1" title="Abstimm-Kuchengrafik" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
+							echo do_shortcode('[chartscodes accentcolor="1" title="' . wpd_translate( 'votes pie chart' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 						}	
 					
 					}
                     /* END password protected? */
                     ?>
                 </div><!-- .entry-content -->
-
                 <footer class="entry-footer">
-    <?php // edit_post_link( wpd_translate( 'Edit' ), '<span class="edit-link">', '</span>' ); ?>
                 </footer><!-- .entry-footer -->
                 <script>
                     var wpdoodle_ajaxurl = '<?php echo admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ); ?>';

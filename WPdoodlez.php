@@ -5,7 +5,7 @@
  * Description: Doodle like finding meeting date 
  * Contributors: Robert Kolatzek, PBMod
  * Author: PBMod
- * Version: 9.1.0.10.25
+ * Version: 9.1.0.10.26
  * Author URI: https://github.com/svenbolte
  * License: GPL 2
  * Tested up to: 5.5
@@ -114,8 +114,6 @@ add_action( 'wp_ajax_wpdoodlez_save_poll', 'wpdoodlez_save_poll' );
 add_action( 'wp_ajax_nopriv_wpdoodlez_save_poll', 'wpdoodlez_save_poll' );
 
 
-
-
 /**
  * Delete a given vote identified by user name. Possible for all wp user with *delete_published_posts* right
  */
@@ -153,7 +151,6 @@ function wpdoodlez_cookie() {
 }
 add_action( 'init', 'wpdoodlez_cookie' );
 
-
 /**
  * Register WPdoodle post type and refresh rewrite rules
  */
@@ -164,4 +161,15 @@ function wpdoodlez_rewrite_flush() {
 
 register_activation_hook( __FILE__, 'wpdoodlez_rewrite_flush' );
 add_action( 'after_switch_theme', 'wpdoodlez_rewrite_flush' );
+
+// show doodles on home page
+add_action( 'pre_get_posts', 'wpse_242473_add_post_type_to_home' );
+function wpse_242473_add_post_type_to_home( $query ) {
+
+    if( $query->is_main_query() && $query->is_home() ) {
+        $query->set( 'post_type', array( 'post', 'wpdoodle') );
+    }
+}
+
+
 ?>

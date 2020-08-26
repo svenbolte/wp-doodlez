@@ -3,7 +3,7 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 Requires at least: 4.4
 Tested up to: 5.4.2
-Stable tag: 9.1.0.10.23
+Stable tag: 9.1.0.10.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,11 @@ WPdoodlez are own post type and very similar to a post. A WPdoodle extends a pos
 After install this plugin you will see "WPDoodle" item in the menu on the left site. 
 
 == Changelog ==
+
+= 9.1.0.10.26 =
+doodlez are listed in the main loop on the home page now
+admin features, Details link without url parameter clickable, show country/flag only for logged in users
+language adaptions / translations
 
 = 9.1.0.10.25 =
 if chartscodes plugin is installed, the voters country/flag be displayed (got from filtered/shortened ip)
