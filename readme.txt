@@ -33,6 +33,10 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 
 == Changelog ==
 
+= 9.1.0.10.27 =
+wpdoodlez now loads special template when penguin theme is present, else a dafault template will be loaded
+fixed error when switching themes. docu menu did not work
+
 = 9.1.0.10.26 =
 doodlez are listed in the main loop on the home page now
 admin features, Details link without url parameter clickable, show country/flag only for logged in users

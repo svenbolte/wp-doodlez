@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The template for displaying all single wpdoodle
+ * The template for displaying all single wpdoodle - penguin theme required
  *
  */
 wp_enqueue_script( "jquery" );
@@ -10,23 +10,52 @@ wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array()
 get_header();
 ?>
 
-<div id="primary" class="content-area" style="max-width:900px;background-color:white;margin:0 auto;">
+<div id="content-area">
+	<div id="primary">
     <main id="main" class="site-main" role="main">
-
-        <?php
-        // Start the loop.
-        while ( have_posts() ) : the_post();
-            ?>
-            <article id = "post-<?php the_ID(); ?>" <?php post_class(); ?>>
-                <header class="entry-header">
-                    <?php
-                    if ( is_single() ) :
-                        the_title( '<h1 class="entry-title">', '</h1>' );
-                    else :
-                        the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' );
-                    endif;
-                    ?>
-                </header><!-- .entry-header -->
+	<?php
+	// Start the loop.
+	while ( have_posts() ) : the_post();
+		?>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+		<?php 
+		penguin_entry_top(); ?>
+		<header class="entry-header">
+		<div class="greybox">
+			<?php
+			$categories_list = get_the_category_list( esc_html__( ', ', 'penguin' ) );
+			if ( $categories_list && penguin_categorized_blog() ) : ?>
+				<i title="<?php esc_html_e( 'Categories icon', 'penguin' ) ?>" class="fa fa-folder-open"></i>
+				<?php echo $categories_list;
+			endif; // End if categories 
+			/* translators: used between list items, there is a space after the comma */
+			$tags_list = get_the_tag_list( '', esc_html_x( ', ', 'list item separator', 'penguin' ) );
+			if ( $tags_list ) :
+			?>
+			&nbsp;<i title="<?php esc_html_e( 'Tags icon', 'penguin' ) ?>" class="fa fa-tag"></i>
+			<?php echo '<span style="font-size:0.8em;">' . $tags_list .'</span>'; 
+			endif; // End if $tags_list ?>
+		</div>	
+		<?php
+		if ( has_post_thumbnail() == false ) :
+		$category = get_the_category(); 
+		if ( z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+			$cbild = z_taxonomy_image_url($category[0]->term_id);
+			echo ('<div class="post-thumbnail"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">');
+			echo ('<img src="' . $cbild . '" class="attachment-Penguin800X400 size-Penguin800X400 wp-post-image" style="max-height:220px" /></a></div>');	
+		} else {
+			$cbild = '';
+     		echo ('<br>');
+		}
+		endif;
+		if ( has_post_thumbnail() ) { get_template_part( 'template-parts/the_post_thumbnail' ); } 
+		get_template_part( 'template-parts/meta', 'top' );
+		if ( is_single() ) :
+			the_title( '<h1 class="entry-title">', '</h1>' );
+		else :
+			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
+		endif;
+	?>
 				<div class="entry-content">
                     <?php
 					/* translators: %s: Name of current post */
@@ -204,9 +233,7 @@ get_header();
                     /* END password protected? */
                     ?>
                 </div><!-- .entry-content -->
-
                 <footer class="entry-footer">
-    <?php edit_post_link( wpd_translate( 'Edit' ), '<span class="edit-link">', '</span>' ); ?>
                 </footer><!-- .entry-footer -->
                 <script>
                     var wpdoodle_ajaxurl = '<?php echo admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ); ?>';
@@ -218,11 +245,14 @@ get_header();
             if ( comments_open() || get_comments_number() ) :
                 comments_template();
             endif;
-        // End the loop.
+			setPostViews(get_the_ID());
+			// End the loop.
         endwhile;
         ?>
-
+		
     </main><!-- .site-main -->
-</div><!-- .content-area -->
+	</div><!-- #primary -->
 
+<?php get_sidebar(); ?>
+</div><!-- #content-area -->
 <?php get_footer(); ?>
