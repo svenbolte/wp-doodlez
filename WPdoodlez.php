@@ -51,7 +51,7 @@ function wpdoodlez_template( $single_template ) {
 add_filter( 'single_template', 'wpdoodlez_template' );
 
 	// IP-Adresse des Users bekommen
-	function get_the_user_ip() {
+	function wd_get_the_user_ip() {
 		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 			//check ip from share internet
 			$ip = $_SERVER['HTTP_CLIENT_IP'];

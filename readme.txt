@@ -3,7 +3,7 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 Requires at least: 4.4
 Tested up to: 5.4.2
-Stable tag: 9.1.0.10.26
+Stable tag: 9.1.0.10.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,7 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 == Changelog ==
 
 = 9.1.0.10.27 =
+bugfix when used with a theme that is not penguin
 wpdoodlez now loads special template when penguin theme is present, else a dafault template will be loaded
 fixed error when switching themes. docu menu did not work
 

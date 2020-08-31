@@ -97,7 +97,7 @@ get_header();
 									$pielabel.=$key.','; $piesum .= $value.','; 
 								}
 							}
-							$hashuser = substr(md5(time()),1,20) . '-' . get_the_user_ip();
+							$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
 							echo '<br><table id="pollselect"><thead><th colspan=3>' . wpd_translate( 'your choice' ) . '</th></thead>';	
 							foreach ( $suggestions as $key => $value ) {
 								 if ($key != "post_views_count" && $key != "likes" ) {
