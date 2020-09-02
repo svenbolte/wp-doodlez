@@ -1,22 +1,21 @@
 <?php
 /**
- * Plugin Name: WP Doodlez
- * Plugin URI: https://github.com/svenbolte/WPdoodlez
- * Description: Doodle like finding meeting date 
- * Contributors: Robert Kolatzek, PBMod
- * Author: PBMod
- * Version: 9.1.0.10.27
- * Author URI: https://github.com/svenbolte
- * License: GPL 2
- * Tested up to: 5.5
- * Requires at least: 4.6
- * Requires PHP: 5.5
+Plugin Name: WP Doodlez
+Plugin URI: https://github.com/svenbolte/WPdoodlez
+Description: Doodle like finding meeting date 
+Contributors: Robert Kolatzek, PBMod
+Author URI: https://github.com/svenbolte
+License: GPL 2
+Author: PBMod
+Version: 9.1.0.10.27
+Stable tag: 9.1.0.10.27
+Requires at least: 5.1
+Tested up to: 5.5.1
+Requires PHP: 7.2
 */
 
 /**
- * Translate string
- * @param string $text
- * @return string
+ * Translate string @param string $text  @return string
  */
 function wpd_translate( $text ) {
     return __( $text, 'WPdoodlez' );
