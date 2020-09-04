@@ -7,8 +7,8 @@ Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.27
-Stable tag: 9.1.0.10.27
+Version: 9.1.0.10.28
+Stable tag: 9.1.0.10.28
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
