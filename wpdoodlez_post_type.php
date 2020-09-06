@@ -18,9 +18,8 @@ $labels = [
 
 $args = [
     'labels'              => $labels,
-    'supports'            => [ 'title', 'editor', 'thumbnail', 'comments', 'custom-fields' ],
+    'supports'            => [ 'title', 'editor', 'thumbnail', 'comments', 'custom-fields', 'post-formats' ],
 	// 'show_in_rest' => true,   // Gutenberg Anzeige des Editors, über ... / Ansicht dann Eigene Felder einschalten!
-	// 'taxonomies'          => ['category' ],
 	 "taxonomies"		  => array("post_tag", "category"),
     'hierarchical'        => false,
     'public'              => true,
