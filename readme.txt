@@ -36,6 +36,7 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 == Changelog ==
 
 = 9.1.0.10.29 =
+styling in admin area modernized
 Supports post formats now. To show the full content of the doodle on home page some coding must be done.
 
 = 9.1.0.10.28 =

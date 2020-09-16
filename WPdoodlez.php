@@ -188,23 +188,28 @@ add_submenu_page(
 add_action('admin_menu', 'create_menupages_wpdoodle');
 
 function wpdoodle_doku() {
-	echo '<h1>WPDoodlez Doku</h1>';
+	echo '<h1>WPDoodlez Dokumentation</h1>';
 	?>
-	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
-	if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
-	then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
-	<br>
-	User parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
+	<div class="postbox" style="padding:5px">
+	<h2>	appointment voting or anonymized polls</h2>
+	<p>If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries</p>
+	<p>if custom fields are dates e.g  name: 12.12.2020    value: ja</p>
+	<p>then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates</p>
+	<p>User parameter /admin=1 to display alternate votes display (more features when logged in as admin)</p>
 	<h2>	Highlights</h2>
-	* A link to WPdoodle is public but not published everywhere<br>
-	* A WPdoodle can be in a review and be published at given time<br>
-	* A WPdoodle can have own URL <br>
-	* Poll users must not be valid logged in wordpress users<br>
-	* Users with "delete published post" rights can delete votes<br>
-	* Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)<br>
-	* Every custom field set in a WPdoodle is a possible answer<br>
-	* The first value of the custom field will be displayed in the row as users answer<br>
-	* The last row in the table contains total votes count<br>
+	<ul>
+		<li>A link to WPdoodle is public but not published everywhere</li>
+		<li>A WPdoodle can be in a review and be published at given time</li>
+		<li>A WPdoodle can have own URL</li>
+		<li>Poll users do net need to be valid logged in wordpress users</li>
+		<li>Doodlez Users with "delete published post" rights can delete votes</li>
+		<li>Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)</li>
+		<li>Every custom field set in a WPdoodle is a possible answer</li>
+		<li>The first value of the custom field will be displayed in the row as users answer</li>
+		<li>The last row in the table contains total votes count</li>
+		<li>handle the wpdoodlez like a normal custom post in wp - with archives and search</li>
+		</ul>
+</div>
 	<?php
 }
 
