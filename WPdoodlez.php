@@ -7,8 +7,8 @@ Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.30
-Stable tag: 9.1.0.10.30
+Version: 9.1.0.10.31
+Stable tag: 9.1.0.10.31
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -260,7 +260,7 @@ function get_doodlez_content() {
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes" ) {
-					$pielabel.=$key.','; $piesum .= $value.','; 
+					$pielabel.=$suggestions[$key][0].','; $piesum .= $value.','; 
 				}
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
@@ -307,9 +307,7 @@ function get_doodlez_content() {
 							foreach ( $suggestions as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes"  ) {
 									?><td><label> <input type="checkbox" name="<?php echo $key; ?>" class="wpdoodlez-input">
-							<?php
-									echo $value[ 0 ]; ?></label>
-							</td><?php
+									<?php echo $value[ 0 ]; ?></label></td><?php
 								}
 						}
 						?><td>
@@ -325,7 +323,6 @@ function get_doodlez_content() {
 					$page = isset($_GET['seite'])?intval($_GET['seite']):0;
 //					foreach ( $votes as $name => $vote ) {
 					foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
-
 						?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
 								class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
 								<?php
@@ -386,7 +383,7 @@ function get_doodlez_content() {
 						$pielabel = ''; $piesum = '';
 						foreach ( $votes_cout as $key => $value ) {
 							if ($key != "post_views_count" && $key != "likes" ) {
-								?><th id="total-<?php echo $key; ?>"><?php echo $value;  $pielabel.=$key.','; $piesum .= $value.','; ?></th><?php
+								?><th id="total-<?php echo $key; ?>"><?php echo $value;  $pielabel .=  strtoupper($key) . ','; $piesum .= $value . ','; ?></th><?php
 							} }
 						?>
 					<td><?php echo '<b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b>';  ?></td>
