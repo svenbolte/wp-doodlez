@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Version: 9.1.0.10.29
-Stable tag: 9.1.0.10.29
+Version: 9.1.0.10.30
+Stable tag: 9.1.0.10.30
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -35,8 +35,11 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 
 == Changelog ==
 
+= 9.1.0.10.30 =
+pagination for votes admin details (20 entry before page next)
+pagination for doodlez set to 100 entries per page. Totals are calculated per page
+
 = 9.1.0.10.29 =
-styling in admin area modernized
 Supports post formats now. To show the full content of the doodle on home page some coding must be done.
 
 = 9.1.0.10.28 =

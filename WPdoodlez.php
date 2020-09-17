@@ -7,8 +7,8 @@ Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.29
-Stable tag: 9.1.0.10.29
+Version: 9.1.0.10.30
+Stable tag: 9.1.0.10.30
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -174,6 +174,19 @@ function wpse_242473_add_post_type_to_home( $query ) {
     }
 }
 
+// Doodle Comments ab Werk aus
+function default_comments_off( $data, $postarr ) {
+     if( $data['post_type'] == 'wpdoodle' ) {
+          //New posts don't have an ID - So this checks if the post is new or already exists
+          if( !($postarr['ID']) ){
+               $data['comment_status'] = 0; //0 = false | 1 = true
+          }
+     }
+     return $data;
+}
+add_filter( 'wp_insert_post_data', 'default_comments_off', '', 2);
+
+
 // Menüs erweitern um Dokulink
 function create_menupages_wpdoodle() {
 add_submenu_page(
@@ -188,28 +201,23 @@ add_submenu_page(
 add_action('admin_menu', 'create_menupages_wpdoodle');
 
 function wpdoodle_doku() {
-	echo '<h1>WPDoodlez Dokumentation</h1>';
+	echo '<h1>WPDoodlez Doku</h1>';
 	?>
-	<div class="postbox" style="padding:5px">
-	<h2>	appointment voting or anonymized polls</h2>
-	<p>If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries</p>
-	<p>if custom fields are dates e.g  name: 12.12.2020    value: ja</p>
-	<p>then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates</p>
-	<p>User parameter /admin=1 to display alternate votes display (more features when logged in as admin)</p>
+	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
+	if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
+	then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
+	<br>
+	User parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
 	<h2>	Highlights</h2>
-	<ul>
-		<li>A link to WPdoodle is public but not published everywhere</li>
-		<li>A WPdoodle can be in a review and be published at given time</li>
-		<li>A WPdoodle can have own URL</li>
-		<li>Poll users do net need to be valid logged in wordpress users</li>
-		<li>Doodlez Users with "delete published post" rights can delete votes</li>
-		<li>Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)</li>
-		<li>Every custom field set in a WPdoodle is a possible answer</li>
-		<li>The first value of the custom field will be displayed in the row as users answer</li>
-		<li>The last row in the table contains total votes count</li>
-		<li>handle the wpdoodlez like a normal custom post in wp - with archives and search</li>
-		</ul>
-</div>
+	* A link to WPdoodle is public but not published everywhere<br>
+	* A WPdoodle can be in a review and be published at given time<br>
+	* A WPdoodle can have own URL <br>
+	* Poll users must not be valid logged in wordpress users<br>
+	* Users with "delete published post" rights can delete votes<br>
+	* Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)<br>
+	* Every custom field set in a WPdoodle is a possible answer<br>
+	* The first value of the custom field will be displayed in the row as users answer<br>
+	* The last row in the table contains total votes count<br>
 	<?php
 }
 
@@ -286,7 +294,9 @@ function get_doodlez_content() {
 				</thead>
 				<tbody>
 					<?php
-					$myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
+					if (!empty($_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ] )) {
+						$myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
+					}
 					?>
 					<tr id="wpdoodlez-form">
 						<td><input type="text" 
@@ -308,7 +318,14 @@ function get_doodlez_content() {
 					</tr>
 					<?php
 					$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
-					foreach ( $votes as $name => $vote ) {
+					// Page navigation
+					$html='';
+					if ( $polli ) { $nb_elem_per_page = 20; } else { $nb_elem_per_page = 100; }
+					$number_of_pages = intval(count($votes)/$nb_elem_per_page)+1;
+					$page = isset($_GET['seite'])?intval($_GET['seite']):0;
+//					foreach ( $votes as $name => $vote ) {
+					foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
+
 						?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
 								class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
 								<?php
@@ -372,7 +389,7 @@ function get_doodlez_content() {
 								?><th id="total-<?php echo $key; ?>"><?php echo $value;  $pielabel.=$key.','; $piesum .= $value.','; ?></th><?php
 							} }
 						?>
-					<td></td>
+					<td><?php echo '<b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b>';  ?></td>
 				</tr>
 			</tfoot>
 			<?php   
@@ -380,6 +397,14 @@ function get_doodlez_content() {
 			?>
 				
 		</table>
+				<?php
+				// Page navigation		
+				for($i=0;$i<$number_of_pages;$i++){
+					$seitennummer = $i+1;
+					$html .= ' &nbsp;<a class="page-numbers" href="'.add_query_arg( array('admin'=>'1', 'seite'=>$i), home_url( $wp->request ) ).'">'.$seitennummer.'</a>';
+				}	
+				echo $html;
+				?>
 		<?php
 		// Chart Pie anzeigen zu den Ergebnissen
 		$piesum = rtrim($piesum, ",");

@@ -39,7 +39,7 @@ get_header();
 		<?php
 		if ( has_post_thumbnail() == false ) :
 		$category = get_the_category(); 
-		if ( z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+		if ( !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 			$cbild = z_taxonomy_image_url($category[0]->term_id);
 			echo ('<div class="post-thumbnail"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">');
 			echo ('<img src="' . $cbild . '" class="attachment-Penguin800X400 size-Penguin800X400 wp-post-image" style="max-height:220px" /></a></div>');	
