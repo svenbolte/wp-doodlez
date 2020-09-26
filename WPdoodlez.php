@@ -7,8 +7,8 @@ Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.31
-Stable tag: 9.1.0.10.31
+Version: 9.1.0.10.32
+Stable tag: 9.1.0.10.32
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -203,27 +203,81 @@ add_action('admin_menu', 'create_menupages_wpdoodle');
 function wpdoodle_doku() {
 	echo '<h1>WPDoodlez Doku</h1>';
 	?>
+	* WPDoodlez can handle classic polls and doodle like appointment planning
 	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
 	if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
 	then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
 	<br>
 	User parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
-	<h2>	Highlights</h2>
-	* A link to WPdoodle is public but not published everywhere<br>
-	* A WPdoodle can be in a review and be published at given time<br>
-	* A WPdoodle can have own URL <br>
-	* Poll users must not be valid logged in wordpress users<br>
+	<h2>Highlights</h2>
+	* link to WPdoodlez is public, but post can have password <br>
+	* A WPdoodlez can be in a review and be published at given time<br>
+	* A WPdoodlez can have own URL <br>
+	* Poll users do not need to be valid logged in wordpress users<br>
 	* Users with "delete published post" rights can delete votes<br>
-	* Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)<br>
+	* Users shortname will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)<br>
 	* Every custom field set in a WPdoodle is a possible answer<br>
 	* The first value of the custom field will be displayed in the row as users answer<br>
 	* The last row in the table contains total votes count<br>
 	<?php
 }
 
+// Mini Calendar display month 
+function mini_calendar($month,$year,$eventarray){
+
+	/* days and weeks vars now ... */
+	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
+	$running_day = date('w',mktime(0,0,0,$month,1,$year));
+	$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+	$days_in_this_week = 1;
+	$day_counter = 0;
+	$dates_array = array();
+
+	/* draw table */
+	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . strftime('%B %Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
+	/* table headings */
+	$headings = array('SO','MO','DI','MI','DO','FR','SA','Kw');
+	$calendar.= '<tr><td style="padding:2px">'.implode('</td><td style="padding:2px">',$headings).'</td></tr>';
+	
+	/* row for week one */
+	$calendar.= '<tr>';
+	/* print "blank" days until the first of the current week */
+	for($x = 0; $x < $running_day; $x++):
+		$calendar.= '<td style="padding:2px"></td>';
+		$days_in_this_week++;
+	endfor;
+
+	/* keep going with days.... */
+	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+		/* add in the day number */
+		$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
+		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
+		$stylez= '<td style="padding:2px">';
+		foreach ($eventarray as $calevent) {
+			if ( date('Ymd',mktime(0,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(0,0,0,$month,$list_day,$year)) ) {
+				$stylez= '<td style="padding:2px;background:#ffd800;font-weight:700">';
+			}
+		}	
+		$calendar.= $stylez . $list_day . '</td>';
+		if($running_day == 6):
+			$calendar.= '<td style="padding:2px"	>'.$running_week.'</td></tr>';
+			if(($day_counter + 1 ) != $days_in_month):
+				$calendar.= '<tr>';
+			endif;
+			$running_day = -1;
+			$days_in_this_week = 0;
+		endif;
+		$days_in_this_week++; $running_day++; $day_counter++;
+	endfor;
+	$calendar.= '</table>';
+	/* all done, return result */
+	return $calendar;
+}
+
 
 // Doodlez Inhalte anzeigen
 function get_doodlez_content() {
+	global $wp;
 	/* translators: %s: Name of current post */
 	the_content();
 	$suggestions = $votes_cout  = [ ];
@@ -234,14 +288,16 @@ function get_doodlez_content() {
 			$votes_cout[ $key ]  = 0;
 		}
 	}
+
 	// admin Details link für polls
 	if (is_user_logged_in()) {
-		global $wp;
-		if (!isset($_GET['admin']) ) {
-			echo '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . wpd_translate( 'poll details' ) . '</a></span>';	
-		} else {
-			echo '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . wpd_translate( 'poll results' ) . '</a></span>';	
-		}	
+		if ( array_key_exists('vote1', $suggestions) ) {
+			if (!isset($_GET['admin']) ) {
+				echo '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . wpd_translate( 'poll details' ) . '</a></span>';	
+			} else {
+				echo '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . wpd_translate( 'poll results' ) . '</a></span>';	
+			}	
+		}
 	}	
 		
 	/* password protected? */
@@ -275,9 +331,29 @@ function get_doodlez_content() {
 			echo '<button id="wpdoodlez_poll">' . wpd_translate( 'Vote!' ) . '</button></td></tr>';
 			echo '</table>';
 		} else {
-		// Dies nur ausführen, wenn Feldnamen nicht vote1...20
+			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
 			?>
 			<h4><?php echo wpd_translate( 'Voting' ); ?></h4>
+			<?php
+			if ( !$polli && function_exists('mini_calendar')) {
+				$outputed_values = array();
+				$xevents = array();
+				foreach ( $suggestions as $key => $value ) {
+					if ($key != "post_views_count" && $key != "likes" ) {
+						array_push($xevents, $key);
+					}
+				}
+				foreach ( $suggestions as $key => $value ) {
+					if ($key != "post_views_count" && $key != "likes" ) {
+						$workername = substr($key,6,4) . substr($key,3,2);
+						if (!in_array($workername, $outputed_values)){
+							echo '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.mini_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
+							array_push($outputed_values, $workername);
+						}
+					}	
+				}
+			}	
+			?>
 			<table>
 				<thead>
 					<tr>
@@ -285,7 +361,7 @@ function get_doodlez_content() {
 						<?php
 							foreach ( $suggestions as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes" ) {
-									?><th><?php echo $key; ?></th><?php
+									?><th style="overflow-wrap:anywhere"><?php	echo $key; ?></th><?php
 								}	
 							}
 							?>
@@ -317,11 +393,10 @@ function get_doodlez_content() {
 					<?php
 					$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 					// Page navigation
-					$html='';
 					if ( $polli ) { $nb_elem_per_page = 20; } else { $nb_elem_per_page = 100; }
 					$number_of_pages = intval(count($votes)/$nb_elem_per_page)+1;
 					$page = isset($_GET['seite'])?intval($_GET['seite']):0;
-//					foreach ( $votes as $name => $vote ) {
+					//					foreach ( $votes as $name => $vote ) {
 					foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
 						?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
 								class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
@@ -364,7 +439,7 @@ function get_doodlez_content() {
 										data-realname="<?php echo $name; ?>"
 										><?php echo wpd_translate( 'delete' ); ?></button><?php
 									}
-									if ( $myname == $name ) {
+									if ( !empty($myname) && $myname == $name ) {
 										?>
 								<button class="wpdoodlez-edit" 
 										data-vote="<?php echo md5( $name ); ?>" 
@@ -395,12 +470,15 @@ function get_doodlez_content() {
 				
 		</table>
 				<?php
-				// Page navigation		
-				for($i=0;$i<$number_of_pages;$i++){
-					$seitennummer = $i+1;
-					$html .= ' &nbsp;<a class="page-numbers" href="'.add_query_arg( array('admin'=>'1', 'seite'=>$i), home_url( $wp->request ) ).'">'.$seitennummer.'</a>';
+				if ( isset($_GET['admin']) || !$polli) {
+					// Page navigation		
+					$html='';
+					for($i=0;$i<$number_of_pages;$i++){
+						$seitennummer = $i+1;
+						$html .= ' &nbsp;<a class="page-numbers" href="'.add_query_arg( array('admin'=>'1', 'seite'=>$i), home_url( $wp->request ) ).'">'.$seitennummer.'</a>';
+					}	
+					echo $html;
 				}	
-				echo $html;
 				?>
 		<?php
 		// Chart Pie anzeigen zu den Ergebnissen
