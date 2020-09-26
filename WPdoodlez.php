@@ -224,7 +224,6 @@ function wpdoodle_doku() {
 
 // Mini Calendar display month 
 function mini_calendar($month,$year,$eventarray){
-
 	/* days and weeks vars now ... */
 	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
 	$running_day = date('w',mktime(0,0,0,$month,1,$year));
@@ -234,6 +233,7 @@ function mini_calendar($month,$year,$eventarray){
 	$dates_array = array();
 
 	/* draw table */
+	setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . strftime('%B %Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
 	/* table headings */
 	$headings = array('SO','MO','DI','MI','DO','FR','SA','Kw');
