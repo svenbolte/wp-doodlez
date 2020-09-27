@@ -224,28 +224,27 @@ function wpdoodle_doku() {
 
 // Mini Calendar display month 
 function mini_calendar($month,$year,$eventarray){
+	setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	/* days and weeks vars now ... */
 	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
 	$running_day = date('w',mktime(0,0,0,$month,1,$year));
+	if ( $running_day == 0 ) { $running_day = 7; }
 	$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
 	$days_in_this_week = 1;
 	$day_counter = 0;
 	$dates_array = array();
 	/* draw table */
-	setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . strftime('%B %Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
 	/* table headings */
-	$headings = array('SO','MO','DI','MI','DO','FR','SA','Kw');
-	$calendar.= '<tr><td style="padding:2px">'.implode('</td><td style="padding:2px">',$headings).'</td></tr>';
-
+	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
+	$calendar.= '<tr><td style="padding:2px;text-align:center">'.implode('</td><td style="padding:2px;text-align:center">',$headings).'</td></tr>';
 	/* row for week one */
 	$calendar.= '<tr>';
 	/* print "blank" days until the first of the current week */
-	for($x = 0; $x < $running_day; $x++):
-		$calendar.= '<td style="padding:2px"></td>';
+	for($x = 1; $x < $running_day; $x++):
+		$calendar.= '<td style="padding:2px;background:rgba(222,222,222,0.1);"></td>';
 		$days_in_this_week++;
 	endfor;
-
 	/* keep going with days.... */
 	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
 		/* add in the day number */
@@ -258,23 +257,22 @@ function mini_calendar($month,$year,$eventarray){
 			}
 		}	
 		$calendar.= $stylez . $list_day . '</td>';
-		if($running_day == 6):
-			$calendar.= '<td style="padding:2px"	>'.$running_week.'</td></tr>';
+		if($running_day == 7):
+			$calendar.= '<td style="padding:2px;background:rgba(222,222,222,0.1);"	>'.$running_week.'</td></tr>';
 			if(($day_counter + 1 ) != $days_in_month):
 				$calendar.= '<tr>';
 			endif;
-			$running_day = -1;
+			$running_day = 0;
 			$days_in_this_week = 0;
 		endif;
 		$days_in_this_week++; $running_day++; $day_counter++;
 	endfor;
-
 	/* finish the rest of the days in the week */
 	if($days_in_this_week < 8 && $days_in_this_week > 1):
 		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
-			$calendar.= '<td class="calendar-day-np"></td>';
+			$calendar.= '<td style="padding:2px"></td>';
 		endfor;
-		$calendar.= '<td style="text-align:center">'.$running_week.'</td></tr>';
+		$calendar.= '<td style="padding:2px;text-align:center">'.$running_week.'</td></tr>';
 	endif;
 	/* end the table */
 	$calendar.= '</table>';
