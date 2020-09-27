@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Version: 9.1.0.10.32
-Stable tag: 9.1.0.10.32
+Version: 9.1.0.10.33
+Stable tag: 9.1.0.10.33
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -34,6 +34,9 @@ WPdoodlez are own post type and very similar to a post. A WPdoodle extends a pos
 After install this plugin you will see "WPDoodle" item in the menu on the left site. 
 
 == Changelog ==
+
+= 9.1.0.10.32 =
+calendar fixes
 
 = 9.1.0.10.32 =
 display and variable declaration fixed, admin details only for polls, appointments will always be displayed detailed

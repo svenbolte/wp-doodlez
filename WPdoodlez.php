@@ -7,8 +7,8 @@ Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.32
-Stable tag: 9.1.0.10.32
+Version: 9.1.0.10.33
+Stable tag: 9.1.0.10.33
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -231,14 +231,13 @@ function mini_calendar($month,$year,$eventarray){
 	$days_in_this_week = 1;
 	$day_counter = 0;
 	$dates_array = array();
-
 	/* draw table */
 	setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . strftime('%B %Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
 	/* table headings */
 	$headings = array('SO','MO','DI','MI','DO','FR','SA','Kw');
 	$calendar.= '<tr><td style="padding:2px">'.implode('</td><td style="padding:2px">',$headings).'</td></tr>';
-	
+
 	/* row for week one */
 	$calendar.= '<tr>';
 	/* print "blank" days until the first of the current week */
@@ -269,6 +268,15 @@ function mini_calendar($month,$year,$eventarray){
 		endif;
 		$days_in_this_week++; $running_day++; $day_counter++;
 	endfor;
+
+	/* finish the rest of the days in the week */
+	if($days_in_this_week < 8 && $days_in_this_week > 1):
+		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+			$calendar.= '<td class="calendar-day-np"></td>';
+		endfor;
+		$calendar.= '<td style="text-align:center">'.$running_week.'</td></tr>';
+	endif;
+	/* end the table */
 	$calendar.= '</table>';
 	/* all done, return result */
 	return $calendar;
