@@ -319,9 +319,11 @@ function get_doodlez_content() {
 					}	
 				}
 			}	
+			$xsum = 0;
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes" ) {
+					$xsum += $value;
 					$pielabel.=$suggestions[$key][0].','; $piesum .= $value.','; 
 				}
 			}
@@ -329,10 +331,12 @@ function get_doodlez_content() {
 			echo '<br><table id="pollselect"><thead><th colspan=3>' . wpd_translate( 'your choice' ) . '</th></thead>';	
 			foreach ( $suggestions as $key => $value ) {
 				 if ($key != "post_views_count" && $key != "likes" ) {
+						if ($xsum>0) $xperc = sprintf("%.1f%%", ($votes_cout[ $key ]/$xsum) * 100);
 						echo'<tr><td><label><input type="checkbox" name="'.$key.'" class="wpdoodlez-input"></td><td>';
-						echo $value[ 0 ] .'</label></td><td>'.$votes_cout[ $key ].'</td></tr>';
+						echo $value[ 0 ] .'</label></td><td>'.$votes_cout[ $key ].' ('.$xperc.')</td></tr>';
 				 }	
 			 }
+			echo '<tr><td>' . wpd_translate( 'total votes' ) . '</td><td></td><td style="font-size:1.1em">'.$xsum.'</td></tr>';
 			echo '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
 			echo '<button id="wpdoodlez_poll">' . wpd_translate( 'Vote!' ) . '</button></td></tr>';
 			echo '</table>';
