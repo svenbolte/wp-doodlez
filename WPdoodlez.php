@@ -38,7 +38,7 @@ add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
 function wpdoodlez_template( $single_template ) {
     global $post;
 	$wpxtheme = wp_get_theme(); // gets the current theme
-	if ( 'penguin-mod' == $wpxtheme ) { $xpenguin = true;} else { $xpenguin=false; }
+	if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
     if ( $post->post_type == 'wpdoodle' ) {
         if ($xpenguin) { $single_template = dirname( __FILE__ ) . '/wpdoodle-template-penguin.php';	} else {
 			$single_template = dirname( __FILE__ ) . '/wpdoodle-template.php';
