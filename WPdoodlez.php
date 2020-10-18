@@ -38,7 +38,7 @@ add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
 function wpdoodlez_template( $single_template ) {
     global $post;
 	$wpxtheme = wp_get_theme(); // gets the current theme
-	if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
+	if ( 'penguin-mod' == $wpxtheme ) { $xpenguin = true;} else { $xpenguin=false; }
     if ( $post->post_type == 'wpdoodle' ) {
         if ($xpenguin) { $single_template = dirname( __FILE__ ) . '/wpdoodle-template-penguin.php';	} else {
 			$single_template = dirname( __FILE__ ) . '/wpdoodle-template.php';
@@ -46,7 +46,6 @@ function wpdoodlez_template( $single_template ) {
     }
     return $single_template;
 }
-
 add_filter( 'single_template', 'wpdoodlez_template' );
 
 	// IP-Adresse des Users bekommen
