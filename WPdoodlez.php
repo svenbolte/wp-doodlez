@@ -7,8 +7,8 @@ Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.33
-Stable tag: 9.1.0.10.33
+Version: 9.1.0.10.34
+Stable tag: 9.1.0.10.34
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -328,10 +328,12 @@ function get_doodlez_content() {
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
 			echo '<br><table id="pollselect"><thead><th colspan=3>' . wpd_translate( 'your choice' ) . '</th></thead>';	
+			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
 				 if ($key != "post_views_count" && $key != "likes" ) {
+						$votecounter += 1;
 						if ($xsum>0) $xperc = sprintf("%.1f%%", ($votes_cout[ $key ]/$xsum) * 100);
-						echo'<tr><td><label><input type="checkbox" name="'.$key.'" class="wpdoodlez-input"></td><td>';
+						echo'<tr><td><label><input type="checkbox" name="'.$key.'" id="'.$key.'" onclick="selectOnlyThis(this.id)" class="wpdoodlez-input"></td><td>';
 						echo $value[ 0 ] .'</label></td><td>'.$votes_cout[ $key ].' ('.$xperc.')</td></tr>';
 				 }	
 			 }
@@ -339,6 +341,18 @@ function get_doodlez_content() {
 			echo '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
 			echo '<button id="wpdoodlez_poll">' . wpd_translate( 'Vote!' ) . '</button></td></tr>';
 			echo '</table>';
+			// only one selection allowed
+			?>
+			<script>
+				function selectOnlyThis(id) {
+					for (var i = 1;i <= <?php echo $votecounter ?>; i++)
+					{
+						document.getElementById('vote'+i).checked = false;
+					}
+					document.getElementById(id).checked = true;
+				}
+			</script>	
+			<?php
 		} else {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
 			?>
@@ -389,9 +403,11 @@ function get_doodlez_content() {
 								   class="wpdoodlez-input"
 								   id="wpdoodlez-name" size="10"></td>
 							<?php
+							$votecounter = 0;
 							foreach ( $suggestions as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes"  ) {
-									?><td><label> <input type="checkbox" name="<?php echo $key; ?>" class="wpdoodlez-input">
+									$votecounter += 1;
+									?><td><label> <input type="checkbox" name="<?php echo $key; ?>" id="<?php echo 'doodsel'.$votecounter; ?>" class="wpdoodlez-input">
 									<?php echo $value[ 0 ]; ?></label></td><?php
 								}
 						}

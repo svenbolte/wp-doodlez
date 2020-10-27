@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: robert_kolatzek, PBMod
-Tags: doodle, poll, question, meeting
+Tags: doodle, poll, question, meeting, vote
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Version: 9.1.0.10.33
-Stable tag: 9.1.0.10.33
+Version: 9.1.0.10.34
+Stable tag: 9.1.0.10.34
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -12,19 +12,20 @@ Requires PHP: 7.2
 
 == Description ==
 
-Everyone knows [doodle](https://doodle.com) It's a cute plattform to poll, to find the best meeting date or place, to make a decision with many people.
-
+Everyone knows [doodle](https://doodle.com) It is a plattform to poll, to find the best meeting date or place, to make a decision with many people.
 With this plugin you can create very simple doodles in your wordpress installation. If choosing custom fields names: vote0...votexxx a survey poll is done and the
 voters stored anonymized.
 
 WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
 
-* A link to WPdoodle is public but not published everywhere
-* A WPdoodle can be in a review and be published at given time
-* A WPdoodle can have own URL 
-* Poll users must not be valid logged in wordpress users
-* Users with "delete published post" rights can delete votes
-* Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)
+* can handle polls and doodlez, depending on what field names are set: vote1...x results in a poll, other field names like dates result in doodlez
+* link to WPdoodle is public, searchable and found in the archives
+* can be in a review and be published at given time
+* can have own URL 
+* password on post protects access if wanted
+* voters do not need to be valid logged in wordpress users
+* doodlez: Users with "delete published post" rights can delete votes
+* doodlez: Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)
 * Every custom field set in a WPdoodle is a possible answer
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
@@ -35,7 +36,10 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 
 == Changelog ==
 
-= 9.1.0.10.32 =
+= 9.1.0.10.34 =
+On Votings (using field names vote1...x) only one selection is allowed now, on appointment findings (doodlez) still more selections than one is allowed.
+
+= 9.1.0.10.33 =
 calendar fixes
 
 = 9.1.0.10.32 =
