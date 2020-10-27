@@ -5,6 +5,8 @@ Plugin URI: https://github.com/svenbolte/WPdoodlez
 Description: Doodle like finding meeting date 
 Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
+Text Domain: WPdoodlez
+Domain Path: /lang/
 License: GPL 2
 Author: PBMod
 Version: 9.1.0.10.34
@@ -14,12 +16,6 @@ Tested up to: 5.5.1
 Requires PHP: 7.2
 */
 
-/**
- * Translate string @param string $text  @return string
- */
-function wpd_translate( $text ) {
-    return __( $text, 'WPdoodlez' );
-}
 /**
  * Load plugin textdomain.
  */
@@ -85,7 +81,8 @@ function wpdoodlez_save_vote() {
         echo json_encode( 
             array( 
                 'save' => false , 
-                'msg' => wpd_translate( 'You have already voted but your vote was deleted. Your name was: ' ).$nameInCookie ) 
+                'msg' => __('You have already voted but your vote was deleted. Your name was: ','WPdoodlez').$nameInCookie
+			) 
         );
         wp_die();
     }
@@ -298,9 +295,9 @@ function get_doodlez_content() {
 	if (is_user_logged_in()) {
 		if ( array_key_exists('vote1', $suggestions) ) {
 			if (!isset($_GET['admin']) ) {
-				echo '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . wpd_translate( 'poll details' ) . '</a></span>';	
+				echo '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . __( 'poll details', 'WPdoodlez'  ) . '</a></span>';	
 			} else {
-				echo '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . wpd_translate( 'poll results' ) . '</a></span>';	
+				echo '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . __( 'poll results', 'WPdoodlez'  ) . '</a></span>';	
 			}	
 		}
 	}	
@@ -327,7 +324,7 @@ function get_doodlez_content() {
 				}
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
-			echo '<br><table id="pollselect"><thead><th colspan=3>' . wpd_translate( 'your choice' ) . '</th></thead>';	
+			echo '<br><table id="pollselect"><thead><th colspan=3>' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
 				 if ($key != "post_views_count" && $key != "likes" ) {
@@ -337,9 +334,9 @@ function get_doodlez_content() {
 						echo $value[ 0 ] .'</label></td><td>'.$votes_cout[ $key ].' ('.$xperc.')</td></tr>';
 				 }	
 			 }
-			echo '<tr><td>' . wpd_translate( 'total votes' ) . '</td><td></td><td style="font-size:1.1em">'.$xsum.'</td></tr>';
+			echo '<tr><td>' . __( 'total votes', 'WPdoodlez' ) . '</td><td></td><td style="font-size:1.1em">'.$xsum.'</td></tr>';
 			echo '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
-			echo '<button id="wpdoodlez_poll">' . wpd_translate( 'Vote!' ) . '</button></td></tr>';
+			echo '<button id="wpdoodlez_poll">' . __( 'Vote!', 'WPdoodlez' ) . '</button></td></tr>';
 			echo '</table>';
 			// only one selection allowed
 			?>
@@ -356,7 +353,7 @@ function get_doodlez_content() {
 		} else {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
 			?>
-			<h4><?php echo wpd_translate( 'Voting' ); ?></h4>
+			<h4><?php echo __( 'Voting', 'WPdoodlez' ); ?></h4>
 			<?php
 			if ( !$polli && function_exists('mini_calendar')) {
 				$outputed_values = array();
@@ -380,7 +377,7 @@ function get_doodlez_content() {
 			<table>
 				<thead>
 					<tr>
-						<th><?php echo wpd_translate( 'User name' ); ?></th>
+						<th><?php echo __( 'User name', 'WPdoodlez'  ); ?></th>
 						<?php
 							foreach ( $suggestions as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes" ) {
@@ -388,7 +385,7 @@ function get_doodlez_content() {
 								}	
 							}
 							?>
-						<th><?php echo wpd_translate( 'Manage vote' ); ?></th>
+						<th><?php echo __( 'Manage vote', 'WPdoodlez'  ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -399,7 +396,7 @@ function get_doodlez_content() {
 					?>
 					<tr id="wpdoodlez-form">
 						<td><input type="text" 
-								   placeholder="<?php echo wpd_translate( 'Your name' ) ?>" 
+								   placeholder="<?php echo __( 'Your name', 'WPdoodlez'  ) ?>" 
 								   class="wpdoodlez-input"
 								   id="wpdoodlez-name" size="10"></td>
 							<?php
@@ -412,7 +409,7 @@ function get_doodlez_content() {
 								}
 						}
 						?><td>
-							<button id="wpdoodlez_vote"><?php echo wpd_translate( 'Vote!' ); ?>
+							<button id="wpdoodlez_vote"><?php echo __( 'Vote!', 'WPdoodlez'  ); ?>
 							</button></td>
 					</tr>
 					<?php
@@ -462,14 +459,14 @@ function get_doodlez_content() {
 								<button class="wpdoodlez-delete" 
 										data-vote="<?php echo md5( $name ); ?>" 
 										data-realname="<?php echo $name; ?>"
-										><?php echo wpd_translate( 'delete' ); ?></button><?php
+										><?php echo __( 'delete', 'WPdoodlez' ); ?></button><?php
 									}
 									if ( !empty($myname) && $myname == $name ) {
 										?>
 								<button class="wpdoodlez-edit" 
 										data-vote="<?php echo md5( $name ); ?>" 
 										data-realname="<?php echo $name; ?>"
-										><?php echo wpd_translate( 'edit' ); ?></button><?php
+										><?php echo __( 'edit', 'WPdoodlez' ); ?></button><?php
 							}
 							?></td>
 						</tr><?php
@@ -478,7 +475,7 @@ function get_doodlez_content() {
 				</tbody>
 			<tfoot>
 				<tr>
-					<th><?php echo wpd_translate( 'total votes' ); ?></th>
+					<th><?php echo __( 'total votes', 'WPdoodlez'  ); ?></th>
 					<?php
 						$pielabel = ''; $piesum = '';
 						foreach ( $votes_cout as $key => $value ) {
@@ -510,7 +507,7 @@ function get_doodlez_content() {
 		$piesum = rtrim($piesum, ",");
 		$pielabel = rtrim($pielabel, ",");
 		if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) ) {
-			echo do_shortcode('[chartscodes accentcolor="1" title="' . wpd_translate( 'votes pie chart' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
+			echo do_shortcode('[chartscodes accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 		}	
 	}
 	/* END password protected? */

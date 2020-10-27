@@ -1,61 +1,70 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: WP Doodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-26 08:17+0000\n"
+"POT-Creation-Date: 2020-10-27 16:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: \n"
 "Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Loco https://localise.biz/"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.4.4; wp-5.5.1"
 
-#: wpdoodle-template.php:50
-msgid "Voting"
+#: WPdoodlez.php:84
+msgid "You have already voted but your vote was deleted. Your name was: "
 msgstr ""
 
-#: wpdoodle-template.php:53
-msgid "User name"
+#: WPdoodlez.php:298
+msgid "poll details"
 msgstr ""
 
-#: wpdoodle-template.php:59
-msgid "Manage vote"
+#: WPdoodlez.php:300
+msgid "poll results"
 msgstr ""
 
-#: wpdoodle-template.php:68
-msgid "Your name"
+#: WPdoodlez.php:327
+msgid "your choice"
 msgstr ""
 
-#: wpdoodle-template.php:82
-msgid "Vote!"
-msgstr ""
-
-#: wpdoodle-template.php:115
-msgid "delete"
-msgstr ""
-
-#: wpdoodle-template.php:122
-msgid "edit"
-msgstr ""
-
-#: wpdoodle-template.php:131
+#: WPdoodlez.php:337 WPdoodlez.php:478
 msgid "total votes"
 msgstr ""
 
-#: wpdoodle-template.php:147
-msgid "Edit"
+#: WPdoodlez.php:339 WPdoodlez.php:412
+msgid "Vote!"
 msgstr ""
 
-#: WPdoodlez.php:65
-msgid "You have already voted but your vote was deleted. Your name was: "
+#: WPdoodlez.php:356
+msgid "Voting"
+msgstr ""
+
+#: WPdoodlez.php:380
+msgid "User name"
+msgstr ""
+
+#: WPdoodlez.php:388
+msgid "Manage vote"
+msgstr ""
+
+#: WPdoodlez.php:399
+msgid "Your name"
+msgstr ""
+
+#: WPdoodlez.php:462
+msgid "delete"
+msgstr ""
+
+#: WPdoodlez.php:469
+msgid "edit"
+msgstr ""
+
+#: WPdoodlez.php:510
+msgid "votes pie chart"
 msgstr ""
 
 #: wpdoodlez_post_type.php:8
@@ -94,17 +103,22 @@ msgstr ""
 msgid "Not found in trash"
 msgstr ""
 
-msgid "poll details"
+#. Name of the plugin
+msgid "WP Doodlez"
 msgstr ""
 
-msgid "poll results"
-msgstr ""
-
-msgid "votes pie chart"
-msgstr ""
-
+#. Description of the plugin
 msgid "Doodle like finding meeting date"
 msgstr ""
 
-msgid "your choice"
+#. URI of the plugin
+msgid "https://github.com/svenbolte/WPdoodlez"
+msgstr ""
+
+#. Author of the plugin
+msgid "PBMod"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://github.com/svenbolte"
 msgstr ""

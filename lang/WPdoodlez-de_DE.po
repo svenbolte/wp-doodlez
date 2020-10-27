@@ -2,65 +2,77 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WPdoodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-08-26 08:17+0000\n"
-"PO-Revision-Date: 2020-08-26 08:18+0000\n"
-"Last-Translator: Patrick Baerenfaenger\n"
+"POT-Creation-Date: 2020-10-27 16:48+0000\n"
+"PO-Revision-Date: 2020-10-27 16:49+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Poedit-Basepath: ..\n"
+"X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: wpdoodle-template.php\n"
 "X-Poedit-SearchPath-1: WPdoodlez.php\n"
 "X-Poedit-SearchPath-2: wpdoodlez_post_type.php\n"
 "X-Poedit-SearchPathExcluded-0: lang\n"
-"X-Loco-Version: 2.4.2; wp-5.5"
+"X-Loco-Version: 2.4.4; wp-5.5.1"
 
-#: wpdoodle-template.php:50
-msgid "Voting"
-msgstr "Abstimmung"
-
-#: wpdoodle-template.php:53
-msgid "User name"
-msgstr "Name"
-
-#: wpdoodle-template.php:59
-msgid "Manage vote"
-msgstr "Verwalten"
-
-#: wpdoodle-template.php:68
-msgid "Your name"
-msgstr "Dein Name"
-
-#: wpdoodle-template.php:82
-msgid "Vote!"
-msgstr "Abstimmen!"
-
-#: wpdoodle-template.php:115
-msgid "delete"
-msgstr "löschen"
-
-#: wpdoodle-template.php:122
-msgid "edit"
-msgstr "bearbeiten"
-
-#: wpdoodle-template.php:131
-msgid "total votes"
-msgstr "Stimmen insgesamt"
-
-#: wpdoodle-template.php:147
-msgid "Edit"
-msgstr "WPdoodle Bearbeiten"
-
-#: WPdoodlez.php:65
+#: WPdoodlez.php:84
 msgid "You have already voted but your vote was deleted. Your name was: "
 msgstr ""
 "Sie haben bereits eine Stimme abgegeben. Sie wurde anscheinend gelöscht. Ihr "
 "Name lautete: "
+
+#: WPdoodlez.php:298
+msgid "poll details"
+msgstr "Details der Abstimmung"
+
+#: WPdoodlez.php:300
+msgid "poll results"
+msgstr "Abstimm-Ergebnisse"
+
+#: WPdoodlez.php:327
+msgid "your choice"
+msgstr "Ihre Auswahl bitte"
+
+#: WPdoodlez.php:337 WPdoodlez.php:478
+msgid "total votes"
+msgstr "Stimmen insgesamt"
+
+#: WPdoodlez.php:339 WPdoodlez.php:412
+msgid "Vote!"
+msgstr "Abstimmen!"
+
+#: WPdoodlez.php:356
+msgid "Voting"
+msgstr "Abstimmung"
+
+#: WPdoodlez.php:380
+msgid "User name"
+msgstr "Name"
+
+#: WPdoodlez.php:388
+msgid "Manage vote"
+msgstr "Verwalten"
+
+#: WPdoodlez.php:399
+msgid "Your name"
+msgstr "Dein Name"
+
+#: WPdoodlez.php:462
+msgid "delete"
+msgstr "löschen"
+
+#: WPdoodlez.php:469
+msgid "edit"
+msgstr "bearbeiten"
+
+#: WPdoodlez.php:510
+msgid "votes pie chart"
+msgstr "Abstimm-Grafik"
 
 #: wpdoodlez_post_type.php:8
 msgid "All WPdoodlez"
@@ -98,17 +110,22 @@ msgstr "Nicht gefunden"
 msgid "Not found in trash"
 msgstr "Nicht gefunden im Papierkorb"
 
-msgid "poll details"
-msgstr "Details der Abstimmung"
+#. Name of the plugin
+msgid "WP Doodlez"
+msgstr "WP Doodlez"
 
-msgid "poll results"
-msgstr "Abstimm-Ergebnisse"
-
-msgid "votes pie chart"
-msgstr "Abstimm-Grafik"
-
+#. Description of the plugin
 msgid "Doodle like finding meeting date"
 msgstr "Terminabstimmung und Umfragen"
 
-msgid "your choice"
-msgstr "Ihre Auswahl bitte"
+#. URI of the plugin
+msgid "https://github.com/svenbolte/WPdoodlez"
+msgstr "WP Doodlez"
+
+#. Author of the plugin
+msgid "PBMod"
+msgstr "PBMod"
+
+#. Author URI of the plugin
+msgid "https://github.com/svenbolte"
+msgstr "https://github.com/svenbolte"

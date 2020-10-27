@@ -31,7 +31,7 @@ get_header();
 					<?php get_doodlez_content(); ?>
                 </div><!-- .entry-content -->
                 <footer class="entry-footer">
-				<?php edit_post_link( wpd_translate( 'Edit' ), '<span class="edit-link">', '</span>' ); ?>
+				<?php edit_post_link( __( 'Edit','WPdoodlez' ), '<span class="edit-link">', '</span>' ); ?>
                 </footer><!-- .entry-footer -->
                 <script>
                     var wpdoodle_ajaxurl = '<?php echo admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ); ?>';

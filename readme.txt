@@ -3,12 +3,13 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: WPDoodlez
+Domain Path: /lang/
 Version: 9.1.0.10.34
 Stable tag: 9.1.0.10.34
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
-
 
 == Description ==
 
