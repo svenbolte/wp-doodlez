@@ -3,7 +3,7 @@ plan and vote to find a common appointment date with participiants for an event.
 
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.
-Completed the german and german formal translations.
+Completed the german and german formal translations. Added method to use structure for polls (onle one answer)
 
 ## GDPR (DSGVO) notice
 Participiants do net need to enter their full name (a nicname would do).
