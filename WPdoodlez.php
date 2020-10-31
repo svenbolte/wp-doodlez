@@ -9,10 +9,10 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.34
-Stable tag: 9.1.0.10.34
+Version: 9.1.0.10.35
+Stable tag: 9.1.0.10.35
 Requires at least: 5.1
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 7.2
 */
 

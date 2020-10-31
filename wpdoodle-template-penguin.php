@@ -21,21 +21,6 @@ get_header();
 		<?php 
 		penguin_entry_top(); ?>
 		<header class="entry-header">
-		<div class="greybox">
-			<?php
-			$categories_list = get_the_category_list( esc_html__( ', ', 'penguin' ) );
-			if ( $categories_list && penguin_categorized_blog() ) : ?>
-				<i title="<?php esc_html_e( 'Categories icon', 'penguin' ) ?>" class="fa fa-folder-open"></i>
-				<?php echo $categories_list;
-			endif; // End if categories 
-			/* translators: used between list items, there is a space after the comma */
-			$tags_list = get_the_tag_list( '', esc_html_x( ', ', 'list item separator', 'penguin' ) );
-			if ( $tags_list ) :
-			?>
-			&nbsp;<i title="<?php esc_html_e( 'Tags icon', 'penguin' ) ?>" class="fa fa-tag"></i>
-			<?php echo '<span style="font-size:0.8em;">' . $tags_list .'</span>'; 
-			endif; // End if $tags_list ?>
-		</div>	
 		<?php
 		if ( has_post_thumbnail() == false ) :
 		$category = get_the_category(); 

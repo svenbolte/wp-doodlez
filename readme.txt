@@ -5,10 +5,10 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.0.10.34
-Stable tag: 9.1.0.10.34
+Version: 9.1.0.10.35
+Stable tag: 9.1.0.10.35
 Requires at least: 5.1
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 7.2
 
 == Description ==
@@ -37,7 +37,8 @@ After install this plugin you will see "WPDoodle" item in the menu on the left s
 
 == Changelog ==
 
-= 9.1.0.10.34 =
+= 9.1.0.10.35 =
+compatible with WP 5.5.3
 On Votings (using field names vote1...x) only one selection is allowed now, on appointment findings (doodlez) still more selections than one is allowed.
 
 = 9.1.0.10.33 =
