@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.0.10.35
-Stable tag: 9.1.0.10.35
+Version: 9.1.0.10.36
+Stable tag: 9.1.0.10.36
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -36,6 +36,9 @@ WPdoodlez are own post type and very similar to a post. A WPdoodle extends a pos
 After install this plugin you will see "WPDoodle" item in the menu on the left site. 
 
 == Changelog ==
+
+= 9.1.0.10.36 =
+template penguin: header_image removed from page template cos its in header-image templat part already
 
 = 9.1.0.10.35 =
 compatible with WP 5.5.3
