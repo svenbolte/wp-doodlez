@@ -220,7 +220,7 @@ function wpdoodle_doku() {
 
 // Mini Calendar display month 
 function mini_calendar($month,$year,$eventarray){
-	setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	/* days and weeks vars now ... */
 	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
 	$running_day = date('w',mktime(0,0,0,$month,1,$year));
