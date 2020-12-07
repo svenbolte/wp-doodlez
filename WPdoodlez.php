@@ -2,15 +2,15 @@
 /**
 Plugin Name: WP Doodlez
 Plugin URI: https://github.com/svenbolte/WPdoodlez
-Description: Doodle like finding meeting date 
+Description: Doodle like finding meeting date, polls, quizzz with csv import
 Contributors: Robert Kolatzek, PBMod
 Author URI: https://github.com/svenbolte
 Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.0.10.36
-Stable tag: 9.1.0.10.36
+Version: 9.1.1.4
+Stable tag: 9.1.1.4
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -197,9 +197,9 @@ add_submenu_page(
 add_action('admin_menu', 'create_menupages_wpdoodle');
 
 function wpdoodle_doku() {
-	echo '<h1>WPDoodlez Doku</h1>';
+	echo '<h1>WPdoodlez Doku</h1>';
 	?>
-	* WPDoodlez can handle classic polls and doodle like appointment planning
+	* WPdoodlez can handle classic polls and doodle like appointment planning
 	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
 	if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
 	then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
@@ -325,6 +325,7 @@ function get_doodlez_content() {
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
 			echo '<br><table id="pollselect"><thead><th colspan=3>' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
+			$xperc = 0;
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
 				 if ($key != "post_views_count" && $key != "likes" ) {
@@ -512,4 +513,371 @@ function get_doodlez_content() {
 	}
 	/* END password protected? */
 }     // end of get doodlez content	
+
+// ------------------- quizzz code and shortcode ---------------------------------------------------------------
+
+
+function create_quiz_post() {
+
+	$labels = array(
+		'name'                => __( 'Questions', 'WPdoodlez' ),
+		'singular_name'       => __( 'Question', 'WPdoodlez' ),
+		'add_new'             => __( 'Add New Question', 'WPdoodlez' ),
+		'add_new_item'        => __( 'Add New Question', 'WPdoodlez' ),
+		'edit_item'           => __( 'Edit Question', 'WPdoodlez' ),
+		'new_item'            => __( 'New Question', 'WPdoodlez' ),
+		'view_item'           => __( 'View Question', 'WPdoodlez' ),
+		'search_items'        => __( 'Search Questions', 'WPdoodlez' ),
+		'not_found'           => __( 'No Questions found', 'WPdoodlez' ),
+		'not_found_in_trash'  => __( 'No Questions found in Trash', 'WPdoodlez' ),
+		'parent_item_colon'   => __( 'Parent Question:', 'WPdoodlez' ),
+		'menu_name'           => __( 'Questions', 'WPdoodlez' ),
+	);
+
+	$args = array(
+		'labels'              => $labels,
+		'hierarchical'        => false,
+		'description'         => 'description',
+		'taxonomies'          => array( 'category', 'post_tag' ),
+		'public'              => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => 5,
+		'menu_icon'           => 'dashicons-yes',
+		'show_in_nav_menus'   => true,
+		'publicly_queryable'  => true,
+		'exclude_from_search' => false,
+		'has_archive'         => true,
+		'query_var'           => true,
+		'can_export'          => true,
+		'rewrite'             => true,
+		'capability_type'     => 'post',
+		'supports'            => array(	'title', 'editor', 'thumbnail',	)
+	);
+	register_post_type( 'Question', $args );
+
+	// CSV Import starten, wenn Dateiname im upload dir public_histereignisse.csv ist	
+	if( isset($_REQUEST['quizzzcsv']) && ( $_REQUEST['quizzzcsv'] == true ) && isset( $_REQUEST['nonce'] ) ) {
+		$nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
+		if ( ! wp_verify_nonce( $nonce, 'dnonce' ) ) wp_die('Invalid nonce..!!');
+		importposts();
+		echo '<script>window.location.href="'.get_home_url().'/wp-admin/edit.php?post_type=question"</script>';
+	}
+}
+add_action( 'init', 'create_quiz_post' );
+
+// Shortcode Random Question
+
+function random_quote_func( $atts ){
+	$attrs = shortcode_atts( 
+		array(
+			'orderby'   => 'rand',
+			'order'   => 'rand',
+			'items'   => 1,
+		), 
+		$atts
+	); 
+    $args=array(
+      'orderby'=> $attrs['orderby'],
+      'order'=> $attrs['order'],
+      'post_type' => 'question',
+      'post_status' => 'publish',
+      'posts_per_page' => $attrs['items'],
+    );
+    $my_query = null;
+    $my_query = new WP_Query($args);
+    $message = '';
+    if( $my_query->have_posts() ) {
+      while ($my_query->have_posts()) : $my_query->the_post(); 
+        $message .= '<blockquote><a href="'.get_post_permalink().'">'.get_the_title().'</a> '.get_the_content().'</blockquote>';
+      endwhile;
+    }
+    wp_reset_query();  
+    return $message;
+ 
+}
+add_shortcode( 'random-question', 'random_quote_func' );
+
+
+function importposts() {
+	//Base upload path of uploads
+	$upload_dir = wp_upload_dir();
+	$upload_basedir = $upload_dir['basedir'] . '/public_histereignisse.csv';
+	$row = 1;
+	if (($handle = fopen($upload_basedir , "r")) !== FALSE) {
+		while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+			if ($row > 1) {
+				// id;	datum;	charakter;	land;	titel;	seitjahr;	bemerkungen
+				$num = count($data);
+				$edat = explode('.',$data[1]);
+				$mydatum = $edat[2].'-'.$edat[1].'-'.$edat[0];
+				$post_id = wp_insert_post(array (
+				   'post_type' => 'Question',
+				   'post_title' => $data[2].' '.$data[0],
+				   'post_content' => $data[4],
+				   'post_status' => 'publish',
+				   'comment_status' => 'closed',
+				   'ping_status' => 'closed', 
+				));
+				if ($post_id) {
+				   // insert post meta
+				  add_post_meta( $post_id, 'quizz_answer', esc_html($data[6]) );
+				  add_post_meta( $post_id, 'quizz_exact', NULL );
+				  add_post_meta( $post_id, 'quizz_last', NULL );
+				  add_post_meta( $post_id, 'quizz_lastpage', NULL );
+				}	
+			}	
+			$row++;
+		}
+    fclose($handle);
+	//	echo ($row-1) . ' Datensätze importiert';
+	}		
+}
+
+function quiz_show_form( $content ) {
+	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+	if (get_post_type()=='question'):
+		global $answer;
+		if (isset($_POST['answer'])) $answer = $_POST['answer'];	// user submitted answer
+
+		// get meta values for this question
+		$answers = get_post_custom_values('quizz_answer');
+		$nextlevel = get_post_custom_values('quizz_nextlevel');
+		$exact = get_post_custom_values('quizz_exact');
+		$last_bool = get_post_custom_values('quizz_last');
+		$lastpage = get_post_custom_values('quizz_lastpage');
+		$rightstat = get_post_custom_values('quizz_rightstat');
+		$wrongstat = get_post_custom_values('quizz_wrongstat');
+		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
+		$lsubmittedanswer = strtolower($answer);
+		$lactualanswer = strtolower($answers[0]);
+
+		if ($exact[0]=="exact") {
+			//exact, strict match
+			if ($answer == $answers[0]) {
+				$correct = "yes";
+			} else {
+				$correct = "no";
+			}
+		} else {
+			$needlehaystack = strrpos($lsubmittedanswer, $lactualanswer);
+			if ( $needlehaystack > -1 ) {
+				$correct = "yes";
+			} else {
+				$correct = "no";
+			}
+		}
+		if ( $correct == "yes" ) {
+			update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
+			if ($last_bool[0] != "last") {
+				if ( !empty($nextlevel[0]) ) {
+					// raise a hook for updating record
+					do_action( 'quizz_level_updated', $nextlevel[0] );
+					$goto = $nextlevel[0];
+					wp_safe_redirect( get_post_permalink($goto) );
+				} else { $error = "Richtige Antwort";$showqform = 'display:none'; }
+			} else {
+				// raise a hook for end of quiz
+				do_action( 'quizz_ended', $lastpage[0] );
+				$goto = $lastpage[0];
+				wp_safe_redirect( get_home_url().'/question?ende=1' );
+			}
+		} else {
+			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+				$error = str_replace("ERROR", __('wrong answer. correct answer is','WPdoodlez').'<div style="font-size:1.2em">'.esc_html($answers[0]).'</span>', $error);
+				$showqform = 'display:none';
+				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
+			} else { $error = "";$showqform = ''; }
+		}
+		$letztefrage='<br><div style="text-align:center"><ul style="list-style:none;display:inline;text-transform:uppercase;"><li style="margin-right:10px;display:inline"><a href="'.get_home_url().'/question?orderby=rand&order=rand">'. __('all questions overview','WPdoodlez').'</a></li><li style="padding:6px;display:inline">';
+		if (isset($nextlevel) || isset($last_bool[0]) ) if ($last_bool[0] == "last") { $letztefrage .= '(letzte Frage)'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'">(nächste Frage :'.$nextlevel[0].')</a>'; }
+		if (!empty($rightstat) || !empty($wrongstat)) $letztefrage .= '</li><li style="padding:6px;display:inline">R:'. @$rightstat[0].' / F:'. @$wrongstat[0];
+		$letztefrage .= '</li></ul></div>';
+
+		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
+		if (!$ende) {
+			$antwortmaske = '<div style="font-family:monospace">' . __('answer mask','WPdoodlez'). ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
+			if ($exact[0]!="exact") { $antwortmaske .= __('not case sensitive','WPdoodlez'); } else { $antwortmaske .= __('case sensitive','WPdoodlez'); }
+			$antwortmaske .='</div>';
+			$theForm = $content . '<blockquote>'.$error . '<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'"><p>'. $antwortmaske.'</p><input type="text" name="answer" id="answer" placeholder="Ihre Antwort" class="quiz_answer answers" /><input type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
+		} else {
+			$theForm = '<div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('all questions answered. test terminated. thanks.','WPdoodlez').'</div>'.$letztefrage;
+		}	
+		return $theForm;
+	else :
+		return $content;
+	endif;
+}
+
+add_filter( 'the_content', 'quiz_show_form' );
+
+
+function quizz_add_custom_box() {
+
+    $screens = array( 'question' );
+
+    foreach ( $screens as $screen ) {
+
+        add_meta_box(
+            'answers-more',
+            __( 'Answers &amp; more', 'WPdoodlez' ),
+            'quizz_inner_custom_box',
+            $screen, 'normal'
+        );
+    }
+}
+add_action( 'add_meta_boxes', 'quizz_add_custom_box' );
+
+
+function quizz_inner_custom_box( $post ) {
+
+  // Add an nonce field so we can check for it later.
+  wp_nonce_field( 'quizz_inner_custom_box', 'quizz_inner_custom_box_nonce' );
+
+  /*
+   * Use get_post_meta() to retrieve an existing value
+   * from the database and use the value for the form.
+   */
+  $value = get_post_meta( $post->ID, 'quizz_answer', true );
+
+  echo '<label for="quizz_answer">';
+       _e( "Answer", 'WPdoodlez' );
+  echo '</label> ';
+  echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75" />';
+
+  $value1 = get_post_meta( $post->ID, 'quizz_exact', true);
+  echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
+  echo '<br />';
+
+  global $wpdb;
+   $query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
+   $prev = $wpdb->get_var( $wpdb->prepare($query, $post->ID) );
+
+  echo '<p><label for="quizz_prevlevel">'. __( "previous question", 'WPdoodlez' ) . '</label> ';
+	  $args = array(
+	  		'post_type' => 'question',
+	  		'exclude' => $post->ID,
+	  		'post_status' => 'publish'
+	  	);
+	  $questions = get_posts( $args );
+
+  echo ' <select id="quizz_prevlevel" name="quizz_prevlevel"><option value="0">keine</option>';
+	  foreach ($questions as $question) {
+	  	echo "<option value='" . $question->ID . "'". (( $prev == $question->ID ) ? ' selected' : '') . ">" . $question->post_title . "-" . $question->post_content ."</option>";
+	  }
+  echo '</select></p>';
+
+  $last = get_post_meta( $post->ID, 'quizz_last', true);
+	echo '<input type="checkbox" name="quizz_last" id="quizz_last" value="last"' . (($last=="last") ? " checked" : "" ) . '>'. __('last question?','WPdoodlez');
+  $lastlevel = get_post_meta( $post->ID, 'quizz_lastpage', true);
+	$args = array(
+  		'post_type' => 'page',
+  		'post_status' => 'publish'
+  	);
+  	$lastpages = get_posts($args);
+
+  echo ' <select id="quizz_lastpage" name="quizz_lastpage">';
+  	echo '<option value="0">keine</option>';
+  	foreach ($lastpages as $lastpage) {
+	  	echo "<option value='" . $lastpage->ID . "'". (( $lastlevel == $lastpage->ID ) ? ' selected' : '') . ">" . $lastpage->post_title ."</option>";
+  	}
+  echo '</select>';
+  $rightstat = get_post_meta( $post->ID, 'quizz_rightstat', true);
+  $wrongstat = get_post_meta( $post->ID, 'quizz_wrongstat', true);
+  if (!empty($rightstat) || !empty($wrongstat)) echo '<p>'. __('stats right wrong answers','WPdoodlez').': '.@$rightstat[0].' / '.@$wrongstat[0].'</p>';
+}
+
+function quizz_save_postdata( $post_id ) {
+
+  /*
+   * We need to verify this came from the our screen and with proper authorization,
+   * because save_post can be triggered at other times.
+   */
+
+  // Check if our nonce is set.
+  if ( ! isset( $_POST['quizz_inner_custom_box_nonce'] ) )
+    return $post_id;
+
+  $nonce = $_POST['quizz_inner_custom_box_nonce'];
+
+  // Verify that the nonce is valid.
+  if ( ! wp_verify_nonce( $nonce, 'quizz_inner_custom_box' ) )
+      return $post_id;
+
+  // If this is an autosave, our form has not been submitted, so we don't want to do anything.
+  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+      return $post_id;
+
+  // Check the user's permissions.
+  if ( 'page' == $_POST['post_type'] ) {
+
+    if ( ! current_user_can( 'edit_page', $post_id ) )
+        return $post_id;
+  
+  } else {
+
+    if ( ! current_user_can( 'edit_post', $post_id ) )
+        return $post_id;
+  }
+
+  /* OK, its safe for us to save the data now. */
+  // Sanitize user input.
+  $myanswer = sanitize_text_field( $_POST['quizz_answer'] );
+  $fromlevel = $_POST['quizz_prevlevel'];
+  $exact = $_POST['quizz_exact'];
+  $lastlevel_bool = $_POST['quizz_last'];
+  $lastpage = $_POST['quizz_lastpage'];
+
+  // Update the meta field in the database.
+  update_post_meta( $post_id, 'quizz_answer', $myanswer );
+  update_post_meta( $fromlevel, 'quizz_nextlevel', $post_id );
+  update_post_meta( $post_id, 'quizz_exact', $exact );
+  update_post_meta( $post_id, 'quizz_last', $lastlevel_bool );
+  update_post_meta( $post_id, 'quizz_lastpage', $lastpage );
+}
+add_action( 'save_post', 'quizz_save_postdata' );
+
+add_action( 'manage_posts_extra_tablenav', 'admin_order_list_top_bar_button', 20, 1 );
+function admin_order_list_top_bar_button( $which ) {
+    global $current_screen;
+
+    if ('question' == $current_screen->post_type) {
+     $nonce = wp_create_nonce( 'dnonce' );
+     echo " <a href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button'>";
+        _e( 'Import from CSV', 'WPdoodlez' );
+        echo '</a> ';
+    }
+}
+
+// Add the custom columns to the book post type:
+add_filter( 'manage_question_posts_columns', 'set_custom_edit_question_columns' );
+function set_custom_edit_question_columns($columns) {
+
+    $new = array();
+	$columns['frageantwort'] = __( 'question/answer', 'WPdoodlez' );
+    $frageantwort = $columns['frageantwort'];  // save the tags column
+    unset($columns['frageantwort']);   // remove it from the columns list
+
+    foreach($columns as $key=>$value) {
+        if($key=='categories') {  // when we find the date column
+           $new['frageantwort'] = $frageantwort;  // put the tags column before it
+        }    
+        $new[$key]=$value;
+    }  
+	return $new;
+}
+
+// Add the data to the custom columns for the book post type:
+add_action( 'manage_question_posts_custom_column' , 'custom_question_column', 10, 2 );
+function custom_question_column( $column, $post_id ) {
+    switch ( $column ) {
+        case 'frageantwort' :
+            echo get_the_excerpt( $post_id ).'<br>';
+			echo '<b>'.get_post_meta( $post_id , 'quizz_answer' , true ).'</b>'; 
+            break;
+
+    }
+}
+//   ----------------------------- Quizzz module ended -------------------------------------
 ?>
