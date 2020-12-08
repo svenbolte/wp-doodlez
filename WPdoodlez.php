@@ -599,11 +599,11 @@ function random_quote_func( $atts ){
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
 			foreach ($ans as $choice) {
-				$antwortmaske .= '<li style="margin-right:10px;border:1px solid silver;padding:5px;display:inline">'.$choice.'</li>';
+				$antwortmaske .= '<li style="line-height:4rem;margin-right:10px;border:1px solid silver;padding:5px;display:inline">'.$choice.'</li>';
 			} unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= '<li style="border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li> ';
+			$antwortmaske .= '<li style="line-height:4rem;border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li> ';
 		}	
 		$antwortmaske .= '</ul>';
         $message .= '<blockquote><p><a href="'.get_post_permalink().'">'.get_the_title().'</a> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
