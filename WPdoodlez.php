@@ -537,7 +537,7 @@ function create_quiz_post() {
 	$args = array(
 		'labels'              => $labels,
 		'hierarchical'        => false,
-		'description'         => 'description',
+		'description'         => __( 'questions with one or four answers and help mask', 'WPdoodlez' ),
 		'taxonomies'          => array( 'category', 'post_tag' ),
 		'public'              => true,
 		'show_ui'             => true,
@@ -706,7 +706,7 @@ function quiz_show_form( $content ) {
 				// raise a hook for end of quiz
 				do_action( 'quizz_ended', $lastpage[0] );
 				$goto = $lastpage[0];
-				wp_safe_redirect( get_home_url().'/question?ende=1' );
+				wp_safe_redirect( add_query_arg( array('ende'=>1), home_url($wp->request) ) );
 			}
 		} else {
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {

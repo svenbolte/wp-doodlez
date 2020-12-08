@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Doodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-07 21:05+0000\n"
+"POT-Creation-Date: 2020-12-08 13:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.6; wp-5.5.3"
 
-#: WPdoodlez.php:719
+#: WPdoodlez.php:739
 msgid " characters long. "
 msgstr ""
 
@@ -27,11 +27,11 @@ msgstr ""
 msgid "Add WPdoodle "
 msgstr ""
 
-#: WPdoodlez.php:725
+#: WPdoodlez.php:745
 msgid "all questions answered. test terminated. thanks."
 msgstr ""
 
-#: WPdoodlez.php:702
+#: WPdoodlez.php:718
 msgid "all questions overview"
 msgstr ""
 
@@ -39,27 +39,31 @@ msgstr ""
 msgid "All WPdoodlez"
 msgstr ""
 
-#: WPdoodlez.php:767 WPdoodlez.php:773 WPdoodlez.php:775 WPdoodlez.php:777
+#: WPdoodlez.php:782 WPdoodlez.php:788 WPdoodlez.php:790 WPdoodlez.php:792
 msgid "Answer"
 msgstr ""
 
-#: WPdoodlez.php:719
+#: WPdoodlez.php:738
 msgid "answer mask"
 msgstr ""
 
-#: WPdoodlez.php:744
+#: WPdoodlez.php:760
 msgid "Answers &amp; more"
 msgstr ""
 
-#: WPdoodlez.php:720
+#: wpdoodlez_post_type.php:24
+msgid "appointment planner, polls, quizzes"
+msgstr ""
+
+#: WPdoodlez.php:740
 msgid "case sensitive"
 msgstr ""
 
-#: WPdoodlez.php:723
+#: WPdoodlez.php:743
 msgid "check answer"
 msgstr ""
 
-#: WPdoodlez.php:686
+#: WPdoodlez.php:702
 msgid "correct answer: "
 msgstr ""
 
@@ -87,7 +91,7 @@ msgstr ""
 msgid "Edit WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:770
+#: WPdoodlez.php:785
 msgid "exact match (also enforces case)"
 msgstr ""
 
@@ -99,11 +103,11 @@ msgstr ""
 msgid "https://github.com/svenbolte/WPdoodlez"
 msgstr ""
 
-#: WPdoodlez.php:882
+#: WPdoodlez.php:897
 msgid "Import from CSV"
 msgstr ""
 
-#: WPdoodlez.php:800
+#: WPdoodlez.php:815
 msgid "last question?"
 msgstr ""
 
@@ -127,7 +131,7 @@ msgstr ""
 msgid "No Questions found in Trash"
 msgstr ""
 
-#: WPdoodlez.php:720
+#: WPdoodlez.php:740
 msgid "not case sensitive"
 msgstr ""
 
@@ -155,7 +159,7 @@ msgstr ""
 msgid "poll results"
 msgstr ""
 
-#: WPdoodlez.php:785
+#: WPdoodlez.php:800
 msgid "previous question"
 msgstr ""
 
@@ -163,12 +167,16 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: WPdoodlez.php:892
+#: WPdoodlez.php:907
 msgid "question/answer"
 msgstr ""
 
 #: WPdoodlez.php:523 WPdoodlez.php:534
 msgid "Questions"
+msgstr ""
+
+#: WPdoodlez.php:540
+msgid "questions with one or four answers and help mask"
 msgstr ""
 
 #: WPdoodlez.php:530
@@ -183,7 +191,7 @@ msgstr ""
 msgid "Show WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:816
+#: WPdoodlez.php:831
 msgid "stats right wrong answers"
 msgstr ""
 
@@ -219,7 +227,7 @@ msgstr ""
 msgid "WP Doodlez"
 msgstr ""
 
-#: WPdoodlez.php:697
+#: WPdoodlez.php:713
 msgid "wrong answer. correct answer is"
 msgstr ""
 

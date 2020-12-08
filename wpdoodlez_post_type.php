@@ -21,6 +21,7 @@ $args = [
     'supports'            => [ 'title', 'editor', 'thumbnail', 'comments', 'custom-fields', 'post-formats' ],
 	// 'show_in_rest' => true,   // Gutenberg Anzeige des Editors, über ... / Ansicht dann Eigene Felder einschalten!
 	 "taxonomies"		  => array("post_tag", "category"),
+	'description'         => __( 'appointment planner, polls, quizzes', 'WPdoodlez' ),
     'hierarchical'        => false,
     'public'              => true,
     'show_ui'             => true,
