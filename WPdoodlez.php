@@ -9,8 +9,8 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.4
-Stable tag: 9.1.1.4
+Version: 9.1.1.5
+Stable tag: 9.1.1.5
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -590,7 +590,23 @@ function random_quote_func( $atts ){
     $message = '';
     if( $my_query->have_posts() ) {
       while ($my_query->have_posts()) : $my_query->the_post(); 
-        $message .= '<blockquote><a href="'.get_post_permalink().'">'.get_the_title().'</a> '.get_the_content().'</blockquote>';
+		$answers = get_post_custom_values('quizz_answer');
+		$answersb = get_post_custom_values('quizz_answerb');
+		$answersc = get_post_custom_values('quizz_answerc');
+		$answersd = get_post_custom_values('quizz_answerd');
+		$antwortmaske='<ul>';
+		if (!empty($answersb) && strlen($answersb[0])>1 ) {
+			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
+			shuffle($ans);
+			foreach ($ans as $choice) {
+				$antwortmaske .= '<li style="margin-right:10px;border:1px solid silver;padding:5px;display:inline">'.$choice.'</li>';
+			} unset($choice);
+		} else {	
+			// ansonsten freie Antwort anfordern von Antwort 1
+			$antwortmaske .= '<li style="border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li> ';
+		}	
+		$antwortmaske .= '</ul>';
+        $message .= '<blockquote><p><a href="'.get_post_permalink().'">'.get_the_title().'</a> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
     }
     wp_reset_query();  
@@ -608,7 +624,7 @@ function importposts() {
 	if (($handle = fopen($upload_basedir , "r")) !== FALSE) {
 		while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
 			if ($row > 1) {
-				// id;	datum;	charakter;	land;	titel;	seitjahr;	bemerkungen
+				// id;	datum;	charakter;	land;	titel;	seitjahr;	antwort; antwortb; antwortc; antwortd; 
 				$num = count($data);
 				$edat = explode('.',$data[1]);
 				$mydatum = $edat[2].'-'.$edat[1].'-'.$edat[0];
@@ -623,6 +639,9 @@ function importposts() {
 				if ($post_id) {
 				   // insert post meta
 				  add_post_meta( $post_id, 'quizz_answer', esc_html($data[6]) );
+				  add_post_meta( $post_id, 'quizz_answerb', esc_html($data[7]) );
+				  add_post_meta( $post_id, 'quizz_answerc', esc_html($data[8]) );
+				  add_post_meta( $post_id, 'quizz_answerd', esc_html($data[9]) );
 				  add_post_meta( $post_id, 'quizz_exact', NULL );
 				  add_post_meta( $post_id, 'quizz_last', NULL );
 				  add_post_meta( $post_id, 'quizz_lastpage', NULL );
@@ -640,9 +659,12 @@ function quiz_show_form( $content ) {
 	if (get_post_type()=='question'):
 		global $answer;
 		if (isset($_POST['answer'])) $answer = $_POST['answer'];	// user submitted answer
-
+		if (isset($_POST['ans'])) $answer = $_POST['ans'];   // Answer is radio button selection 1 of 4
 		// get meta values for this question
 		$answers = get_post_custom_values('quizz_answer');
+		$answersb = get_post_custom_values('quizz_answerb');
+		$answersc = get_post_custom_values('quizz_answerc');
+		$answersd = get_post_custom_values('quizz_answerd');
 		$nextlevel = get_post_custom_values('quizz_nextlevel');
 		$exact = get_post_custom_values('quizz_exact');
 		$last_bool = get_post_custom_values('quizz_last');
@@ -676,7 +698,10 @@ function quiz_show_form( $content ) {
 					do_action( 'quizz_level_updated', $nextlevel[0] );
 					$goto = $nextlevel[0];
 					wp_safe_redirect( get_post_permalink($goto) );
-				} else { $error = "Richtige Antwort";$showqform = 'display:none'; }
+				} else {
+					$error = '<span style="font-size:1.2em">' . __('correct answer: ','WPdoodlez') . $answers[0].'</span>';
+					$showqform = 'display:none';
+				}
 			} else {
 				// raise a hook for end of quiz
 				do_action( 'quizz_ended', $lastpage[0] );
@@ -690,17 +715,32 @@ function quiz_show_form( $content ) {
 				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
 			} else { $error = "";$showqform = ''; }
 		}
-		$letztefrage='<br><div style="text-align:center"><ul style="list-style:none;display:inline;text-transform:uppercase;"><li style="margin-right:10px;display:inline"><a href="'.get_home_url().'/question?orderby=rand&order=rand">'. __('all questions overview','WPdoodlez').'</a></li><li style="padding:6px;display:inline">';
+		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;"><li style="margin-right:10px;display:inline"><a href="'.get_home_url().'/question?orderby=rand&order=rand">'. __('all questions overview','WPdoodlez').'</a></li><li style="padding:6px;display:inline">';
 		if (isset($nextlevel) || isset($last_bool[0]) ) if ($last_bool[0] == "last") { $letztefrage .= '(letzte Frage)'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'">(nächste Frage :'.$nextlevel[0].')</a>'; }
-		if (!empty($rightstat) || !empty($wrongstat)) $letztefrage .= '</li><li style="padding:6px;display:inline">R:'. @$rightstat[0].' / F:'. @$wrongstat[0];
+		if (!empty($rightstat) || !empty($wrongstat)) {
+			if ( $wrongstat[0] > 0 || $rightstat[0] >0 ) { $perct = intval (@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 100; }
+			$letztefrage .= '</li><li style="padding:6px;display:inline"><progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
+		}	
 		$letztefrage .= '</li></ul></div>';
 
 		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
 		if (!$ende) {
-			$antwortmaske = '<div style="font-family:monospace">' . __('answer mask','WPdoodlez'). ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
-			if ($exact[0]!="exact") { $antwortmaske .= __('not case sensitive','WPdoodlez'); } else { $antwortmaske .= __('case sensitive','WPdoodlez'); }
-			$antwortmaske .='</div>';
-			$theForm = $content . '<blockquote>'.$error . '<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'"><p>'. $antwortmaske.'</p><input type="text" name="answer" id="answer" placeholder="Ihre Antwort" class="quiz_answer answers" /><input type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
+			$antwortmaske = $content . '<blockquote>'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
+			if (!empty($answersb) && strlen($answersb[0])>1 ) {
+				$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
+				shuffle($ans);
+				foreach ($ans as $choice) {
+					$antwortmaske .= '<p><input type="radio" name="ans" value="'.$choice.'"> '.$choice.'</input></p>';
+				} unset($choice);
+			} else {	
+				// ansonsten freie Antwort anfordern von Antwort 1
+				$antwortmaske .= '<p>' . __('answer mask','WPdoodlez');
+				$antwortmaske .= ' <span style="font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
+				if ($exact[0]!="exact") { $antwortmaske .= __('not case sensitive','WPdoodlez'); } else { $antwortmaske .= __('case sensitive','WPdoodlez'); }
+				$antwortmaske .='</p><input type="text" name="answer" id="answer" placeholder="Ihre Antwort" class="quiz_answer answers">';
+			}	
+			$theForm = $antwortmaske.'<input type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
 		} else {
 			$theForm = '<div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('all questions answered. test terminated. thanks.','WPdoodlez').'</div>'.$letztefrage;
 		}	
@@ -709,16 +749,12 @@ function quiz_show_form( $content ) {
 		return $content;
 	endif;
 }
-
 add_filter( 'the_content', 'quiz_show_form' );
 
 
 function quizz_add_custom_box() {
-
     $screens = array( 'question' );
-
     foreach ( $screens as $screen ) {
-
         add_meta_box(
             'answers-more',
             __( 'Answers &amp; more', 'WPdoodlez' ),
@@ -728,7 +764,6 @@ function quizz_add_custom_box() {
     }
 }
 add_action( 'add_meta_boxes', 'quizz_add_custom_box' );
-
 
 function quizz_inner_custom_box( $post ) {
 
@@ -740,15 +775,23 @@ function quizz_inner_custom_box( $post ) {
    * from the database and use the value for the form.
    */
   $value = get_post_meta( $post->ID, 'quizz_answer', true );
+  $valueb = get_post_meta( $post->ID, 'quizz_answerb', true );
+  $valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
+  $valued = get_post_meta( $post->ID, 'quizz_answerd', true );
 
-  echo '<label for="quizz_answer">';
-       _e( "Answer", 'WPdoodlez' );
-  echo '</label> ';
-  echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75" />';
-
+  echo '<label for="quizz_answer">' . _e( "Answer", 'WPdoodlez' ) . ' A</label> ';
+  echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
   $value1 = get_post_meta( $post->ID, 'quizz_exact', true);
   echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
   echo '<br />';
+  // Distraktoren, im Quiz werden die Antworten gemischt
+  echo '<label for="quizz_answerb">' . _e( "Answer", 'WPdoodlez' ) . ' B</label> ';
+  echo ' <input type="text" id="quizz_answerb" name="quizz_answerb" value="' . esc_attr( $valueb ) . '" size="75"> optional<br>';
+  echo '<label for="quizz_answerc">' . _e( "Answer", 'WPdoodlez' ) . ' C</label> ';
+  echo ' <input type="text" id="quizz_answerc" name="quizz_answerc" value="' . esc_attr( $valuec ) . '" size="75"> optional<br>';
+  echo '<label for="quizz_answerd">' . _e( "Answer", 'WPdoodlez' ) . ' D</label> ';
+  echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75"> optional<br>';
+
 
   global $wpdb;
    $query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
@@ -824,6 +867,9 @@ function quizz_save_postdata( $post_id ) {
   /* OK, its safe for us to save the data now. */
   // Sanitize user input.
   $myanswer = sanitize_text_field( $_POST['quizz_answer'] );
+  $myanswerb = sanitize_text_field( $_POST['quizz_answerb'] );
+  $myanswerc = sanitize_text_field( $_POST['quizz_answerc'] );
+  $myanswerd = sanitize_text_field( $_POST['quizz_answerd'] );
   $fromlevel = $_POST['quizz_prevlevel'];
   $exact = $_POST['quizz_exact'];
   $lastlevel_bool = $_POST['quizz_last'];
@@ -831,6 +877,9 @@ function quizz_save_postdata( $post_id ) {
 
   // Update the meta field in the database.
   update_post_meta( $post_id, 'quizz_answer', $myanswer );
+  update_post_meta( $post_id, 'quizz_answerb', $myanswerb );
+  update_post_meta( $post_id, 'quizz_answerc', $myanswerc );
+  update_post_meta( $post_id, 'quizz_answerd', $myanswerd );
   update_post_meta( $fromlevel, 'quizz_nextlevel', $post_id );
   update_post_meta( $post_id, 'quizz_exact', $exact );
   update_post_meta( $post_id, 'quizz_last', $lastlevel_bool );

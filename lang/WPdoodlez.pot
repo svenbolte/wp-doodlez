@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Doodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-07 14:56+0000\n"
+"POT-Creation-Date: 2020-12-07 21:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.6; wp-5.5.3"
 
-#: WPdoodlez.php:700
+#: WPdoodlez.php:719
 msgid " characters long. "
 msgstr ""
 
@@ -27,11 +27,11 @@ msgstr ""
 msgid "Add WPdoodle "
 msgstr ""
 
-#: WPdoodlez.php:705
+#: WPdoodlez.php:725
 msgid "all questions answered. test terminated. thanks."
 msgstr ""
 
-#: WPdoodlez.php:693
+#: WPdoodlez.php:702
 msgid "all questions overview"
 msgstr ""
 
@@ -39,24 +39,28 @@ msgstr ""
 msgid "All WPdoodlez"
 msgstr ""
 
-#: WPdoodlez.php:745
+#: WPdoodlez.php:767 WPdoodlez.php:773 WPdoodlez.php:775 WPdoodlez.php:777
 msgid "Answer"
 msgstr ""
 
-#: WPdoodlez.php:700
+#: WPdoodlez.php:719
 msgid "answer mask"
 msgstr ""
 
-#: WPdoodlez.php:724
+#: WPdoodlez.php:744
 msgid "Answers &amp; more"
 msgstr ""
 
-#: WPdoodlez.php:701
+#: WPdoodlez.php:720
 msgid "case sensitive"
 msgstr ""
 
-#: WPdoodlez.php:703
+#: WPdoodlez.php:723
 msgid "check answer"
+msgstr ""
+
+#: WPdoodlez.php:686
+msgid "correct answer: "
 msgstr ""
 
 #: WPdoodlez.php:463
@@ -83,7 +87,7 @@ msgstr ""
 msgid "Edit WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:750
+#: WPdoodlez.php:770
 msgid "exact match (also enforces case)"
 msgstr ""
 
@@ -95,11 +99,11 @@ msgstr ""
 msgid "https://github.com/svenbolte/WPdoodlez"
 msgstr ""
 
-#: WPdoodlez.php:848
+#: WPdoodlez.php:882
 msgid "Import from CSV"
 msgstr ""
 
-#: WPdoodlez.php:772
+#: WPdoodlez.php:800
 msgid "last question?"
 msgstr ""
 
@@ -123,7 +127,7 @@ msgstr ""
 msgid "No Questions found in Trash"
 msgstr ""
 
-#: WPdoodlez.php:701
+#: WPdoodlez.php:720
 msgid "not case sensitive"
 msgstr ""
 
@@ -151,7 +155,7 @@ msgstr ""
 msgid "poll results"
 msgstr ""
 
-#: WPdoodlez.php:757
+#: WPdoodlez.php:785
 msgid "previous question"
 msgstr ""
 
@@ -159,7 +163,7 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: WPdoodlez.php:858
+#: WPdoodlez.php:892
 msgid "question/answer"
 msgstr ""
 
@@ -179,7 +183,7 @@ msgstr ""
 msgid "Show WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:788
+#: WPdoodlez.php:816
 msgid "stats right wrong answers"
 msgstr ""
 
@@ -215,7 +219,7 @@ msgstr ""
 msgid "WP Doodlez"
 msgstr ""
 
-#: WPdoodlez.php:688
+#: WPdoodlez.php:697
 msgid "wrong answer. correct answer is"
 msgstr ""
 
