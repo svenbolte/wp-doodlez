@@ -9,8 +9,8 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.5
-Stable tag: 9.1.1.5
+Version: 9.1.1.6
+Stable tag: 9.1.1.6
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -519,6 +519,11 @@ function get_doodlez_content() {
 
 function create_quiz_post() {
 
+	// Init Session score
+	if (empty($_COOKIE['rightscore'])) setcookie('rightscore', 0, time()+60*60*24*30, '/');
+	if (empty($_COOKIE['wrongscore'])) setcookie('wrongscore', 0, time()+60*60*24*30, '/');
+
+
 	$labels = array(
 		'name'                => __( 'Questions', 'WPdoodlez' ),
 		'singular_name'       => __( 'Question', 'WPdoodlez' ),
@@ -568,7 +573,6 @@ function create_quiz_post() {
 add_action( 'init', 'create_quiz_post' );
 
 // Shortcode Random Question
-
 function random_quote_func( $atts ){
 	$attrs = shortcode_atts( 
 		array(
@@ -606,7 +610,7 @@ function random_quote_func( $atts ){
 			$antwortmaske .= '<li style="line-height:4rem;border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li> ';
 		}	
 		$antwortmaske .= '</ul>';
-        $message .= '<blockquote><p><a href="'.get_post_permalink().'">'.get_the_title().'</a> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
+        $message .= '<blockquote style="font-style:normal"><p><span class="headline"><a href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
     }
     wp_reset_query();  
@@ -691,6 +695,9 @@ function quiz_show_form( $content ) {
 			}
 		}
 		if ( $correct == "yes" ) {
+			ob_start();
+			setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
+			ob_flush();
 			update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
 			if ($last_bool[0] != "last") {
 				if ( !empty($nextlevel[0]) ) {
@@ -710,22 +717,29 @@ function quiz_show_form( $content ) {
 			}
 		} else {
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				$error = str_replace("ERROR", __('wrong answer. correct answer is','WPdoodlez').'<div style="font-size:1.2em">'.esc_html($answers[0]).'</span>', $error);
+				$error = str_replace("ERROR", __('wrong answer. correct answer is','WPdoodlez').'<div style="font-size:1.2em;color:tomato">'.esc_html($answers[0]).'</div>', $error);
 				$showqform = 'display:none';
+				ob_start();
+				setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+				ob_flush();
 				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
 			} else { $error = "";$showqform = ''; }
 		}
 		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;"><li style="margin-right:10px;display:inline"><a href="'.get_home_url().'/question?orderby=rand&order=rand">'. __('all questions overview','WPdoodlez').'</a></li><li style="padding:6px;display:inline">';
 		if (isset($nextlevel) || isset($last_bool[0]) ) if ($last_bool[0] == "last") { $letztefrage .= '(letzte Frage)'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'">(nächste Frage :'.$nextlevel[0].')</a>'; }
 		if (!empty($rightstat) || !empty($wrongstat)) {
-			if ( $wrongstat[0] > 0 || $rightstat[0] >0 ) { $perct = intval (@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 100; }
-			$letztefrage .= '</li><li style="padding:6px;display:inline"><progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
+			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 100; }
+			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 100; }
+			$letztefrage .= '</ul><br><ul></li><li style="padding:6px;display:inline">'. __('Total scores','WPdoodlez');
+			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
+			$letztefrage .= '</li><li style="padding:6px;display:inline">'. __('Your session','WPdoodlez');
+			$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
 		}	
 		$letztefrage .= '</li></ul></div>';
 
 		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
 		if (!$ende) {
-			$antwortmaske = $content . '<blockquote>'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+			$antwortmaske = $content . '<blockquote style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
 			if (!empty($answersb) && strlen($answersb[0])>1 ) {
 				$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
