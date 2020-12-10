@@ -725,14 +725,40 @@ function quiz_show_form( $content ) {
 				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
 			} else { $error = "";$showqform = ''; }
 		}
-		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;"><li style="margin-right:10px;display:inline"><a href="'.get_home_url().'/question?orderby=rand&order=rand">'. __('all questions overview','WPdoodlez').'</a></li><li style="padding:6px;display:inline">';
-		if (isset($nextlevel) || isset($last_bool[0]) ) if ($last_bool[0] == "last") { $letztefrage .= '(letzte Frage)'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'">(nächste Frage :'.$nextlevel[0].')</a>'; }
+
+		// Link für nächste Zufallsfrage
+    $args=array(
+      'orderby'=>'rand',
+      'post_type' => 'question',
+      'post_status' => 'publish',
+      'posts_per_page' => 1,
+	  'showposts' => 1,
+    );
+    $my_query = null;
+    $my_query = new WP_Query($args);
+    $message = '';
+    if( $my_query->have_posts() ) {
+      while ($my_query->have_posts()) : $my_query->the_post(); 
+		$random_post_url = get_the_permalink();
+      endwhile;
+    }
+    wp_reset_query();  
+		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
+		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
+		$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
+		if (isset($nextlevel) || isset($last_bool[0]) ) {
+			$letztefrage.='</li>'.$listyle;
+			if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
+			$letztefrage.='</li>';
+		} else {
+			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'"><i class="fa fa-random"></i> nächste Zufallsfrage</a></li>';
+		}
 		if (!empty($rightstat) || !empty($wrongstat)) {
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 100; }
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 100; }
-			$letztefrage .= '</ul><br><ul></li><li style="padding:6px;display:inline">'. __('Total scores','WPdoodlez');
+			$letztefrage .= '</ul><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
 			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
-			$letztefrage .= '</li><li style="padding:6px;display:inline">'. __('Your session','WPdoodlez');
+			$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
 			$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
 		}	
 		$letztefrage .= '</li></ul></div>';
