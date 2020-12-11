@@ -751,7 +751,7 @@ function quiz_show_form( $content ) {
 			if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
 			$letztefrage.='</li>';
 		} else {
-			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'"><i class="fa fa-random"></i> nächste Zufallsfrage</a></li>';
+			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
 		}
 		if (!empty($rightstat) || !empty($wrongstat)) {
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 100; }
@@ -778,7 +778,7 @@ function quiz_show_form( $content ) {
 				$antwortmaske .= '<p>' . __('answer mask','WPdoodlez');
 				$antwortmaske .= ' <span style="font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 				if ($exact[0]!="exact") { $antwortmaske .= __('not case sensitive','WPdoodlez'); } else { $antwortmaske .= __('case sensitive','WPdoodlez'); }
-				$antwortmaske .='</p><input type="text" name="answer" id="answer" placeholder="Ihre Antwort" class="quiz_answer answers">';
+				$antwortmaske .='</p><input type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
 			}	
 			$theForm = $antwortmaske.'<input type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
 		} else {
