@@ -588,6 +588,7 @@ function random_quote_func( $atts ){
       'post_type' => 'question',
       'post_status' => 'publish',
       'posts_per_page' => $attrs['items'],
+	  'showposts' => $attrs['items'],
     );
     $my_query = null;
     $my_query = new WP_Query($args);
@@ -598,19 +599,18 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
-		$antwortmaske='<ul>';
+		$antwortmaske='';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
 			foreach ($ans as $choice) {
-				$antwortmaske .= '<li style="line-height:4rem;margin-right:10px;border:1px solid silver;padding:5px;display:inline">'.$choice.'</li>';
+				$antwortmaske .= '<span style="list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:10px;border:1px solid silver;padding:5px;display:inline">'.$choice.'</span>';
 			} unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= '<li style="line-height:4rem;border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li> ';
+			$antwortmaske .= '<span style="line-height:4rem;border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
 		}	
-		$antwortmaske .= '</ul>';
-        $message .= '<blockquote style="font-style:normal"><p><span class="headline"><a href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
+        $message .= '<blockquote style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
     }
     wp_reset_query();  
@@ -727,22 +727,22 @@ function quiz_show_form( $content ) {
 		}
 
 		// Link für nächste Zufallsfrage
-    $args=array(
-      'orderby'=>'rand',
-      'post_type' => 'question',
-      'post_status' => 'publish',
-      'posts_per_page' => 1,
-	  'showposts' => 1,
-    );
-    $my_query = null;
-    $my_query = new WP_Query($args);
-    $message = '';
-    if( $my_query->have_posts() ) {
-      while ($my_query->have_posts()) : $my_query->the_post(); 
-		$random_post_url = get_the_permalink();
-      endwhile;
-    }
-    wp_reset_query();  
+		$args=array(
+		  'orderby'=>'rand',
+		  'post_type' => 'question',
+		  'post_status' => 'publish',
+		  'posts_per_page' => 1,
+		  'showposts' => 1,
+		);
+		$my_query = null;
+		$my_query = new WP_Query($args);
+		$random_post_url = '';
+		if( $my_query->have_posts() ) {
+		  while ($my_query->have_posts()) : $my_query->the_post(); 
+			$random_post_url = get_the_permalink();
+		  endwhile;
+		}
+		wp_reset_query();  
 		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
 		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
 		$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
