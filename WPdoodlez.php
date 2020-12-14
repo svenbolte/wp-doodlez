@@ -604,11 +604,11 @@ function random_quote_func( $atts ){
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
 			foreach ($ans as $choice) {
-				$antwortmaske .= '<span style="list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:10px;border:1px solid silver;padding:5px;display:inline">'.$choice.'</span>';
+				$antwortmaske .= '<span style="list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:10px;border:1px solid silver;border-radius:3px;padding:5px;display:inline">'.$choice.'</span>';
 			} unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= '<span style="line-height:4rem;border:1px solid silver;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
+			$antwortmaske .= '<span style="line-height:4rem;border:1px solid silver;border-radius:3px;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
 		}	
         $message .= '<blockquote style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
@@ -832,7 +832,6 @@ function quizz_inner_custom_box( $post ) {
   echo '<label for="quizz_answerd">' . _e( "Answer", 'WPdoodlez' ) . ' D</label> ';
   echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75"> optional<br>';
 
-
   global $wpdb;
    $query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
    $prev = $wpdb->get_var( $wpdb->prepare($query, $post->ID) );
@@ -942,7 +941,6 @@ function admin_order_list_top_bar_button( $which ) {
 // Add the custom columns to the book post type:
 add_filter( 'manage_question_posts_columns', 'set_custom_edit_question_columns' );
 function set_custom_edit_question_columns($columns) {
-
     $new = array();
 	$columns['frageantwort'] = __( 'question/answer', 'WPdoodlez' );
     $frageantwort = $columns['frageantwort'];  // save the tags column
