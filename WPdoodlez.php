@@ -599,7 +599,7 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
-		$antwortmaske='';
+		$antwortmaske='<a title="Frage aufrufen" href="'.get_post_permalink().'">';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
@@ -610,6 +610,7 @@ function random_quote_func( $atts ){
 			// ansonsten freie Antwort anfordern von Antwort 1
 			$antwortmaske .= '<span style="line-height:4rem;border:1px solid silver;border-radius:3px;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
 		}	
+		$antwortmaske .=' </a>';
         $message .= '<blockquote style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
     }
