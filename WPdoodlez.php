@@ -592,7 +592,7 @@ function random_quote_func( $atts ){
     );
     $my_query = null;
     $my_query = new WP_Query($args);
-    $message = '';
+    $message = '<style>.qiz { padding-left: 40px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb"; }</style>';
     if( $my_query->have_posts() ) {
       while ($my_query->have_posts()) : $my_query->the_post(); 
 		$answers = get_post_custom_values('quizz_answer');
@@ -611,7 +611,7 @@ function random_quote_func( $atts ){
 			$antwortmaske .= '<span style="line-height:4rem;border:1px solid silver;border-radius:3px;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
 		}	
 		$antwortmaske .=' </a>';
-        $message .= '<blockquote style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
+        $message .= '<blockquote class="qiz" style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
     }
     wp_reset_query();  
@@ -707,7 +707,7 @@ function quiz_show_form( $content ) {
 					$goto = $nextlevel[0];
 					wp_safe_redirect( get_post_permalink($goto) );
 				} else {
-					$error = '<span style="font-size:1.2em">' . __('correct answer: ','WPdoodlez') . $answers[0].'</span>';
+					$error = '<span style="font-size:1.2em;color:green">' . __('correct answer: ','WPdoodlez') . $answers[0].'</span>';
 					$showqform = 'display:none';
 				}
 			} else {
@@ -766,13 +766,17 @@ function quiz_show_form( $content ) {
 
 		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
 		if (!$ende) {
-			$antwortmaske = $content . '<blockquote style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+			$antwortmaske = '<style>.qiz { padding-left: 50px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb"; }</style>';
+			$antwortmaske .= $content . '<blockquote class="qiz" style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
 			if (!empty($answersb) && strlen($answersb[0])>1 ) {
 				$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 				shuffle($ans);
+				$xex = 0;
 				foreach ($ans as $choice) {
-					$antwortmaske .= '<p><input type="radio" name="ans" value="'.$choice.'"> '.$choice.'</input></p>';
+					$xex++;
+					$antwortmaske .= '<p style="display:block;border:1px solid #eee;padding:5px;border-radius:3px"><input type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
+					$antwortmaske .= ' &nbsp; <label class="headline btn" for="ans'.$xex.'"><a><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label></p>';
 				} unset($choice);
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
