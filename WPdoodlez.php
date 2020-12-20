@@ -775,8 +775,8 @@ function quiz_show_form( $content ) {
 				$xex = 0;
 				foreach ($ans as $choice) {
 					$xex++;
-					$antwortmaske .= '<p style="display:block;border:1px solid #eee;padding:5px;border-radius:3px"><input type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
-					$antwortmaske .= ' &nbsp; <label class="headline btn" for="ans'.$xex.'"><a><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label></p>';
+					$antwortmaske .= '<p style="display:block;border:1px solid #eee;padding:5px;border-radius:3px"><input class="radio-custom" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
+					$antwortmaske .= ' &nbsp; <label class="headline btn radio-custom-label" for="ans'.$xex.'"><a><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label></p>';
 				} unset($choice);
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
