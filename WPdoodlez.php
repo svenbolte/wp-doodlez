@@ -590,40 +590,6 @@ function random_quote_func( $atts ){
       'posts_per_page' => $attrs['items'],
 	  'showposts' => $attrs['items'],
     );
-
-
-	// wenn admin eingeloggt, Admin stats anzeigen
-	if(current_user_can('administrator')) {
-		global $wpdb;
-		$toprights = $wpdb->get_results(" SELECT posts.guid, posts.post_content, postmeta.meta_value
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC LIMIT 5 ");
-		$rct = 0;
-		foreach ($toprights as $topright) {
-			$rct += $topright->meta_value;
-			echo( 'R:('.$topright->meta_value.') <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>');
-		}	
-		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
-		$rct = 0;
-		foreach ($rightcounter as $top5right) {
-			$rct += $top5right->meta_value;
-		}	
-		$wrongcounter = $wpdb->get_results(" SELECT postmeta.meta_value 
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_wrongstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
-		$wct = 0;
-		foreach ($wrongcounter as $top5wrong) {
-			$wct += $top5wrong->meta_value;
-		}	
-		if ($rct >0 || $wct > 0) echo 'Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct. ' ('.intval($rct/($rct+$wct)*100).' %), falsch: '.$wct;
-	}
-	// Ende Admin Stats
-
     $my_query = null;
     $my_query = new WP_Query($args);
     $message = '<style>.qiz { padding-left: 40px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb"; }</style>';
@@ -649,6 +615,42 @@ function random_quote_func( $atts ){
       endwhile;
     }
     wp_reset_query();  
+
+
+	// wenn admin eingeloggt, Admin stats anzeigen
+	if(current_user_can('administrator')) {
+		global $wpdb;
+		$message .= '<h6>Admin-Statistik</h6>';
+		$toprights = $wpdb->get_results(" SELECT posts.guid, posts.post_content, postmeta.meta_value
+		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
+		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
+		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC LIMIT 5 ");
+		$rct = 0;
+		foreach ($toprights as $topright) {
+			$rct += $topright->meta_value;
+			$message .= 'R:('.$topright->meta_value.') <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>';
+		}	
+		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
+		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
+		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
+		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
+		$rct = 0;
+		foreach ($rightcounter as $top5right) {
+			$rct += $top5right->meta_value;
+		}	
+		$wrongcounter = $wpdb->get_results(" SELECT postmeta.meta_value 
+		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
+		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_wrongstat'
+		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
+		$wct = 0;
+		foreach ($wrongcounter as $top5wrong) {
+			$wct += $top5wrong->meta_value;
+		}	
+		if ($rct >0 || $wct > 0) $message .= 'Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct. ' ('.intval($rct/($rct+$wct)*100).' %), falsch: '.$wct;
+	}
+	// Ende Admin Stats
+
+
     return $message;
  
 }
