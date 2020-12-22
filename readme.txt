@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.6
-Stable tag: 9.1.1.6
+Version: 9.1.1.7
+Stable tag: 9.1.1.7
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -76,6 +76,10 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.7 ===
+quiz styling inline CSS beautified
+
 === 9.1.1.6 ===
 During a Wordpress session Quiz results will be counted. Nothing will be stored - it is a GDPR compliant counter.
 

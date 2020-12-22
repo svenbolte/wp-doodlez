@@ -9,8 +9,8 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.6
-Stable tag: 9.1.1.6
+Version: 9.1.1.7
+Stable tag: 9.1.1.7
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -780,6 +780,10 @@ function quiz_show_form( $content ) {
 		  endwhile;
 		}
 		wp_reset_query();  
+		$accentcolor = get_theme_mod( 'link-color', '#888' );
+		$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb";}';
+		$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
+		$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} .qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}</style>';
 		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
 		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
 		$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
@@ -802,8 +806,7 @@ function quiz_show_form( $content ) {
 
 		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
 		if (!$ende) {
-			$antwortmaske = '<style>.qiz { padding-left: 50px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb"; }</style>';
-			$antwortmaske .= $content . '<blockquote class="qiz" style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
 			if (!empty($answersb) && strlen($answersb[0])>1 ) {
 				$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
@@ -811,8 +814,8 @@ function quiz_show_form( $content ) {
 				$xex = 0;
 				foreach ($ans as $choice) {
 					$xex++;
-					$antwortmaske .= '<p style="display:block;border:1px solid #eee;padding:5px;border-radius:3px"><input class="radio-custom" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
-					$antwortmaske .= ' &nbsp; <label class="headline btn radio-custom-label" for="ans'.$xex.'"><a><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label></p>';
+					$antwortmaske .= '<input type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
+					$antwortmaske .= ' &nbsp; <label for="ans'.$xex.'"><a><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
 				} unset($choice);
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
@@ -821,7 +824,7 @@ function quiz_show_form( $content ) {
 				if ($exact[0]!="exact") { $antwortmaske .= __('not case sensitive','WPdoodlez'); } else { $antwortmaske .= __('case sensitive','WPdoodlez'); }
 				$antwortmaske .='</p><input type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
 			}	
-			$theForm = $antwortmaske.'<input type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
+			$theForm = $formstyle . $antwortmaske.'<input style="margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
 		} else {
 			$theForm = '<div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('all questions answered. test terminated. thanks.','WPdoodlez').'</div>'.$letztefrage;
 		}	
