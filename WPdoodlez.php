@@ -628,7 +628,7 @@ function random_quote_func( $atts ){
 		$rct = 0;
 		foreach ($toprights as $topright) {
 			$rct += $topright->meta_value;
-			$message .= 'R:('.$topright->meta_value.') <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>';
+			$message .= 'R:'.$topright->meta_value.' <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>';
 		}	
 		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
 		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
@@ -695,12 +695,34 @@ function importposts() {
 	}		
 }
 
+// Schulnote auflösen
+function get_schulnote( $prozent ) {
+	if ($prozent >=94 ) $snote = 'sehr gut (1.0)';
+	if ($prozent >=92 && $prozent <94 ) $snote = 'sehr gut - (1.3)';
+	if ($prozent >=89 && $prozent <92 ) $snote = 'gut plus (1.7)';
+	if ($prozent >=84 && $prozent <89 ) $snote = 'gut (2.0)';
+	if ($prozent >=81 && $prozent <84 ) $snote = 'gut minus (2.3)';
+	if ($prozent >=77 && $prozent <81 ) $snote = 'befriedigend plus (2.7)';
+	if ($prozent >=71 && $prozent <77 ) $snote = 'befriedigend (3.0)';
+	if ($prozent >=67 && $prozent <71 ) $snote = 'befriedigend minus (3.3)';
+	if ($prozent >=62 && $prozent <67 ) $snote = 'ausreichend plus (3.7)';
+	if ($prozent >=55 && $prozent <62 ) $snote = 'ausreichend (4.0)';
+	if ($prozent >=50 && $prozent <55 ) $snote = 'ausreichend minus (4.3)';
+	if ($prozent >=44 && $prozent <50 ) $snote = 'mangelhaft plus (4.7)';
+	if ($prozent >=37 && $prozent <44 ) $snote = 'mangelhaft (5.0)';
+	if ($prozent >=30 && $prozent <37 ) $snote = 'mangelhaft minus (5.3)';
+	if ($prozent <30 ) $snote = 'ungenügend (6.0)';
+	return $snote;
+}
+
 function quiz_show_form( $content ) {
+	global $wp;
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	if (get_post_type()=='question'):
 		global $answer;
 		if (isset($_POST['answer'])) $answer = $_POST['answer'];	// user submitted answer
 		if (isset($_POST['ans'])) $answer = $_POST['ans'];   // Answer is radio button selection 1 of 4
+		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
 		// get meta values for this question
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
@@ -785,7 +807,7 @@ function quiz_show_form( $content ) {
 		$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
 		$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} .qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}</style>';
 		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
-		$letztefrage='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
+		$letztefrage ='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
 		$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 		if (isset($nextlevel) || isset($last_bool[0]) ) {
 			$letztefrage.='</li>'.$listyle;
@@ -794,17 +816,15 @@ function quiz_show_form( $content ) {
 		} else {
 			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
 		}
-		if (!empty($rightstat) || !empty($wrongstat)) {
-			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 100; }
-			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 100; }
-			$letztefrage .= '</ul><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
-			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
-			$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
-			$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
-		}	
+		$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
+		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
+		if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
+		$letztefrage .= '</ul><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
+		$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
+		$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
+		$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
 		$letztefrage .= '</li></ul></div>';
 
-		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
 		if (!$ende) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
@@ -826,7 +846,15 @@ function quiz_show_form( $content ) {
 			}	
 			$theForm = $formstyle . $antwortmaske.'<input style="margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
 		} else {
-			$theForm = '<div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('all questions answered. test terminated. thanks.','WPdoodlez').'</div>'.$letztefrage;
+			$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
+			$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
+			$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. ' richtig und '.@$_COOKIE['wrongscore'].' falsch.<br>';
+			$theForm .= '<br>In Schulnoten ausgedrückt: '.get_schulnote( $sperct );
+			$theForm .= '<p style="font-size:0.7em;margin-top:2em">'. get_bloginfo('name') .'<br>'.get_bloginfo('description').'<br>'.get_bloginfo('url'). '</p></div>';
+			if( class_exists( 'PB_ChartsCodes' ) ) {
+				$piesum = intval(@$_COOKIE['rightscore']) . ',' . intval(@$_COOKIE['wrongscore']);
+				$theForm .= do_shortcode('[chartscodes accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
+			}	
 		}	
 		return $theForm;
 	else :
