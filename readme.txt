@@ -5,20 +5,19 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.7
-Stable tag: 9.1.1.7
+Version: 9.1.1.8
+Stable tag: 9.1.1.8
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
 
-## Description  - now with quiz module and csv import for questions ##
+## Description  plan appointments, query polls and place a quiz on your wordpress site ( with csv import for questions) ##
 
-quizzz: Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
+QUIZZZ: Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
 
-wpdoodlez: Everyone knows [doodle](https://doodle.com) It is a plattform to poll, to find the best meeting date or place, to make a decision with many people.
+WPDOODLEZ: Everyone knows [doodle](https://doodle.com) It is a plattform to poll, to find the best meeting date or place, to make a decision with many people.
 With this plugin you can create very simple doodles in your wordpress installation. If choosing custom fields names: vote0...votexxx a survey poll is done and the
-voters stored anonymized.
-WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
+voters stored anonymized. WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
 
 * can handle polls and doodlez, depending on what field names are set: vote1...x results in a poll, other field names like dates result in doodlez
 * link to WPdoodle is public, searchable and found in the archives
@@ -34,27 +33,13 @@ WPdoodlez are own post type and very similar to a post. A WPdoodle extends a pos
 
 == Installation ==
 
-For an automatic installation through WordPress:
-1. Go to the 'Add New' plugins screen in your WordPress admin area
-1. Search for 'Quizz'
-1. Click 'Install Now' and activate the plugin
-
-For a manual installation via FTP:
-1. Upload the addthis folder to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' screen in your WordPress admin area
-
 To upload the plugin through WordPress, instead of FTP:
 1. Upload the downloaded zip file on the 'Add New' plugins screen (see the 'Upload' tab) in your WordPress admin area and activate.
-
 After install this plugin you will see "WPDoodle" and "Questions" item in the menu on the left site. 
-
 
 ##  Quizzz Module and shortcode  ##
 
-== Description ==
-
 Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
-
 You can create rich questions, with rich text, images, videos, audio, as you would in any other WordPress post, and let the user answer in plain text, and move on to the next question if they've answered correctly.
 The answer conditions can be either 'exact match & case-sensitive', or can be phrase-matched (eg. the list of correct answers can be "xyz, abc, def", and if the user enters "abc", it's counted as the right answer.
 
@@ -76,6 +61,9 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.8 ===
+Quiz: Schulnotensystem erweitert, Prozentgrenzen werden nun mit ausgegeben, ab 97%: Eins Plus 0.7
 
 === 9.1.1.7 ===
 quiz styling inline CSS beautified
@@ -154,7 +142,13 @@ own styling in template and theme integration for penguin
 do not count custom data types set by various other plugins like twitter feed
 add integration of chartscodes plugin to show pie charts of voting
 
-= 1.0.1 =
+= 9.1.13 =
+Template updated to match current requirements
+changed Custom file type to add post pic, category, tags, editor for Post Content, Archive
+Adds Bar chart, when ChartsCodes Plugin is present
+Tested with WP 5.4.2
+
+= 1.0.1 = development before PBMod Fork
 Fix for plugin activation. Sorry for the mess!
 
 = 1.0.2 =
@@ -165,14 +159,11 @@ Translate word "Doodle" as "WPdoodle" because of trade mark collision
 
 = 1.0.4 =
 Bugfix: Load and execute javascript after loading jQuery -> external file
-
 New: Load css from a file 
-
 New: Overwrite plugins css with own css definistions in user.css (loading only if exists)
 
 = 1.0.5 =
 Bugfix: Loading js file
-
 New: highlight your vote by using css class "myvote"
 
 = 1.0.6 =
@@ -180,16 +171,9 @@ Error message by second voting try. (After deleting a vote cookies are still
 in the browser of the person, which vote was deleted. She/he can not vote any more
 and doesn't know why. The message in a javascrip alert fix this bad behaviour.)
 
-= 1.0.7 =
-= 1.0.8 =
+= 1.0.7 = 1.0.8 =
 Update latest installable version to 4.7 without changing anything but documentation
 
-= 1.0.9 =
-= 1.0.10 =
+= 1.0.9 = 1.0.10 =
 Update latest tag to 4.9.6
 
-= 9.1.13 =
-Template updated to match current requirements
-changed Custom file type to add post pic, category, tags, editor for Post Content, Archive
-Adds Bar chart, when ChartsCodes Plugin is present
-Tested with WP 5.4.2

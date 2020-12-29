@@ -9,8 +9,8 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.7
-Stable tag: 9.1.1.7
+Version: 9.1.1.8
+Stable tag: 9.1.1.8
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -697,21 +697,22 @@ function importposts() {
 
 // Schulnote auflösen
 function get_schulnote( $prozent ) {
-	if ($prozent >=94 ) $snote = 'sehr gut (1.0)';
-	if ($prozent >=92 && $prozent <94 ) $snote = 'sehr gut - (1.3)';
-	if ($prozent >=89 && $prozent <92 ) $snote = 'gut plus (1.7)';
-	if ($prozent >=84 && $prozent <89 ) $snote = 'gut (2.0)';
-	if ($prozent >=81 && $prozent <84 ) $snote = 'gut minus (2.3)';
-	if ($prozent >=77 && $prozent <81 ) $snote = 'befriedigend plus (2.7)';
-	if ($prozent >=71 && $prozent <77 ) $snote = 'befriedigend (3.0)';
-	if ($prozent >=67 && $prozent <71 ) $snote = 'befriedigend minus (3.3)';
-	if ($prozent >=62 && $prozent <67 ) $snote = 'ausreichend plus (3.7)';
-	if ($prozent >=55 && $prozent <62 ) $snote = 'ausreichend (4.0)';
-	if ($prozent >=50 && $prozent <55 ) $snote = 'ausreichend minus (4.3)';
-	if ($prozent >=44 && $prozent <50 ) $snote = 'mangelhaft plus (4.7)';
-	if ($prozent >=37 && $prozent <44 ) $snote = 'mangelhaft (5.0)';
-	if ($prozent >=30 && $prozent <37 ) $snote = 'mangelhaft minus (5.3)';
-	if ($prozent <30 ) $snote = 'ungenügend (6.0)';
+	if ($prozent >=97 ) $snote = 'sehr gut plus (0.7, 97-100%)';
+	if ($prozent >=94 && $prozent <97 ) $snote = 'sehr gut plus (1.0, 94-96%)';
+	if ($prozent >=92 && $prozent <94 ) $snote = 'sehr gut (1.3, 92-93%)';
+	if ($prozent >=89 && $prozent <92 ) $snote = 'gut plus (1.7, 89-91%)';
+	if ($prozent >=84 && $prozent <89 ) $snote = 'gut (2.0, 84-88%)';
+	if ($prozent >=81 && $prozent <84 ) $snote = 'gut minus (2.3, 81-83%)';
+	if ($prozent >=77 && $prozent <81 ) $snote = 'befriedigend plus (2.7, 77-80%)';
+	if ($prozent >=71 && $prozent <77 ) $snote = 'befriedigend (3.0, 71-76%)';
+	if ($prozent >=67 && $prozent <71 ) $snote = 'befriedigend minus (3.3, 67-70%)';
+	if ($prozent >=62 && $prozent <67 ) $snote = 'ausreichend plus (3.7, 62-66%)';
+	if ($prozent >=55 && $prozent <62 ) $snote = 'ausreichend (4.0, 55-61%)';
+	if ($prozent >=50 && $prozent <55 ) $snote = 'ausreichend minus (4.3, 50-54%)';
+	if ($prozent >=44 && $prozent <50 ) $snote = 'mangelhaft plus (4.7, 44-49%)';
+	if ($prozent >=37 && $prozent <44 ) $snote = 'mangelhaft (5.0, 37-43%)';
+	if ($prozent >=30 && $prozent <37 ) $snote = 'mangelhaft minus (5.3, 30-36%)';
+	if ($prozent <30 ) $snote = 'ungenügend (6.0, unter 30%)';
 	return $snote;
 }
 
@@ -848,7 +849,7 @@ function quiz_show_form( $content ) {
 		} else {
 			$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
 			$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
-			$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. ' richtig und '.@$_COOKIE['wrongscore'].' falsch.<br>';
+			$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. ' richtig und '.@$_COOKIE['wrongscore'].' falsch. Das sind: '.$sperct.' %.<br>';
 			$theForm .= '<br>In Schulnoten ausgedrückt: '.get_schulnote( $sperct );
 			$theForm .= '<p style="font-size:0.7em;margin-top:2em">'. get_bloginfo('name') .'<br>'.get_bloginfo('description').'<br>'.get_bloginfo('url'). '</p></div>';
 			if( class_exists( 'PB_ChartsCodes' ) ) {
