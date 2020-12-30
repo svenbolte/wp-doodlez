@@ -698,8 +698,8 @@ function importposts() {
 // Schulnote auflösen
 function get_schulnote( $prozent ) {
 	if ($prozent >=97 ) $snote = 'sehr gut plus (0.7, 97-100%)';
-	if ($prozent >=94 && $prozent <97 ) $snote = 'sehr gut plus (1.0, 94-96%)';
-	if ($prozent >=92 && $prozent <94 ) $snote = 'sehr gut (1.3, 92-93%)';
+	if ($prozent >=94 && $prozent <97 ) $snote = 'sehr gut (1.0, 94-96%)';
+	if ($prozent >=92 && $prozent <94 ) $snote = 'sehr gut minus (1.3, 92-93%)';
 	if ($prozent >=89 && $prozent <92 ) $snote = 'gut plus (1.7, 89-91%)';
 	if ($prozent >=84 && $prozent <89 ) $snote = 'gut (2.0, 84-88%)';
 	if ($prozent >=81 && $prozent <84 ) $snote = 'gut minus (2.3, 81-83%)';
@@ -849,12 +849,16 @@ function quiz_show_form( $content ) {
 		} else {
 			$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
 			$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
-			$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. ' richtig und '.@$_COOKIE['wrongscore'].' falsch. Das sind: '.$sperct.' %.<br>';
-			$theForm .= '<br>In Schulnoten ausgedrückt: '.get_schulnote( $sperct );
-			$theForm .= '<p style="font-size:0.7em;margin-top:2em">'. get_bloginfo('name') .'<br>'.get_bloginfo('description').'<br>'.get_bloginfo('url'). '</p></div>';
+			$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
+			$theForm .= '<br><br><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress>';
+			if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
+			$theForm .= '<br><br>In Schulnoten ausgedrückt: '.get_schulnote( $sperct ).',<br>somit <strong>'.$fail.' bestanden</strong>.';
+			$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+			$theForm .= '<span style="font-family:Brush Script MT;font-size:2em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
+			$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 			if( class_exists( 'PB_ChartsCodes' ) ) {
-				$piesum = intval(@$_COOKIE['rightscore']) . ',' . intval(@$_COOKIE['wrongscore']);
-				$theForm .= do_shortcode('[chartscodes accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
+				$piesum = $sperct . ',' . (100 - $sperct);
+				$theForm .= do_shortcode('[chartscodes accentcolor="1" title="" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
 			}	
 		}	
 		return $theForm;
