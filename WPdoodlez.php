@@ -354,7 +354,7 @@ function get_doodlez_content() {
 		} else {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
 			?>
-			<h4><?php echo __( 'Voting', 'WPdoodlez' ); ?></h4>
+			<h6><?php echo __( 'Voting', 'WPdoodlez' ); ?></h6>
 			<?php
 			if ( !$polli && function_exists('mini_calendar')) {
 				$outputed_values = array();
@@ -615,44 +615,7 @@ function random_quote_func( $atts ){
       endwhile;
     }
     wp_reset_query();  
-
-
-	// wenn admin eingeloggt, Admin stats anzeigen
-	if(current_user_can('administrator')) {
-		global $wpdb;
-		$message .= '<h6>Admin-Statistik</h6>';
-		$toprights = $wpdb->get_results(" SELECT posts.guid, posts.post_content, postmeta.meta_value
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC LIMIT 5 ");
-		$rct = 0;
-		foreach ($toprights as $topright) {
-			$rct += $topright->meta_value;
-			$message .= 'R:'.$topright->meta_value.' <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>';
-		}	
-		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
-		$rct = 0;
-		foreach ($rightcounter as $top5right) {
-			$rct += $top5right->meta_value;
-		}	
-		$wrongcounter = $wpdb->get_results(" SELECT postmeta.meta_value 
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_wrongstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
-		$wct = 0;
-		foreach ($wrongcounter as $top5wrong) {
-			$wct += $top5wrong->meta_value;
-		}	
-		if ($rct >0 || $wct > 0) $message .= 'Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct. ' ('.intval($rct/($rct+$wct)*100).' %), falsch: '.$wct;
-	}
-	// Ende Admin Stats
-
-
     return $message;
- 
 }
 add_shortcode( 'random-question', 'random_quote_func' );
 
@@ -695,7 +658,46 @@ function importposts() {
 	}		
 }
 
-// Schulnote auflösen
+function quiz_adminstats() {
+	// wenn admin eingeloggt, Admin stats anzeigen
+	if( current_user_can('administrator') &&  ( is_singular() ) ) {
+		global $wpdb;
+		$message = '<h6>Admin-Statistik</h6>';
+		$toprights = $wpdb->get_results(" SELECT posts.guid, posts.post_content, postmeta.meta_value
+		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
+		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
+		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC LIMIT 5 ");
+		$rct = 0;
+		foreach ($toprights as $topright) {
+			$rct += $topright->meta_value;
+			$message .= 'R:'.$topright->meta_value.' <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>';
+		}	
+		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
+		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
+		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
+		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
+		$rct = 0;
+		foreach ($rightcounter as $top5right) {
+			$rct += $top5right->meta_value;
+		}	
+		$wrongcounter = $wpdb->get_results(" SELECT postmeta.meta_value 
+		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
+		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_wrongstat'
+		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
+		$wct = 0;
+		foreach ($wrongcounter as $top5wrong) {
+			$wct += $top5wrong->meta_value;
+		}	
+		if ($rct >0 || $wct > 0) {
+			$message .= '<p>Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct. ' ('.intval($rct/($rct+$wct)*100).' %), falsch: '.$wct.' ('.(100 - intval($rct/($rct+$wct)*100)).'%) ';
+			$message .= ' &nbsp; <progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress> </p>';
+		}	
+	}
+	// Ende Admin Stats
+	return $message;
+}
+
+// // Schulnote auflösen
 function get_schulnote( $prozent ) {
 	if ($prozent >=97 ) $snote = 'sehr gut plus (0.7, 97-100%)';
 	if ($prozent >=94 && $prozent <97 ) $snote = 'sehr gut (1.0, 94-96%)';
@@ -825,6 +827,7 @@ function quiz_show_form( $content ) {
 		$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
 		$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
 		$letztefrage .= '</li></ul></div>';
+		$letztefrage .= quiz_adminstats();
 
 		if (!$ende) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
