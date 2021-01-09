@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.8
-Stable tag: 9.1.1.8
+Version: 9.1.1.9
+Stable tag: 9.1.1.9
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -61,6 +61,9 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.9 ===
+Quiz output boxed and colored tomato or green, added thumbsup/down, translations
 
 === 9.1.1.8 ===
 Quiz: Schulnotensystem erweitert, Prozentgrenzen werden nun mit ausgegeben, ab 97%: Eins Plus 0.7
