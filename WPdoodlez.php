@@ -592,7 +592,8 @@ function random_quote_func( $atts ){
     );
     $my_query = null;
     $my_query = new WP_Query($args);
-    $message = '<style>.qiz { padding-left: 40px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb"; }</style>';
+	$accentcolor = get_theme_mod( 'link-color', '#888' );
+    $message = '<style>.qiz { padding-left: 40px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:2.6em;top:0;left:5px;content: "\f0eb"; }</style>';
     if( $my_query->have_posts() ) {
       while ($my_query->have_posts()) : $my_query->the_post(); 
 		$answers = get_post_custom_values('quizz_answer');
@@ -719,6 +720,7 @@ function get_schulnote( $prozent ) {
 	return $snote;
 }
 
+// Einzelanzeige
 function quiz_show_form( $content ) {
 	global $wp;
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
@@ -742,6 +744,18 @@ function quiz_show_form( $content ) {
 		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
 		$lsubmittedanswer = strtolower($answer);
 		$lactualanswer = strtolower($answers[0]);
+		// Antworten anzeigen
+		$ansmixed = '';
+		if (!empty($answersb) && strlen($answersb[0])>1 ) {
+			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
+			shuffle($ans);
+			foreach ($ans as $choice) {
+				$ansmixed .= '<span style="list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:10px;border:1px solid silver;border-radius:3px;padding:5px;display:inline">'.$choice.'</span>';
+			} unset($choice);
+		} else {	
+			// ansonsten freie Antwort anfordern von Antwort 1
+			$ansmixed .= '<span style="line-height:4rem;border:1px solid silver;border-radius:3px;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
+		}	
 
 		if ($exact[0]=="exact") {
 			//exact, strict match
@@ -770,7 +784,7 @@ function quiz_show_form( $content ) {
 					$goto = $nextlevel[0];
 					wp_safe_redirect( get_post_permalink($goto) );
 				} else {
-					$error = '<div style="font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . '"'. $answers[0].'"<br><br>'.$zusatzinfo[0].'</div>';
+					$error = $ansmixed.'<div style="font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . '"'. $answers[0].'"<br><br>'.$zusatzinfo[0].'</div>';
 					$showqform = 'display:none';
 				}
 			} else {
@@ -781,7 +795,7 @@ function quiz_show_form( $content ) {
 			}
 		} else {
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				$error = str_replace("ERROR", '<div style="font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg  fa-thumbs-o-down"></i> &nbsp;  "'. $answer . '"<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br>"'.esc_html($answers[0]).'"<br><br>'.$zusatzinfo[0].'</div>', $error);
+				$error = str_replace("ERROR", $ansmixed.'<div style="font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg  fa-thumbs-o-down"></i> &nbsp;  "'. $answer . '"<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br>"'.esc_html($answers[0]).'"<br><br>'.$zusatzinfo[0].'</div>', $error);
 				$showqform = 'display:none';
 				ob_start();
 				setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
@@ -808,7 +822,7 @@ function quiz_show_form( $content ) {
 		}
 		wp_reset_query();  
 		$accentcolor = get_theme_mod( 'link-color', '#888' );
-		$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:#aaa;position:absolute;font-family:FontAwesome;font-size:2.4em;top:0;left:5px;content: "\f0eb";}';
+		$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:3em;top:0;left:5px;content: "\f0eb";}';
 		$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
 		$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} .qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}</style>';
 		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
