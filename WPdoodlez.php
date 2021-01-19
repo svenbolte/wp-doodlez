@@ -848,7 +848,7 @@ function quiz_show_form( $content ) {
 		if (!$ende) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
 			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
-			$antwortmaske .= '<style>progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" value="" max="30"></progress>';
+			$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" class="progress" value="" max="30"></progress>';
 			$antwortmaske .= "<!-- noformat on --><script>function Timer(s) { ";
 			$antwortmaske .= " document.getElementById('sec').value=s; ";
 			$antwortmaske .= " s--; if (s > -1) { window.setTimeout('Timer(' + s + ')', 999); } else { document.getElementById('quizform').submit(); } } ";
