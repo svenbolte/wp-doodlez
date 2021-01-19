@@ -9,8 +9,8 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.9
-Stable tag: 9.1.1.9
+Version: 9.1.1.10
+Stable tag: 9.1.1.10
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -846,7 +846,13 @@ function quiz_show_form( $content ) {
 		$letztefrage .= quiz_adminstats();
 
 		if (!$ende) {
-			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">'.$error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
+			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+			$antwortmaske .= '<style>progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" value="" max="30"></progress>';
+			$antwortmaske .= "<!-- noformat on --><script>function Timer(s) { ";
+			$antwortmaske .= " document.getElementById('sec').value=s; ";
+			$antwortmaske .= " s--; if (s > -1) { window.setTimeout('Timer(' + s + ')', 999); } else { document.getElementById('quizform').submit(); } } ";
+			$antwortmaske .= "Timer(30);</script><!-- noformat off -->";
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
 			if (!empty($answersb) && strlen($answersb[0])>1 ) {
 				$showsubmit ='none';

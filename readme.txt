@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.9
-Stable tag: 9.1.1.9
+Version: 9.1.1.10
+Stable tag: 9.1.1.10
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -61,6 +61,9 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.9 ===
+Quiz 40 new questions added and timer for answers set to 30 seconds. when timer expired question is scored as wrong
 
 === 9.1.1.9 ===
 Quiz output boxed and colored tomato or green, added thumbsup/down, translations
