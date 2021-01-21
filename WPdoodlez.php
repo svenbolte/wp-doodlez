@@ -691,8 +691,10 @@ function quiz_adminstats() {
 			$wct += $top5wrong->meta_value;
 		}	
 		if ($rct >0 || $wct > 0) {
-			$message .= '<p>Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct. ' ('.intval($rct/($rct+$wct)*100).' %), falsch: '.$wct.' ('.(100 - intval($rct/($rct+$wct)*100)).'%) ';
-			$message .= ' &nbsp; <progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress> </p>';
+			$message .= '<p>Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct;
+			$message .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
+			$message .= ' &nbsp; falsch: '.$wct;
+			$message .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
 		}	
 		return $message;
 	}
@@ -849,10 +851,12 @@ function quiz_show_form( $content ) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
 			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 			$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" class="progress" value="" max="30"></progress>';
-			$antwortmaske .= "<!-- noformat on --><script>function Timer(s) { ";
-			$antwortmaske .= " document.getElementById('sec').value=s; ";
-			$antwortmaske .= " s--; if (s > -1) { window.setTimeout('Timer(' + s + ')', 999); } else { document.getElementById('quizform').submit(); } } ";
-			$antwortmaske .= "Timer(30);</script><!-- noformat off -->";
+			if ( empty($_POST) ) {
+				$antwortmaske .= "<!-- noformat on --><script>function Timer(s) { ";
+				$antwortmaske .= " document.getElementById('sec').value=s; ";
+				$antwortmaske .= " s--; if (s > -1) { window.setTimeout('Timer(' + s + ')', 999); } else { document.getElementById('quizform').submit(); } } ";
+				$antwortmaske .= "Timer(30);</script><!-- noformat off -->";
+			}	
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
 			if (!empty($answersb) && strlen($answersb[0])>1 ) {
 				$showsubmit ='none';
