@@ -746,17 +746,34 @@ function quiz_show_form( $content ) {
 		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
 		$lsubmittedanswer = strtolower($answer);
 		$lactualanswer = strtolower($answers[0]);
-		// Antworten anzeigen
-		$ansmixed = '';
+
+		// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
+		$ansmixed='';
+		if (!empty($_POST) ) { $hideplay = ""; } else { $hideplay="document.getElementById('quizform').submit();"; }
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
+			$showsubmit ='none';
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
+			$xex = 0;
 			foreach ($ans as $choice) {
-				$ansmixed .= '<span style="list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:10px;border:1px solid silver;border-radius:3px;padding:5px;display:inline">'.$choice.'</span>';
+				$xex++;
+				$labstyle = ''; $astyle='';
+				if (!empty($_POST) ) {
+					if ( $choice == $answer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
+					if ( $choice == $answers[0] ) { $labstyle = 'background:green'; $astyle='color:#fff'; } 
+				}	
+				$ansmixed .= '<input onclick="'.$hideplay.'" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
+				$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
 			} unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$ansmixed .= '<span style="line-height:4rem;border:1px solid silver;border-radius:3px;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
+			if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
+			$ansmixed .= '<p>' . __('answer mask','WPdoodlez');
+			$ansmixed .= ' <span style="font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
+			if ( empty($_POST) ) {
+				if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
+				$ansmixed .='</p><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
+			}
 		}	
 
 		if ($exact[0]=="exact") {
@@ -786,7 +803,7 @@ function quiz_show_form( $content ) {
 					$goto = $nextlevel[0];
 					wp_safe_redirect( get_post_permalink($goto) );
 				} else {
-					$error = $ansmixed.'<div style="font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . '"'. $answers[0].'"<br><br>'.$zusatzinfo[0].'</div>';
+					$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0].'<br><br>'.$zusatzinfo[0].'</div>';
 					$showqform = 'display:none';
 				}
 			} else {
@@ -797,7 +814,7 @@ function quiz_show_form( $content ) {
 			}
 		} else {
 			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				$error = str_replace("ERROR", $ansmixed.'<div style="font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg  fa-thumbs-o-down"></i> &nbsp;  "'. $answer . '"<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br>"'.esc_html($answers[0]).'"<br><br>'.$zusatzinfo[0].'</div>', $error);
+				$error = str_replace("ERROR", $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg  fa-thumbs-o-down"></i> &nbsp;  '. $answer . '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br> '.esc_html($answers[0]).'<br><br>'.$zusatzinfo[0].'</div>', $error);
 				$showqform = 'display:none';
 				ob_start();
 				setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
@@ -826,7 +843,14 @@ function quiz_show_form( $content ) {
 		$accentcolor = get_theme_mod( 'link-color', '#888' );
 		$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:3em;top:0;left:5px;content: "\f0eb";}';
 		$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
-		$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} .qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}</style>';
+		$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} ';
+		if ( empty($_POST) ) {
+			$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
+		} else {
+			$formstyle .= '.qiz input[type=radio] + label {cursor:not-allowed} ';
+		}
+		
+		$formstyle .='</style>';
 		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
 		$letztefrage ='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
 		$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
@@ -850,32 +874,14 @@ function quiz_show_form( $content ) {
 		if (!$ende) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
 			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
-			$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" class="progress" value="" max="30"></progress>';
-			if ( empty($_POST) ) {
+			if ( empty($_POST) ) {     // Timer 30 Sekunden
+				$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" class="progress" value="" max="30"></progress>';
 				$antwortmaske .= "<!-- noformat on --><script>function Timer(s) { ";
 				$antwortmaske .= " document.getElementById('sec').value=s; ";
 				$antwortmaske .= " s--; if (s > -1) { window.setTimeout('Timer(' + s + ')', 999); } else { document.getElementById('quizform').submit(); } } ";
 				$antwortmaske .= "Timer(30);</script><!-- noformat off -->";
 			}	
-			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
-			if (!empty($answersb) && strlen($answersb[0])>1 ) {
-				$showsubmit ='none';
-				$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
-				shuffle($ans);
-				$xex = 0;
-				foreach ($ans as $choice) {
-					$xex++;
-					$antwortmaske .= '<input onclick="document.getElementById(\'quizform\').submit();" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
-					$antwortmaske .= ' &nbsp; <label for="ans'.$xex.'"><a><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
-				} unset($choice);
-			} else {	
-				// ansonsten freie Antwort anfordern von Antwort 1
-				$showsubmit='inline-block';
-				$antwortmaske .= '<p>' . __('answer mask','WPdoodlez');
-				$antwortmaske .= ' <span style="font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
-				if ($exact[0]!="exact") { $antwortmaske .= __('not case sensitive','WPdoodlez'); } else { $antwortmaske .= __('case sensitive','WPdoodlez'); }
-				$antwortmaske .='</p><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
-			}	
+			$antwortmaske .= $ansmixed;
 			$theForm = $formstyle . $antwortmaske.'<input style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
 		} else {    // Zertifikat ausgeben
 			$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
