@@ -768,12 +768,12 @@ function quiz_show_form( $content ) {
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
 			if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
-			$ansmixed .= '<p>' . __('answer mask','WPdoodlez');
-			$ansmixed .= ' <span style="font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
+			$ansmixed .= '<div style="width:100%;display:block;border:1px solid silver;border-radius:3px;padding:8px;font-family:monospace">' . __('answer mask','WPdoodlez');
+			$ansmixed .= ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ] ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 			if ( empty($_POST) ) {
 				if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
-				$ansmixed .='</p><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
-			}
+				$ansmixed .='</div><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
+			} else $ansmixed .='</div>';
 		}	
 
 		if ($exact[0]=="exact") {
@@ -825,11 +825,7 @@ function quiz_show_form( $content ) {
 
 		// Link für nächste Zufallsfrage
 		$args=array(
-		  'orderby'=>'rand',
-		  'post_type' => 'question',
-		  'post_status' => 'publish',
-		  'posts_per_page' => 1,
-		  'showposts' => 1,
+		  'orderby'=>'rand', 'post_type' => 'question', 'post_status' => 'publish', 'posts_per_page' => 1, 'showposts' => 1,
 		);
 		$my_query = null;
 		$my_query = new WP_Query($args);
@@ -849,7 +845,6 @@ function quiz_show_form( $content ) {
 		} else {
 			$formstyle .= '.qiz input[type=radio] + label {cursor:not-allowed} ';
 		}
-		
 		$formstyle .='</style>';
 		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
 		$letztefrage ='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
@@ -875,11 +870,12 @@ function quiz_show_form( $content ) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
 			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 			if ( empty($_POST) ) {     // Timer 30 Sekunden
-				$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress id="sec" class="progress" value="" max="30"></progress>';
-				$antwortmaske .= "<!-- noformat on --><script>function Timer(s) { ";
-				$antwortmaske .= " document.getElementById('sec').value=s; ";
-				$antwortmaske .= " s--; if (s > -1) { window.setTimeout('Timer(' + s + ')', 999); } else { document.getElementById('quizform').submit(); } } ";
-				$antwortmaske .= "Timer(30);</script><!-- noformat off -->";
+				if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
+				$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress onclick="'.$admincanstop.'" id="sec" class="progress" value="" max="30"></progress>';
+				$antwortmaske .= "<!-- noformat on --><script>var myTimer; function clock(c) { myTimer = setInterval(myClock, 1000); ";
+				$antwortmaske .= "     function myClock() { document.getElementById('sec').value = --c; ";
+				$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('quizform').submit(); }  }  } ";
+				$antwortmaske .= "clock(30);</script><!-- noformat off -->";
 			}	
 			$antwortmaske .= $ansmixed;
 			$theForm = $formstyle . $antwortmaske.'<input style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
