@@ -600,7 +600,8 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
-		$antwortmaske='<a title="Frage aufrufen" href="'.get_post_permalink().'">';
+		if (isset($_GET['timer'])) { $timerurl='1'; } else { $timerurl = '0'; }
+		$antwortmaske='<a title="Frage aufrufen" href="'.get_post_permalink().'?timer='.$timerurl.'">';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
@@ -854,7 +855,8 @@ function quiz_show_form( $content ) {
 			if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
 			$letztefrage.='</li>';
 		} else {
-			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
+			if (isset($_GET['timer'])) { $timerurl = '1'; } else { $timerurl = '0'; }
+			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'?timer='.$timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
 		}
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
@@ -869,12 +871,14 @@ function quiz_show_form( $content ) {
 		if (!$ende) {
 			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
 			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
-			if ( empty($_POST) ) {     // Timer 30 Sekunden
-				if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
+			if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
+			if ( empty($_POST) && $timeranaus == '0' ) {     // Timer 30 Sekunden
+				$admincanstop = 'clearInterval(myTimer)';
+				// if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
 				$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress onclick="'.$admincanstop.'" id="sec" class="progress" value="" max="30"></progress>';
 				$antwortmaske .= "<!-- noformat on --><script>var myTimer; function clock(c) { myTimer = setInterval(myClock, 1000); ";
 				$antwortmaske .= "     function myClock() { document.getElementById('sec').value = --c; ";
-				$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('quizform').submit(); }  }  } ";
+				$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('ans2').checked=true;document.getElementById('ans2').value='-Zeit abgelaufen-'; document.getElementById('quizform').submit(); }  }  } ";
 				$antwortmaske .= "clock(30);</script><!-- noformat off -->";
 			}	
 			$antwortmaske .= $ansmixed;
