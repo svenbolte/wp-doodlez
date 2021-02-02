@@ -49,6 +49,7 @@ The plugin also raises the following hooks:
 quizz_level_updated: raised when the user's answer is considered correct and they're pushed to the next question
 quizz_ended: raised when the list of questions comes to an end, and the user is sent to a designated page (eg. a congratulations page)
 
+Add url parameter ?timer=1 to stop using timer on questions or clock on started timer at each question
 
 == Usage ==
 
@@ -62,8 +63,11 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 == Changelog ==
 
-=== 9.1.1.9 ===
+=== 9.1.1.10 ===
 Quiz 40 new questions added and timer for answers set to 30 seconds. when timer expired question is scored as wrong
+fixed handling after timer expiration
+timer can be stopped by clicking on progress bar
+30 sec timer can be disabled by adding url parameter ?timer=1
 
 === 9.1.1.9 ===
 Quiz output boxed and colored tomato or green, added thumbsup/down, translations

@@ -600,8 +600,8 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
-		if (isset($_GET['timer'])) { $timerurl='1'; } else { $timerurl = '0'; }
-		$antwortmaske='<a title="Frage aufrufen" href="'.get_post_permalink().'?timer='.$timerurl.'">';
+		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
+		$antwortmaske='<a title="Frage aufrufen" href="'.get_post_permalink().$timerurl.'">';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
@@ -664,6 +664,7 @@ function importposts() {
 function quiz_adminstats() {
 	// wenn admin eingeloggt, Admin stats anzeigen
 	if( current_user_can('administrator') &&  ( is_singular() ) ) {
+		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 		global $wpdb;
 		$message = '<h6>Admin-Statistik</h6>';
 		$toprights = $wpdb->get_results(" SELECT posts.guid, posts.post_content, postmeta.meta_value
@@ -673,7 +674,7 @@ function quiz_adminstats() {
 		$rct = 0;
 		foreach ($toprights as $topright) {
 			$rct += $topright->meta_value;
-			$message .= 'R:'.$topright->meta_value.' <a href="'.$topright->guid.'">'.$topright->post_content.'</a><br>';
+			$message .= 'R:'.$topright->meta_value.' <a href="'.$topright->guid.$timerurl.'">'.$topright->post_content.'</a><br>';
 		}	
 		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
 		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
