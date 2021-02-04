@@ -624,12 +624,13 @@ add_shortcode( 'random-question', 'random_quote_func' );
 
 function importposts() {
 	//Base upload path of uploads
+	$edat= array();
 	$upload_dir = wp_upload_dir();
 	$upload_basedir = $upload_dir['basedir'] . '/public_histereignisse.csv';
 	$row = 1;
 	if (($handle = fopen($upload_basedir , "r")) !== FALSE) {
-		while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-			if ($row > 1) {
+		while (($data = fgetcsv($handle, 2000, ";")) !== FALSE) {
+			if ( $row > 1 && !empty($data[1]) ) {
 				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo
 				$num = count($data);
 				$edat = explode('.',$data[1]);
@@ -856,8 +857,8 @@ function quiz_show_form( $content ) {
 			if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
 			$letztefrage.='</li>';
 		} else {
-			if (isset($_GET['timer'])) { $timerurl = '1'; } else { $timerurl = '0'; }
-			$letztefrage.='</li>'.$listyle.'<a href="'.$random_post_url.'?timer='.$timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
+			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
+			$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
 		}
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
