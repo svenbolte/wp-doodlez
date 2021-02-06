@@ -5,8 +5,8 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.10
-Stable tag: 9.1.1.10
+Version: 9.1.1.11
+Stable tag: 9.1.1.11
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -49,7 +49,6 @@ The plugin also raises the following hooks:
 quizz_level_updated: raised when the user's answer is considered correct and they're pushed to the next question
 quizz_ended: raised when the list of questions comes to an end, and the user is sent to a designated page (eg. a congratulations page)
 
-Add url parameter ?timer=1 to stop using timer on questions or clock on started timer at each question
 
 == Usage ==
 
@@ -63,11 +62,11 @@ Add url parameter ?timer=1 to stop using timer on questions or clock on started 
 
 == Changelog ==
 
+=== 9.1.1.11 ===
+Hangman option (user selectable) integrated when answer is between 5 and 14 characters. 
+
 === 9.1.1.10 ===
 Quiz 40 new questions added and timer for answers set to 30 seconds. when timer expired question is scored as wrong
-fixed handling after timer expiration
-timer can be stopped by clicking on progress bar
-30 sec timer can be disabled by adding url parameter ?timer=1
 
 === 9.1.1.9 ===
 Quiz output boxed and colored tomato or green, added thumbsup/down, translations
@@ -186,4 +185,3 @@ Update latest installable version to 4.7 without changing anything but documenta
 
 = 1.0.9 = 1.0.10 =
 Update latest tag to 4.9.6
-

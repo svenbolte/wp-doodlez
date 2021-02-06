@@ -9,8 +9,8 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.10
-Stable tag: 9.1.1.10
+Version: 9.1.1.11
+Stable tag: 9.1.1.11
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -600,20 +600,27 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
+		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
-		$antwortmaske='<a title="Frage aufrufen" href="'.get_post_permalink().$timerurl.'">';
+		$antwortmaske='<ul class="footer-menu"><a title="Frage aufrufen" href="'.get_post_permalink().$timerurl.'">';
+		$listyle='list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:6px;border:1px solid silver;border-radius:3px;padding:5px;display:inline';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
 			foreach ($ans as $choice) {
-				$antwortmaske .= '<span style="list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:10px;border:1px solid silver;border-radius:3px;padding:5px;display:inline">'.$choice.'</span>';
-			} unset($choice);
+				$antwortmaske .= '<li style="'.$listyle.'">'.$choice.'</li>';
+			}
+			unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= '<span style="line-height:4rem;border:1px solid silver;border-radius:3px;padding:5px;display:inline;font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</span> ';
+			$antwortmaske .= '<li style="'.$listyle.';font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li>';
 		}	
-		$antwortmaske .=' </a>';
-        $message .= '<blockquote class="qiz" style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
+		$antwortmaske .='</a>';
+		if (strlen($hangrein) <= 14 && strlen($hangrein) >= 5) $antwortmaske.='<a href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><li style="'.$listyle.';margin-right:0"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</li></a>';
+		$antwortmaske .='</ul>';
+		$message .= '<blockquote class="qiz" style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
+		
+
       endwhile;
     }
     wp_reset_query();  
@@ -734,6 +741,19 @@ function quiz_show_form( $content ) {
 		if (isset($_POST['answer'])) $answer = $_POST['answer'];	// user submitted answer
 		if (isset($_POST['ans'])) $answer = $_POST['ans'];   // Answer is radio button selection 1 of 4
 		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
+		// Link für nächste Zufallsfrage
+		$args=array(
+		  'orderby'=>'rand', 'post_type' => 'question', 'post_status' => 'publish', 'posts_per_page' => 1, 'showposts' => 1,
+		);
+		$my_query = null;
+		$my_query = new WP_Query($args);
+		$random_post_url = '';
+		if( $my_query->have_posts() ) {
+		  while ($my_query->have_posts()) : $my_query->the_post(); 
+			$random_post_url = get_the_permalink();
+		  endwhile;
+		}
+		wp_reset_query();  
 		// get meta values for this question
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
@@ -749,157 +769,162 @@ function quiz_show_form( $content ) {
 		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
 		$lsubmittedanswer = strtolower($answer);
 		$lactualanswer = strtolower($answers[0]);
-
-		// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
-		$ansmixed='';
-		if (!empty($_POST) ) { $hideplay = ""; } else { $hideplay="document.getElementById('quizform').submit();"; }
-		if (!empty($answersb) && strlen($answersb[0])>1 ) {
-			$showsubmit ='none';
-			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
-			shuffle($ans);
-			$xex = 0;
-			foreach ($ans as $choice) {
-				$xex++;
-				$labstyle = ''; $astyle='';
-				if (!empty($_POST) ) {
-					if ( $choice == $answer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
-					if ( $choice == $answers[0] ) { $labstyle = 'background:green'; $astyle='color:#fff'; } 
-				}	
-				$ansmixed .= '<input onclick="'.$hideplay.'" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
-				$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
-			} unset($choice);
-		} else {	
-			// ansonsten freie Antwort anfordern von Antwort 1
-			if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
-			$ansmixed .= '<div style="width:100%;display:block;border:1px solid silver;border-radius:3px;padding:8px;font-family:monospace">' . __('answer mask','WPdoodlez');
-			$ansmixed .= ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ] ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
-			if ( empty($_POST) ) {
-				if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
-				$ansmixed .='</div><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
-			} else $ansmixed .='</div>';
-		}	
-
-		if ($exact[0]=="exact") {
-			//exact, strict match
-			if ($answer == $answers[0]) {
-				$correct = "yes";
-			} else {
-				$correct = "no";
-			}
+		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
+		// Hangman spielen oder normale Beantwortung
+		if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
+			$theForm = $content . play_hangman($answers[0]);
+			$theForm .= '<ul class="footer-menu" style="text-align:center;margin-top:20px;list-style:none;text-transform:uppercase;"><li><a href="' . $random_post_url .'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li></ul>';
 		} else {
-			$needlehaystack = strrpos($lsubmittedanswer, $lactualanswer);
-			if ( $needlehaystack > -1 ) {
-				$correct = "yes";
-			} else {
-				$correct = "no";
-			}
-		}
-		if ( $correct == "yes" ) {
-			ob_start();
-			setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
-			ob_flush();
-			update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
-			if ($last_bool[0] != "last") {
-				if ( !empty($nextlevel[0]) ) {
-					// raise a hook for updating record
-					do_action( 'quizz_level_updated', $nextlevel[0] );
-					$goto = $nextlevel[0];
-					wp_safe_redirect( get_post_permalink($goto) );
+			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
+			$ansmixed='';
+			if (!empty($_POST) ) { $hideplay = ""; } else { $hideplay="document.getElementById('quizform').submit();"; }
+			if (!empty($answersb) && strlen($answersb[0])>1 ) {
+				$showsubmit ='none';
+				if (empty($_POST) ) {
+					$ans = array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
+					shuffle($ans);
 				} else {
-					$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0].'<br><br>'.$zusatzinfo[0].'</div>';
-					$showqform = 'display:none';
+					$ans = explode(";",$_POST['answers4']);
+				}	
+				$xex = 0;
+				foreach ($ans as $choice) {
+					$xex++;
+					$labstyle = ''; $astyle='';
+					if (!empty($_POST) ) {
+						if ( $choice == $answer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
+						if ( $choice == $answers[0] ) { $labstyle = 'background:green'; $astyle='color:#fff'; } 
+					}	
+					$ansmixed .= '<input onclick="'.$hideplay.'" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
+					$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
+				} 
+				$ansmixed .='<input type="hidden" name="answers4" id="answers4" value="'.implode(";",$ans).'">';
+				unset($choice);
+			} else {	
+				// ansonsten freie Antwort anfordern von Antwort 1
+				if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
+				$ansmixed .= '<div style="width:100%;display:block;border:1px solid silver;border-radius:3px;padding:8px;font-family:monospace">' . __('answer mask','WPdoodlez');
+				$ansmixed .= ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ] ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
+				if ( empty($_POST) ) {
+					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
+					$ansmixed .='</div><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
+				} else $ansmixed .='</div>';
+			}	
+
+			if ($exact[0]=="exact") {
+				//exact, strict match
+				if ($answer == $answers[0]) {
+					$correct = "yes";
+				} else {
+					$correct = "no";
 				}
 			} else {
-				// raise a hook for end of quiz
-				do_action( 'quizz_ended', $lastpage[0] );
-				$goto = $lastpage[0];
-				wp_safe_redirect( add_query_arg( array('ende'=>1), home_url($wp->request) ) );
+				$needlehaystack = strrpos($lsubmittedanswer, $lactualanswer);
+				if ( $needlehaystack > -1 ) {
+					$correct = "yes";
+				} else {
+					$correct = "no";
+				}
 			}
-		} else {
-			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				$error = str_replace("ERROR", $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg  fa-thumbs-o-down"></i> &nbsp;  '. $answer . '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br> '.esc_html($answers[0]).'<br><br>'.$zusatzinfo[0].'</div>', $error);
-				$showqform = 'display:none';
+			if ( $correct == "yes" ) {
 				ob_start();
-				setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+				setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
-				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
-			} else { $error = "";$showqform = ''; }
-		}
-
-		// Link für nächste Zufallsfrage
-		$args=array(
-		  'orderby'=>'rand', 'post_type' => 'question', 'post_status' => 'publish', 'posts_per_page' => 1, 'showposts' => 1,
-		);
-		$my_query = null;
-		$my_query = new WP_Query($args);
-		$random_post_url = '';
-		if( $my_query->have_posts() ) {
-		  while ($my_query->have_posts()) : $my_query->the_post(); 
-			$random_post_url = get_the_permalink();
-		  endwhile;
-		}
-		wp_reset_query();  
-		$accentcolor = get_theme_mod( 'link-color', '#888' );
-		$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:3em;top:0;left:5px;content: "\f0eb";}';
-		$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
-		$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} ';
-		if ( empty($_POST) ) {
-			$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
-		} else {
-			$formstyle .= '.qiz input[type=radio] + label {cursor:not-allowed} ';
-		}
-		$formstyle .='</style>';
-		$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
-		$letztefrage ='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
-		$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
-		if (isset($nextlevel) || isset($last_bool[0]) ) {
-			$letztefrage.='</li>'.$listyle;
-			if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
-			$letztefrage.='</li>';
-		} else {
-			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
-			$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li>';
-		}
-		$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
-		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
-		if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
-		$letztefrage .= '</ul><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
-		$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
-		$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
-		$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
-		$letztefrage .= '</li></ul></div>';
-		$letztefrage .= quiz_adminstats();
-
-		if (!$ende) {
-			$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
-			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
-			if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
-			if ( empty($_POST) && $timeranaus == '0' ) {     // Timer 30 Sekunden
-				$admincanstop = 'clearInterval(myTimer)';
-				// if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
-				$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress onclick="'.$admincanstop.'" id="sec" class="progress" value="" max="30"></progress>';
-				$antwortmaske .= "<!-- noformat on --><script>var myTimer; function clock(c) { myTimer = setInterval(myClock, 1000); ";
-				$antwortmaske .= "     function myClock() { document.getElementById('sec').value = --c; ";
-				$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('ans2').checked=true;document.getElementById('ans2').value='-Zeit abgelaufen-'; document.getElementById('quizform').submit(); }  }  } ";
-				$antwortmaske .= "clock(30);</script><!-- noformat off -->";
-			}	
-			$antwortmaske .= $ansmixed;
-			$theForm = $formstyle . $antwortmaske.'<input style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
-		} else {    // Zertifikat ausgeben
-			$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
-			$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
-			$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
-			$theForm .= '<br><br><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress>';
-			if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
-			$theForm .= '<br><br>In Schulnoten ausgedrückt: '.get_schulnote( $sperct ).',<br>somit <strong>'.$fail.' bestanden</strong>.';
-			$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
-			$theForm .= '<span style="font-family:Brush Script MT;font-size:2em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
-			$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
-			if( class_exists( 'PB_ChartsCodes' ) ) {
-				$piesum = $sperct . ',' . (100 - $sperct);
-				$theForm .= do_shortcode('[chartscodes accentcolor="1" title="" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
-			}	
-		}	
+				update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
+				if ($last_bool[0] != "last") {
+					if ( !empty($nextlevel[0]) ) {
+						// raise a hook for updating record
+						do_action( 'quizz_level_updated', $nextlevel[0] );
+						$goto = $nextlevel[0];
+						wp_safe_redirect( get_post_permalink($goto) );
+					} else {
+						$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
+						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+						$error .= '</div>';
+						$showqform = 'display:none';
+					}
+				} else {
+					// raise a hook for end of quiz
+					do_action( 'quizz_ended', $lastpage[0] );
+					$goto = $lastpage[0];
+					wp_safe_redirect( add_query_arg( array('ende'=>1), home_url($wp->request) ) );
+				}
+			} else {
+				if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+					$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px">';
+					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
+					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
+					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+					$error .= '</div>';
+					$showqform = 'display:none';
+					ob_start();
+					setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+					ob_flush();
+					update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
+				} else { $error = "";$showqform = ''; }
+			}
+			$accentcolor = get_theme_mod( 'link-color', '#888' );
+			$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:3em;top:0;left:5px;content: "\f0eb";}';
+			$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
+			$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} ';
+			if ( empty($_POST) ) {
+				$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
+			} else {
+				$formstyle .= '.qiz input[type=radio] + label {cursor:not-allowed} ';
+			}
+			$formstyle .='</style>';
+			$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
+			$letztefrage ='<br><div style="text-align:center"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
+			$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
+			if (isset($nextlevel) || isset($last_bool[0]) ) {
+				$letztefrage.='</li>'.$listyle;
+				if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
+				$letztefrage.='</li>';
+			} else {
+				if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
+				$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
+				if (strlen($hangrein) <= 14 && strlen($hangrein) >= 5) $letztefrage.='</li>'.$listyle.'<a href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></li>';
+			}
+			$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
+			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
+			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
+			$letztefrage .= '</ul><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
+			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
+			$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
+			$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
+			$letztefrage .= '</li></ul></div>';
+			$letztefrage .= quiz_adminstats();
+			if (!$ende) {
+				$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
+				$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
+				$antwortmaske .= "<!-- noformat on --><script>function empty() { var x; x = document.getElementById('answer').value; if (x == '') { alert('".__('please enter a value','WPdoodlez')."'); return false; }; }</script>";
+				if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
+				if ( empty($_POST) && $timeranaus == '0' && ( !empty($answersb) && strlen($answersb[0])>1 ) ) {     // Timer 30 Sekunden
+					$admincanstop = 'clearInterval(myTimer)';
+					  // if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
+					$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress onclick="'.$admincanstop.'" id="sec" class="progress" value="" max="30"></progress>';
+					$antwortmaske .= "<!-- noformat on --><script>var myTimer; function clock(c) { myTimer = setInterval(myClock, 1000); ";
+					$antwortmaske .= "     function myClock() { document.getElementById('sec').value = --c; ";
+					$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('ans2').checked=true;document.getElementById('ans2').value='".__(' no answer (timeout occured)','WPdoodlez')."'; document.getElementById('quizform').submit(); }  }  } ";
+					$antwortmaske .= "clock(30);</script><!-- noformat off -->";
+				}	
+				$antwortmaske .= $ansmixed;
+				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
+			} else {    // Zertifikat ausgeben
+				$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
+				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
+				$theForm .= '<br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
+				$theForm .= '<br><br><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress>';
+				if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
+				$theForm .= '<br><br>In Schulnoten ausgedrückt: '.get_schulnote( $sperct ).',<br>somit <strong>'.$fail.' bestanden</strong>.';
+				$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+				$theForm .= '<span style="font-family:Brush Script MT;font-size:2em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
+				$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
+				if( class_exists( 'PB_ChartsCodes' ) ) {
+					$piesum = $sperct . ',' . (100 - $sperct);
+					$theForm .= do_shortcode('[chartscodes accentcolor="1" title="" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
+				}	
+			}
+		}		
 		return $theForm;
 	else :
 		return $content;
@@ -990,40 +1015,23 @@ function quizz_inner_custom_box( $post ) {
 }
 
 function quizz_save_postdata( $post_id ) {
-
-  /*
-   * We need to verify this came from the our screen and with proper authorization,
-   * because save_post can be triggered at other times.
-   */
-
-  // Check if our nonce is set.
+  // Check if our nonce is set.We need to verify this came from the our screen and with proper authorization
   if ( ! isset( $_POST['quizz_inner_custom_box_nonce'] ) )
     return $post_id;
-
   $nonce = $_POST['quizz_inner_custom_box_nonce'];
-
   // Verify that the nonce is valid.
-  if ( ! wp_verify_nonce( $nonce, 'quizz_inner_custom_box' ) )
-      return $post_id;
-
+  if ( ! wp_verify_nonce( $nonce, 'quizz_inner_custom_box' ) ) return $post_id;
   // If this is an autosave, our form has not been submitted, so we don't want to do anything.
-  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
-      return $post_id;
-
+  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
   // Check the user's permissions.
   if ( 'page' == $_POST['post_type'] ) {
-
     if ( ! current_user_can( 'edit_page', $post_id ) )
         return $post_id;
-  
   } else {
-
     if ( ! current_user_can( 'edit_post', $post_id ) )
         return $post_id;
   }
-
-  /* OK, its safe for us to save the data now. */
-  // Sanitize user input.
+  // Sanitize user input.OK, its safe for us to save the data now
   $myanswer = sanitize_text_field( $_POST['quizz_answer'] );
   $myanswerb = sanitize_text_field( $_POST['quizz_answerb'] );
   $myanswerc = sanitize_text_field( $_POST['quizz_answerc'] );
@@ -1033,7 +1041,6 @@ function quizz_save_postdata( $post_id ) {
   $exact = $_POST['quizz_exact'];
   $lastlevel_bool = $_POST['quizz_last'];
   $lastpage = $_POST['quizz_lastpage'];
-
   // Update the meta field in the database.
   update_post_meta( $post_id, 'quizz_answer', $myanswer );
   update_post_meta( $post_id, 'quizz_answerb', $myanswerb );
@@ -1050,7 +1057,6 @@ add_action( 'save_post', 'quizz_save_postdata' );
 add_action( 'manage_posts_extra_tablenav', 'admin_order_list_top_bar_button', 20, 1 );
 function admin_order_list_top_bar_button( $which ) {
     global $current_screen;
-
     if ('question' == $current_screen->post_type) {
      $nonce = wp_create_nonce( 'dnonce' );
      echo " <a href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button'>";
@@ -1066,7 +1072,6 @@ function set_custom_edit_question_columns($columns) {
 	$columns['frageantwort'] = __( 'question/answer', 'WPdoodlez' );
     $frageantwort = $columns['frageantwort'];  // save the tags column
     unset($columns['frageantwort']);   // remove it from the columns list
-
     foreach($columns as $key=>$value) {
         if($key=='categories') {  // when we find the date column
            $new['frageantwort'] = $frageantwort;  // put the tags column before it
@@ -1087,5 +1092,162 @@ function custom_question_column( $column, $post_id ) {
 
     }
 }
+
+// hangman spiel mit Wort laden  //  echo play_hangman('Katze');
+
+// Funktionen für Hangman
+function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
+	global $wp;
+	$gtml = '<style>input[type=button][disabled],button:disabled,button[disabled] { border: 1px solid #999999;background-color:#cccccc;color: #666666;}</style>';
+	$gtml .= '<p><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</p>';
+	$gtml .= '<code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'<br>';
+	$gtml .= $guesstemplate. '<br>';
+	$formurl = add_query_arg( array('hangman'=>'1' ), home_url( $wp->request ) );
+	$gtml .= '</code><form name="galgen" method="post" action="'. $formurl .'">';
+	$gtml .= '<input type="hidden" name="wrong" value="'.$wrong.'" />';
+	$gtml .= '<input type="hidden" name="lettersguessed" value="'.$guessed.'" />';
+	$gtml .= '<input type="hidden" name="word" value="'.$which.'" />';
+	$gtml .= '<input type="hidden" name="letter" id="letter" size="1" style="max-size:1" autofocus /><br><br>';
+	$ci=0;
+	foreach (range('A', 'Z') as $char) {
+		$ci +=1;
+		$gtml .= '<input style="width:35px;padding:5px;margin-bottom:5px" onclick="document.getElementById(\'letter\').value=this.value;this.form.submit();" type="button" value="'.$char.'" ';
+		if ( str_contains($guessed,$char) ) $gtml .= ' disabled';
+		$gtml .= '> &nbsp; ';
+		if ( $ci % 9 == 0 ) $gtml .= '<br>';
+	}  
+	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
+	return $gtml;
+}
+
+function play_hangman($rein) {
+  global $hang;
+  $hang = array();
+	$hang[0] = nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |
+	 |
+	 |
+	 |
+	 | 
+	/|\
+	'));
+	$hang[1] =nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |     o
+	 |
+	 |
+	 |
+	 | 
+	/|\
+	'));
+	$hang[2] =nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |     o
+	 |     |
+	 |     |
+	 |
+	 | 
+	/|\
+	'));
+	$hang[3] =nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |     o
+	 |     |
+	 |     |
+	 |    /
+	 | 
+	/|\
+	'));
+	$hang[4] =nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |     o
+	 |     |
+	 |     |
+	 |    / \
+	 | 
+	/|\
+	'));
+	$hang[5] =nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |     o
+	 |   --|
+	 |     |
+	 |    / \
+	 | 
+	/|\
+	'));
+	$hang[6] =nl2br(str_replace (" ","&nbsp;",
+	' _______
+	 |/    | 
+	 |     o
+	 |   --|--
+	 |     |
+	 |    / \
+	 | 
+	/|\
+	'));
+  global $words;
+  $ers = array('Ä' => 'Ae', 'Ö' => 'Oe', 'Ü' => 'Ue', 'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss' );
+  $rein = strtr($rein,$ers);
+  $rein = preg_replace("/[^A-Za-z]/", '', $rein);
+  $words = strtoupper($rein);
+	$method = $_SERVER["REQUEST_METHOD"];
+	if ($method == "POST") {
+	  return handleGuess();
+	} else {
+	  return startGame();
+	}
+}
+
+function startGame() {
+  global $words;
+  global $hang;
+  $word =  $words;
+  $len = strlen($word);
+  $guesstemplate = str_repeat('_ ', $len);
+  return printPage($hang[0], $guesstemplate, 0, "", 0);
+}
+
+function matchLetters($word, $guessedLetters) {
+  $len = strlen($word);
+  $guesstemplate = str_repeat("_ ", $len);
+  for ($i = 0; $i < $len; $i++) {
+	$ch = $word[$i];
+	if (strstr($guessedLetters, $ch)) {
+	  $pos = 2 * $i;
+	  $guesstemplate[$pos] = $ch;
+	}
+  }
+  return $guesstemplate;
+}
+
+function handleGuess() {
+  global $words;
+  global $hang;
+  $which = $_POST["word"];
+  $word  = $words;
+  $wrong = $_POST["wrong"];
+  $lettersguessed = $_POST["lettersguessed"];
+  $guess = $_POST["letter"];
+  $letter = strtoupper($guess[0]);
+  if(!strstr($word, $letter)) {	$wrong++;  }
+  $lettersguessed = $lettersguessed . $letter;
+  $guesstemplate = matchLetters($word, $lettersguessed);
+  if (!strstr($guesstemplate, "_")) {
+   	return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Gewonnen - Gratulation. Sie haben <em>'.$word.'</em> erraten.</p></div>';
+  } else if ($wrong >= 6) {
+	return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Verloren - <em>'.$word.'</em> war die Lösung.</p></div>';
+  } else {
+	return printPage($hang[$wrong], $guesstemplate, $which, $lettersguessed, $wrong);
+  }
+}
+// Hangman Ende
 //   ----------------------------- Quizzz module ended -------------------------------------
 ?>

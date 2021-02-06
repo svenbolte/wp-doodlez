@@ -1,29 +1,33 @@
-# WPdoodlez Forked Mod
-plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress
+# WPdoodlez Forked Mod with Poll quizzz
+Doodlez: plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress.
+Poll: create classic polls to let visitors vote about a question
+Quizzz: Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.
-Completed the german and german formal translations. Added method to use structure for polls (onle one answer)
+Completed the german and german formal translations. Added method to use structure for polls (only one answer allowed)
 
 ## GDPR (DSGVO) notice
-Participiants do net need to enter their full name (a nicname would do).
+Participiants do net need to enter their full name (a nick name would do).
 A cookie "wpdoodlez-hashofthevote" with the given nic name is stored on the local computer to
 notice that one has voted already - so you should opt-in cookies and place a note on your GDPR statement.
 
 Doodlez can be password protected (with builtin wordpress logic) to prevent others seeing the content
 Archives, Post Content, Post-Thumbnail, Categories and Tags have been enabled to provide full integration like a normal post.
 
+Quiz game has a shortcode for random questions and a custom post type "question" for quiz. It can display a certificate to print
+and stores your ranking in a personal cookie. personal rankings are only stored in your browser, not the web server
 
 ## Highlights
 * WPDoodlez can handle classic polls and doodle like appointment planning
-If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
+* If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries
 if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
-then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
+then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates
 
-User parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
+User parameter /admin=1 to display alternate votes display (more features when logged in as admin)
 
 * link to WPdoodlez is public, but post can have password
-* A WPdoodlez can be in a review and be published at given time
+* A WPdoodlez can be saved in draft mode and will be published at given time
 * A WPdoodlez can have own URL
 * Poll users do not need to be valid logged in wordpress users
 * Users with "delete published post" rights can delete votes
