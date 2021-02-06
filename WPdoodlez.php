@@ -1097,6 +1097,7 @@ function custom_question_column( $column, $post_id ) {
 
 // Funktionen für Hangman
 function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
+	global $hang;
 	global $wp;
 	$gtml = '<style>input[type=button][disabled],button:disabled,button[disabled] { border: 1px solid #999999;background-color:#cccccc;color: #666666;}</style>';
 	$gtml .= '<p><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</p>';
@@ -1121,10 +1122,10 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 }
 
 function play_hangman($rein) {
-  global $hang;
-  $hang = array();
+	global $hang;
+	$hang = array();
 	$hang[0] = nl2br(str_replace (" ","&nbsp;",
-	' _______
+								  ' _______
 	 |/    | 
 	 |
 	 |
@@ -1134,7 +1135,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[1] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+								 ' _______
 	 |/    | 
 	 |     o
 	 |
@@ -1144,7 +1145,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[2] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+								 ' _______
 	 |/    | 
 	 |     o
 	 |     |
@@ -1154,7 +1155,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[3] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+								 ' _______
 	 |/    | 
 	 |     o
 	 |     |
@@ -1164,7 +1165,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[4] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+								 ' _______
 	 |/    | 
 	 |     o
 	 |     |
@@ -1174,7 +1175,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[5] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+								 ' _______
 	 |/    | 
 	 |     o
 	 |   --|
@@ -1184,7 +1185,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[6] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+								 ' _______
 	 |/    | 
 	 |     o
 	 |   --|--
@@ -1193,60 +1194,48 @@ function play_hangman($rein) {
 	 | 
 	/|\
 	'));
-  global $words;
-  $ers = array('Ä' => 'Ae', 'Ö' => 'Oe', 'Ü' => 'Ue', 'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss' );
-  $rein = strtr($rein,$ers);
-  $rein = preg_replace("/[^A-Za-z]/", '', $rein);
-  $words = strtoupper($rein);
+	global $words;
+	$ers = array('Ä' => 'Ae', 'Ö' => 'Oe', 'Ü' => 'Ue', 'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss' );
+	$rein = strtr($rein,$ers);
+	$rein = preg_replace("/[^A-Za-z]/", '', $rein);
+	$words = strtoupper($rein);
 	$method = $_SERVER["REQUEST_METHOD"];
 	if ($method == "POST") {
-	  return handleGuess();
+		$which = $_POST["word"];
+		$word  = $words;
+		$wrong = $_POST["wrong"];
+		$lettersguessed = $_POST["lettersguessed"];
+		$guess = $_POST["letter"];
+		$letter = strtoupper($guess[0]);
+		if(!strstr($word, $letter)) {	$wrong++;  }
+		$lettersguessed = $lettersguessed . $letter;
+		$guesstemplate = matchLetters($word, $lettersguessed);
+		if (!strstr($guesstemplate, "_")) {
+			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Gewonnen - Gratulation. Sie haben <em>'.$word.'</em> erraten.</p></div>';
+		} else if ($wrong >= 6) {
+			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Verloren - <em>'.$word.'</em> war die Lösung.</p></div>';
+		} else {
+			return printPage($hang[$wrong], $guesstemplate, $which, $lettersguessed, $wrong);
+		}
 	} else {
-	  return startGame();
+		$word =  $words;
+		$len = strlen($word);
+		$guesstemplate = str_repeat('_ ', $len);
+		return printPage($hang[0], $guesstemplate, 0, "", 0);
 	}
-}
-
-function startGame() {
-  global $words;
-  global $hang;
-  $word =  $words;
-  $len = strlen($word);
-  $guesstemplate = str_repeat('_ ', $len);
-  return printPage($hang[0], $guesstemplate, 0, "", 0);
 }
 
 function matchLetters($word, $guessedLetters) {
-  $len = strlen($word);
-  $guesstemplate = str_repeat("_ ", $len);
-  for ($i = 0; $i < $len; $i++) {
-	$ch = $word[$i];
-	if (strstr($guessedLetters, $ch)) {
-	  $pos = 2 * $i;
-	  $guesstemplate[$pos] = $ch;
+	$len = strlen($word);
+	$guesstemplate = str_repeat("_ ", $len);
+	for ($i = 0; $i < $len; $i++) {
+		$ch = $word[$i];
+		if (strstr($guessedLetters, $ch)) {
+			$pos = 2 * $i;
+			$guesstemplate[$pos] = $ch;
+		}
 	}
-  }
-  return $guesstemplate;
-}
-
-function handleGuess() {
-  global $words;
-  global $hang;
-  $which = $_POST["word"];
-  $word  = $words;
-  $wrong = $_POST["wrong"];
-  $lettersguessed = $_POST["lettersguessed"];
-  $guess = $_POST["letter"];
-  $letter = strtoupper($guess[0]);
-  if(!strstr($word, $letter)) {	$wrong++;  }
-  $lettersguessed = $lettersguessed . $letter;
-  $guesstemplate = matchLetters($word, $lettersguessed);
-  if (!strstr($guesstemplate, "_")) {
-   	return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Gewonnen - Gratulation. Sie haben <em>'.$word.'</em> erraten.</p></div>';
-  } else if ($wrong >= 6) {
-	return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Verloren - <em>'.$word.'</em> war die Lösung.</p></div>';
-  } else {
-	return printPage($hang[$wrong], $guesstemplate, $which, $lettersguessed, $wrong);
-  }
+	return $guesstemplate;
 }
 // Hangman Ende
 //   ----------------------------- Quizzz module ended -------------------------------------
