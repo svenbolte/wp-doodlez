@@ -774,6 +774,18 @@ function quiz_show_form( $content ) {
 		if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
 			$theForm = $content . play_hangman($answers[0]);
 			$theForm .= '<ul class="footer-menu" style="text-align:center;margin-top:20px;list-style:none;text-transform:uppercase;"><li><a href="' . $random_post_url .'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li></ul>';
+			if ( strpos($theForm,"background-color:green") !== false ) {	
+				ob_start();
+				setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
+				ob_flush();
+				update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
+			}
+			if ( strpos($theForm,"background-color:tomato") !== false ) {	
+				ob_start();
+				setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+				ob_flush();
+				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
+			}
 		} else {
 			// 4 Antworten gemixt vorgeben, wenn gesetzt, freie Antwort, wenn nur eine
 			$ansmixed='';
@@ -947,71 +959,60 @@ function quizz_add_custom_box() {
 add_action( 'add_meta_boxes', 'quizz_add_custom_box' );
 
 function quizz_inner_custom_box( $post ) {
-
-  // Add an nonce field so we can check for it later.
-  wp_nonce_field( 'quizz_inner_custom_box', 'quizz_inner_custom_box_nonce' );
-
-  /*
-   * Use get_post_meta() to retrieve an existing value
-   * from the database and use the value for the form.
-   */
-  $value = get_post_meta( $post->ID, 'quizz_answer', true );
-  $valueb = get_post_meta( $post->ID, 'quizz_answerb', true );
-  $valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
-  $valued = get_post_meta( $post->ID, 'quizz_answerd', true );
-  $zusatzinfo = get_post_meta( $post->ID, 'quizz_zusatzinfo', true );
-
-  echo '<label for="quizz_answer">' . _e( "Answer", 'WPdoodlez' ) . ' A</label> ';
-  echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
-  $value1 = get_post_meta( $post->ID, 'quizz_exact', true);
-  echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
-  echo '<br />';
-  // Distraktoren, im Quiz werden die Antworten gemischt
-  echo '<label for="quizz_answerb">' . _e( "Answer", 'WPdoodlez' ) . ' B</label> ';
-  echo ' <input type="text" id="quizz_answerb" name="quizz_answerb" value="' . esc_attr( $valueb ) . '" size="75"> optional<br>';
-  echo '<label for="quizz_answerc">' . _e( "Answer", 'WPdoodlez' ) . ' C</label> ';
-  echo ' <input type="text" id="quizz_answerc" name="quizz_answerc" value="' . esc_attr( $valuec ) . '" size="75"> optional<br>';
-  echo '<label for="quizz_answerd">' . _e( "Answer", 'WPdoodlez' ) . ' D</label> ';
-  echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75"> optional<br>';
-  echo '<label for="quizz_zusatzinfo">' . _e( "moreinfo", 'WPdoodlez' ) . ' </label> ';
-  echo ' <input type="text" id="quizz_zusatzinfo" name="quizz_zusatzinfo" value="' . esc_attr( $zusatzinfo ) . '" size="75"> optional<br>';
-
-  global $wpdb;
-   $query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
-   $prev = $wpdb->get_var( $wpdb->prepare($query, $post->ID) );
-
-  echo '<p><label for="quizz_prevlevel">'. __( "previous question", 'WPdoodlez' ) . '</label> ';
+	// Add an nonce field so we can check for it later.
+	wp_nonce_field( 'quizz_inner_custom_box', 'quizz_inner_custom_box_nonce' );
+	// Use get_post_meta() to retrieve an existing value from the database and use the value for the form.
+	$value = get_post_meta( $post->ID, 'quizz_answer', true );
+	$valueb = get_post_meta( $post->ID, 'quizz_answerb', true );
+	$valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
+	$valued = get_post_meta( $post->ID, 'quizz_answerd', true );
+	$zusatzinfo = get_post_meta( $post->ID, 'quizz_zusatzinfo', true );
+	echo '<label for="quizz_answer">' . _e( "Answer", 'WPdoodlez' ) . ' A</label> ';
+	echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
+	$value1 = get_post_meta( $post->ID, 'quizz_exact', true);
+	echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
+	echo '<br />';
+	// Distraktoren, im Quiz werden die Antworten gemischt
+	echo '<label for="quizz_answerb">' . _e( "Answer", 'WPdoodlez' ) . ' B</label> ';
+	echo ' <input type="text" id="quizz_answerb" name="quizz_answerb" value="' . esc_attr( $valueb ) . '" size="75"> optional<br>';
+	echo '<label for="quizz_answerc">' . _e( "Answer", 'WPdoodlez' ) . ' C</label> ';
+	echo ' <input type="text" id="quizz_answerc" name="quizz_answerc" value="' . esc_attr( $valuec ) . '" size="75"> optional<br>';
+	echo '<label for="quizz_answerd">' . _e( "Answer", 'WPdoodlez' ) . ' D</label> ';
+	echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75"> optional<br>';
+	echo '<label for="quizz_zusatzinfo">' . _e( "moreinfo", 'WPdoodlez' ) . ' </label> ';
+	echo ' <input type="text" id="quizz_zusatzinfo" name="quizz_zusatzinfo" value="' . esc_attr( $zusatzinfo ) . '" size="75"> optional<br>';
+	global $wpdb;
+	$query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
+	$prev = $wpdb->get_var( $wpdb->prepare($query, $post->ID) );
+	echo '<p><label for="quizz_prevlevel">'. __( "previous question", 'WPdoodlez' ) . '</label> ';
 	  $args = array(
-	  		'post_type' => 'question',
-	  		'exclude' => $post->ID,
-	  		'post_status' => 'publish'
-	  	);
+			'post_type' => 'question',
+			'exclude' => $post->ID,
+			'post_status' => 'publish'
+		);
 	  $questions = get_posts( $args );
-
-  echo ' <select id="quizz_prevlevel" name="quizz_prevlevel"><option value="0">keine</option>';
+	echo ' <select id="quizz_prevlevel" name="quizz_prevlevel"><option value="0">keine</option>';
 	  foreach ($questions as $question) {
-	  	echo "<option value='" . $question->ID . "'". (( $prev == $question->ID ) ? ' selected' : '') . ">" . $question->post_title . "-" . $question->post_content ."</option>";
+		echo "<option value='" . $question->ID . "'". (( $prev == $question->ID ) ? ' selected' : '') . ">" . $question->post_title . "-" . $question->post_content ."</option>";
 	  }
-  echo '</select></p>';
-
-  $last = get_post_meta( $post->ID, 'quizz_last', true);
+	echo '</select></p>';
+	$last = get_post_meta( $post->ID, 'quizz_last', true);
 	echo '<input type="checkbox" name="quizz_last" id="quizz_last" value="last"' . (($last=="last") ? " checked" : "" ) . '>'. __('last question?','WPdoodlez');
-  $lastlevel = get_post_meta( $post->ID, 'quizz_lastpage', true);
+	$lastlevel = get_post_meta( $post->ID, 'quizz_lastpage', true);
 	$args = array(
-  		'post_type' => 'page',
-  		'post_status' => 'publish'
-  	);
-  	$lastpages = get_posts($args);
-
-  echo ' <select id="quizz_lastpage" name="quizz_lastpage">';
-  	echo '<option value="0">keine</option>';
-  	foreach ($lastpages as $lastpage) {
-	  	echo "<option value='" . $lastpage->ID . "'". (( $lastlevel == $lastpage->ID ) ? ' selected' : '') . ">" . $lastpage->post_title ."</option>";
-  	}
-  echo '</select>';
-  $rightstat = get_post_meta( $post->ID, 'quizz_rightstat', true);
-  $wrongstat = get_post_meta( $post->ID, 'quizz_wrongstat', true);
-  if (!empty($rightstat) || !empty($wrongstat)) echo '<p>'. __('stats right wrong answers','WPdoodlez').': '.@$rightstat[0].' / '.@$wrongstat[0].'</p>';
+		'post_type' => 'page',
+		'post_status' => 'publish'
+	);
+	$lastpages = get_posts($args);
+	echo ' <select id="quizz_lastpage" name="quizz_lastpage">';
+	echo '<option value="0">keine</option>';
+	foreach ($lastpages as $lastpage) {
+		echo "<option value='" . $lastpage->ID . "'". (( $lastlevel == $lastpage->ID ) ? ' selected' : '') . ">" . $lastpage->post_title ."</option>";
+	}
+	echo '</select>';
+	$rightstat = get_post_meta( $post->ID, 'quizz_rightstat', true);
+	$wrongstat = get_post_meta( $post->ID, 'quizz_wrongstat', true);
+	if (!empty($rightstat) || !empty($wrongstat)) echo '<p>'. __('stats right wrong answers','WPdoodlez').': '.@$rightstat[0].' / '.@$wrongstat[0].'</p>';
 }
 
 function quizz_save_postdata( $post_id ) {
@@ -1093,9 +1094,8 @@ function custom_question_column( $column, $post_id ) {
     }
 }
 
-// hangman spiel mit Wort laden  //  echo play_hangman('Katze');
+// -------- hangman spiel mit Wort laden  //  echo play_hangman('Katze');
 
-// Funktionen für Hangman
 function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 	global $hang;
 	global $wp;
@@ -1111,9 +1111,9 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 	$gtml .= '<input type="hidden" name="letter" id="letter" size="1" style="max-size:1" autofocus /><br><br>';
 	$ci=0;
 	foreach (range('A', 'Z') as $char) {
-		$ci +=1;
+		$ci += 1;
 		$gtml .= '<input style="width:35px;padding:5px;margin-bottom:5px" onclick="document.getElementById(\'letter\').value=this.value;this.form.submit();" type="button" value="'.$char.'" ';
-		if ( str_contains($guessed,$char) ) $gtml .= ' disabled';
+		if ( !empty($guessed) && strpos($guessed,$char) !== false ) { $gtml .= ' disabled'; }
 		$gtml .= '> &nbsp; ';
 		if ( $ci % 9 == 0 ) $gtml .= '<br>';
 	}  
