@@ -1100,8 +1100,7 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 	global $hang;
 	global $wp;
 	$gtml = '<style>input[type=button][disabled],button:disabled,button[disabled] { border: 1px solid #999999;background-color:#cccccc;color: #666666;}</style>';
-	$gtml .= '<p><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</p>';
-	$gtml .= '<code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'<br>';
+	$gtml .= '<code style="font-family:monospace;font-size:1.5em">';
 	$gtml .= $guesstemplate. '<br>';
 	$formurl = add_query_arg( array('hangman'=>'1' ), home_url( $wp->request ) );
 	$gtml .= '</code><form name="galgen" method="post" action="'. $formurl .'">';
@@ -1114,10 +1113,11 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 		$ci += 1;
 		$gtml .= '<input style="width:35px;padding:5px;margin-bottom:5px" onclick="document.getElementById(\'letter\').value=this.value;this.form.submit();" type="button" value="'.$char.'" ';
 		if ( !empty($guessed) && strpos($guessed,$char) !== false ) { $gtml .= ' disabled'; }
-		$gtml .= '> &nbsp; ';
-		if ( $ci % 9 == 0 ) $gtml .= '<br>';
+		$gtml .= '> &nbsp;';
 	}  
 	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
+	$gtml .= '<div style="float:left;width:30%"><code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
+	$gtml .= '<div style="padding-top:5%;float:left;width:60%;height:200px"><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</div>';
 	return $gtml;
 }
 
