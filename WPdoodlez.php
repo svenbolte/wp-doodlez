@@ -9,10 +9,10 @@ Text Domain: WPdoodlez
 Domain Path: /lang/
 License: GPL 2
 Author: PBMod
-Version: 9.1.1.11
-Stable tag: 9.1.1.11
+Version: 9.1.1.12
+Stable tag: 9.1.1.12
 Requires at least: 5.1
-Tested up to: 5.6
+Tested up to: 5.6.1
 Requires PHP: 7.4
 */
 
@@ -602,8 +602,8 @@ function random_quote_func( $atts ){
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
-		$antwortmaske='<ul class="footer-menu"><a title="Frage aufrufen" href="'.get_post_permalink().$timerurl.'">';
-		$listyle='list-style-type:none;white-space:nowrap;line-height:4rem;margin-right:6px;border:1px solid silver;border-radius:3px;padding:5px;display:inline';
+		$antwortmaske='<ul><a title="Frage aufrufen" href="'.get_post_permalink().$timerurl.'">';
+		$listyle='list-style-type:none;white-space:nowrap;margin-right:6px;border:1px solid silver;border-radius:3px;padding:5px;display:inline-block';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);

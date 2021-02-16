@@ -5,10 +5,10 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.11
-Stable tag: 9.1.1.11
+Version: 9.1.1.12
+Stable tag: 9.1.1.12
 Requires at least: 5.1
-Tested up to: 5.6
+Tested up to: 5.6.1
 Requires PHP: 7.4
 
 ## Description  plan appointments, query polls and place a quiz on your wordpress site ( with csv import for questions) ##
