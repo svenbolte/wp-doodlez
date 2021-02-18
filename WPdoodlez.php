@@ -1116,8 +1116,8 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 		$gtml .= '> &nbsp;';
 	}  
 	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
-	$gtml .= '<div style="float:left;width:30%"><code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
-	$gtml .= '<div style="padding-top:5%;float:left;width:60%;height:200px"><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</div>';
+	$gtml .= '<div style="float:left;width:40%"><code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
+	$gtml .= '<div style="padding-top:5%;float:left;width:55%;height:220px"><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</div>';
 	return $gtml;
 }
 
