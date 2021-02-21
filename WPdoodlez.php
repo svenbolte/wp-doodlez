@@ -602,25 +602,22 @@ function random_quote_func( $atts ){
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
-		$antwortmaske='<ul><a title="Frage aufrufen" href="'.get_post_permalink().$timerurl.'">';
-		$listyle='list-style-type:none;white-space:nowrap;margin-right:6px;border:1px solid silver;border-radius:3px;padding:5px;display:inline-block';
+		$listyle='text-align:center;border:1px solid silver;border-radius:3px;padding:4px;display:block;margin:3px';
+		$xlink='<div class="nav-links"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().$timerurl.'" style="'.$listyle.'">';
+		$antwortmaske='';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
 			foreach ($ans as $choice) {
-				$antwortmaske .= '<li style="'.$listyle.'">'.$choice.'</li>';
+				$antwortmaske .= $xlink.$choice.'</a></div>';
 			}
 			unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= '<li style="'.$listyle.';font-family:monospace">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</li>';
+			$antwortmaske .= $xlink.'[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a></div>';
 		}	
-		$antwortmaske .='</a>';
-		if (strlen($hangrein) <= 14 && strlen($hangrein) >= 5) $antwortmaske.='<a href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><li style="'.$listyle.';margin-right:0"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</li></a>';
-		$antwortmaske .='</ul>';
-		$message .= '<blockquote class="qiz" style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
-		
-
+		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
+		$message .= '<blockquote class="qiz" style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
       endwhile;
     }
     wp_reset_query();  
@@ -1116,8 +1113,8 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 		$gtml .= '> &nbsp;';
 	}  
 	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
-	$gtml .= '<div style="float:left;width:40%"><code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
-	$gtml .= '<div style="padding-top:5%;float:left;width:55%;height:220px"><b>Galgenmännchen</b> - Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Die verbleibende Buchstabenfolge ist <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen lang.</div>';
+	$gtml .= '<div style="float:left;width:38%"><code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
+	$gtml .= '<div style="padding-top:5%;float:left;width:58%;height:220px"><b>Galgenmännchen</b> Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Es bleiben <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen</div>';
 	return $gtml;
 }
 
