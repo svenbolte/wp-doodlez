@@ -1,14 +1,12 @@
 ### Plugin Name: WPDoodlez and Quizzz ###
 Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.12
-Stable tag: 9.1.1.12
+Version: 9.1.1.13
+Stable tag: 9.1.1.13
 Requires at least: 5.1
-Tested up to: 5.6.1
+Tested up to: 5.7
 Requires PHP: 7.4
 
 ## Description  plan appointments, query polls and place a quiz on your wordpress site ( with csv import for questions) ##
@@ -61,6 +59,9 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.13 ===
+add some more quizzz questions
 
 === 9.1.1.11 ===
 Hangman option (user selectable) integrated when answer is between 5 and 14 characters. 

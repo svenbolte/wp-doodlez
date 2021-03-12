@@ -2,17 +2,18 @@
 /**
 Plugin Name: WP Doodlez
 Plugin URI: https://github.com/svenbolte/WPdoodlez
+Author URI: https://github.com/svenbolte
 Description: Doodle like finding meeting date, polls, quizzz with csv import
 Contributors: Robert Kolatzek, PBMod
-Author URI: https://github.com/svenbolte
+License: GPL v3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
-License: GPL 2
 Author: PBMod
-Version: 9.1.1.12
-Stable tag: 9.1.1.12
+Version: 9.1.1.13
+Stable tag: 9.1.1.13
 Requires at least: 5.1
-Tested up to: 5.6.1
+Tested up to: 5.7
 Requires PHP: 7.4
 */
 
