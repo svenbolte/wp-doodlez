@@ -493,18 +493,18 @@ function get_doodlez_content() {
 			?>
 				
 		</table>
-				<?php
-				if ( isset($_GET['admin']) || !$polli) {
-					// Page navigation		
-					$html='';
-					for($i=0;$i<$number_of_pages;$i++){
-						$seitennummer = $i+1;
-						$html .= ' &nbsp;<a class="page-numbers" href="'.add_query_arg( array('admin'=>'1', 'seite'=>$i), home_url( $wp->request ) ).'">'.$seitennummer.'</a>';
-					}	
-					echo $html;
-				}	
-				?>
 		<?php
+		if ( isset($_GET['admin']) || !$polli) {
+			if ( $number_of_pages >1 ) {
+				// Page navigation		
+				$html='<div class="nav-links">';
+				for($i=0;$i<$number_of_pages;$i++){
+					$seitennummer = $i+1;
+					$html .= ' &nbsp;<a class="page-numbers" href="'.add_query_arg( array('admin'=>'1', 'seite'=>$i), home_url( $wp->request ) ).'">'.$seitennummer.'</a>';
+				}	
+				echo $html . '</div>';
+			}	
+		}	
 		// Chart Pie anzeigen zu den Ergebnissen
 		$piesum = rtrim($piesum, ",");
 		$pielabel = rtrim($pielabel, ",");
