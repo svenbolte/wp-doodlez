@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.13
-Stable tag: 9.1.1.13
+Version: 9.1.1.14
+Stable tag: 9.1.1.14
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -59,6 +59,10 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.14 ===
+copy question to clipboard to transfer it to teams chat or other platforms
+add /rss to url to get a custom post type feed on questions
 
 === 9.1.1.13 ===
 add some more quizzz questions

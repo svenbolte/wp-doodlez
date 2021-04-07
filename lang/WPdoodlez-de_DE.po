@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WPdoodlez\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 16:48+0000\n"
-"PO-Revision-Date: 2021-02-06 10:26+0000\n"
+"PO-Revision-Date: 2021-04-04 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Poedit-SearchPath-1: WPdoodlez.php\n"
 "X-Poedit-SearchPath-2: wpdoodlez_post_type.php\n"
 "X-Poedit-SearchPathExcluded-0: lang\n"
-"X-Loco-Version: 2.5.0; wp-5.6.1"
+"X-Loco-Version: 2.5.2; wp-5.7"
 
 #: WPdoodlez.php:780
 msgid " characters long. "
@@ -42,7 +42,7 @@ msgstr "WPdoodle hinzufügen"
 
 #: WPdoodlez.php:864
 msgid "all questions overview"
-msgstr "Fragen-Übersicht"
+msgstr "Übersicht"
 
 #: wpdoodlez_post_type.php:8
 msgid "All WPdoodlez"
@@ -108,7 +108,7 @@ msgstr "Exakte Eingabe erwartet (mit Groß/Kleinschreibung)"
 
 #: WPdoodlez.php:873
 msgid "get certificate"
-msgstr "Beenden/Zertifikat"
+msgstr "Ende/Zertifikat"
 
 #. Author URI of the plugin
 msgid "https://github.com/svenbolte"
@@ -144,7 +144,7 @@ msgstr "Neuer WPdoodle"
 
 #: WPdoodlez.php:871
 msgid "next random question"
-msgstr "nächste Zufallsfrage"
+msgstr "nächste Frage"
 
 #: WPdoodlez.php:536
 msgid "No Questions found"

@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.13
-Stable tag: 9.1.1.13
+Version: 9.1.1.14
+Stable tag: 9.1.1.14
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -880,7 +880,9 @@ function quiz_show_form( $content ) {
 			$formstyle .='</style>';
 			$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
 			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
-			$letztefrage .= $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
+			$copyfrage = wp_strip_all_tags(get_the_title().' '.get_the_content().' '.$ansmixed);
+			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:40px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
+			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
 				$letztefrage.='</li>'.$listyle;
 				if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
@@ -1080,11 +1082,10 @@ function set_custom_edit_question_columns($columns) {
 add_action( 'manage_question_posts_custom_column' , 'custom_question_column', 10, 2 );
 function custom_question_column( $column, $post_id ) {
     switch ( $column ) {
-        case 'frageantwort' :
-            echo get_the_excerpt( $post_id ).'<br>';
+		case 'frageantwort' :
+			echo get_the_content( $post_id ).'<br>';
 			echo '<b>'.get_post_meta( $post_id , 'quizz_answer' , true ).'</b>'; 
-            break;
-
+			break;
     }
 }
 
