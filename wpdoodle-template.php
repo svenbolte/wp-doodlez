@@ -12,7 +12,6 @@ get_header();
 
 <div id="primary" class="content-area" style="max-width:900px;background-color:white;margin:0 auto;">
     <main id="main" class="site-main" role="main">
-
         <?php
         // Start the loop.
         while ( have_posts() ) : the_post();
