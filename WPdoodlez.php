@@ -587,7 +587,7 @@ function random_quote_func( $atts ){
     $my_query = null;
     $my_query = new WP_Query($args);
 	$accentcolor = get_theme_mod( 'link-color', '#888' );
-    $message = '<style>.qiz { padding-left: 40px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:2.6em;top:0;left:5px;content: "\f0eb"; }</style>';
+    $message = '';
     if( $my_query->have_posts() ) {
       while ($my_query->have_posts()) : $my_query->the_post(); 
 		$answers = get_post_custom_values('quizz_answer');
@@ -611,7 +611,7 @@ function random_quote_func( $atts ){
 			$antwortmaske .= $xlink.'">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a></div>';
 		}	
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
-		$message .= '<blockquote class="qiz" style="font-style:normal"><p><span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</blockquote>';
+		$message .= '<div style="margin-bottom:1em"><p><span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
@@ -869,8 +869,7 @@ function quiz_show_form( $content ) {
 				} else { $error = "";$showqform = ''; }
 			}
 			$accentcolor = get_theme_mod( 'link-color', '#888' );
-			$formstyle = '<style>.qiz {padding-left: 50px; position: relative;}.qiz:before {color:'.$accentcolor.';position:absolute;font-family:FontAwesome;font-size:3em;top:0;left:5px;content: "\f0eb";}';
-			$formstyle .= '.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
+			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
 			$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} ';
 			if ( empty($_POST) ) {
 				$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
@@ -902,7 +901,7 @@ function quiz_show_form( $content ) {
 			$letztefrage .= '</li></ul></div>';
 			$letztefrage .= quiz_adminstats();
 			if (!$ende) {
-				$antwortmaske = $content . '<blockquote class="qiz" style="font-style:normal">';
+				$antwortmaske = $content . '<div class="qiz">';
 				$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
 				$antwortmaske .= "<!-- noformat on --><script>function empty() { var x; x = document.getElementById('answer').value; if (x == '') { alert('".__('please enter a value','WPdoodlez')."'); return false; }; }</script>";
 				if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
@@ -916,7 +915,7 @@ function quiz_show_form( $content ) {
 					$antwortmaske .= "clock(30);</script><!-- noformat off -->";
 				}	
 				$antwortmaske .= $ansmixed;
-				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></blockquote>'. $letztefrage;
+				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></div>'. $letztefrage;
 			} else {    // Zertifikat ausgeben
 				$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
 				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%;border-radius:3px"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
@@ -1120,7 +1119,7 @@ function play_hangman($rein) {
 	global $hang;
 	$hang = array();
 	$hang[0] = nl2br(str_replace (" ","&nbsp;",
-								  ' _______
+	' _______
 	 |/    | 
 	 |
 	 |
@@ -1130,7 +1129,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[1] =nl2br(str_replace (" ","&nbsp;",
-								 ' _______
+	' _______
 	 |/    | 
 	 |     o
 	 |
@@ -1140,7 +1139,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[2] =nl2br(str_replace (" ","&nbsp;",
-								 ' _______
+	' _______
 	 |/    | 
 	 |     o
 	 |     |
@@ -1150,7 +1149,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[3] =nl2br(str_replace (" ","&nbsp;",
-								 ' _______
+	' _______
 	 |/    | 
 	 |     o
 	 |     |
@@ -1160,7 +1159,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[4] =nl2br(str_replace (" ","&nbsp;",
-								 ' _______
+	' _______
 	 |/    | 
 	 |     o
 	 |     |
@@ -1170,7 +1169,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[5] =nl2br(str_replace (" ","&nbsp;",
-								 ' _______
+	' _______
 	 |/    | 
 	 |     o
 	 |   --|
@@ -1180,7 +1179,7 @@ function play_hangman($rein) {
 	/|\
 	'));
 	$hang[6] =nl2br(str_replace (" ","&nbsp;",
-								 ' _______
+	' _______
 	 |/    | 
 	 |     o
 	 |   --|--
