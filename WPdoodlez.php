@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.14
-Stable tag: 9.1.1.14
+Version: 9.1.1.15
+Stable tag: 9.1.1.15
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -517,14 +517,43 @@ function get_doodlez_content() {
 
 // ------------------- quizzz code and shortcode ---------------------------------------------------------------
 
+function create_quiz_tax_category() {
+	$labels = array(
+        'name' => __( 'Quiz Categories', 'WPdoodlez' ),
+        'singular_name' => __( 'Quiz Category', 'WPdoodlez' ),
+        'search_items' =>  __( 'Search Quiz Categories', 'WPdoodlez' ),
+        'popular_items' => __( 'Popular Quiz Categories', 'WPdoodlez' ),
+        'all_items' => __( 'All Quiz Categories', 'WPdoodlez' ),
+        'parent_item' => null,
+        'parent_item_colon' => null,
+        'edit_item' => __( 'Edit Quiz Category', 'WPdoodlez' ),
+        'update_item' => __( 'Update Quiz Category', 'WPdoodlez' ),
+        'add_new_item' => __( 'Add New Quiz Category', 'WPdoodlez' ),
+        'new_item_name' => __( 'New Quiz Category', 'WPdoodlez' ),
+        'separate_items_with_commas' => __( 'Separate categories with commas', 'WPdoodlez' ),
+        'add_or_remove_items' => __( 'Add or remove Quiz categories', 'WPdoodlez' ),
+        'choose_from_most_used' => __( 'Choose from the most used categories', 'WPdoodlez' )
+        );
+    register_taxonomy(  
+    'quizcategory',  
+    'Question',  // this is the custom post type(s) I want to use this taxonomy for
+        array(  
+            'hierarchical' => false,  
+            'label' => __( 'Quiz-categories', 'WPdoodlez' ),  
+            'query_var' => true,  
+            'labels' => $labels,
+            'hierarchical' => true,
+            'show_ui' => true,
+            'rewrite' => true  
+        )  
+    );  
+}
+add_action( 'init', 'create_quiz_tax_category' );
 
 function create_quiz_post() {
-
 	// Init Session score
 	if (empty($_COOKIE['rightscore'])) setcookie('rightscore', 0, time()+60*60*24*30, '/');
 	if (empty($_COOKIE['wrongscore'])) setcookie('wrongscore', 0, time()+60*60*24*30, '/');
-
-
 	$labels = array(
 		'name'                => __( 'Questions', 'WPdoodlez' ),
 		'singular_name'       => __( 'Question', 'WPdoodlez' ),
@@ -539,12 +568,11 @@ function create_quiz_post() {
 		'parent_item_colon'   => __( 'Parent Question:', 'WPdoodlez' ),
 		'menu_name'           => __( 'Questions', 'WPdoodlez' ),
 	);
-
 	$args = array(
 		'labels'              => $labels,
 		'hierarchical'        => false,
 		'description'         => __( 'questions with one or four answers and help mask', 'WPdoodlez' ),
-		'taxonomies'          => array( 'category', 'post_tag' ),
+		'taxonomies'          => array( 'quizcategory', 'post_tag' ),
 		'public'              => true,
 		'show_ui'             => true,
 		'show_in_menu'        => true,
@@ -590,6 +618,14 @@ function random_quote_func( $atts ){
     $message = '';
     if( $my_query->have_posts() ) {
       while ($my_query->have_posts()) : $my_query->the_post(); 
+		$antwortmaske='';
+		$quizkat='';
+		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+		if ( $terms && !is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
+					$quizkat .= '&nbsp; <i class="fa fa-folder-open-o"></i> ' . $term->name . ' &nbsp; ';
+			}
+		}	
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
@@ -598,7 +634,6 @@ function random_quote_func( $atts ){
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 		$listyle='text-align:center;border:1px solid silver;border-radius:3px;padding:4px;display:block;margin:3px';
 		$xlink='<div class="nav-links"><a title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
-		$antwortmaske='';
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
@@ -611,7 +646,7 @@ function random_quote_func( $atts ){
 			$antwortmaske .= $xlink.'">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a></div>';
 		}	
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
-		$message .= '<div style="margin-bottom:1em"><p><span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.get_the_content().'</p>'.$antwortmaske.'</div>';
+		$message .= '<div style="margin-bottom:1em"><p><span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat.get_the_content().'</p>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
@@ -619,10 +654,31 @@ function random_quote_func( $atts ){
 }
 add_shortcode( 'random-question', 'random_quote_func' );
 
+// Kategorie anlegen oder auswählen
+/**
+ * (WordPress) Insert or get term id
+ * @return int Term ID (0 no term was inserted or found)
+ */
+function __wp_insert_or_get_term_id($name, $taxonomy, $parent = 0) {
+    if (!($term = get_term_by("name", $name, $taxonomy))) {
+        $insert = wp_insert_term($name, $taxonomy, array(
+            "parent" => $parent
+        ));
+        if (is_wp_error($insert)) {
+            return 0;
+        }
+        return intval($insert["term_id"]);
+    }
+    return intval($term->term_id);
+}
 
+
+// Fragen importieren
 function importposts() {
-	//Base upload path of uploads
 	set_time_limit(600);
+	// Alle Fragen löschen
+	$allposts= get_posts( array('post_type'=>'Question','numberposts'=>-1) );
+	foreach ($allposts as $eachpost) { wp_delete_post( $eachpost->ID, true ); }
 	$edat= array();
 	$upload_dir = wp_upload_dir();
 	$upload_basedir = $upload_dir['basedir'] . '/public_histereignisse.csv';
@@ -630,10 +686,11 @@ function importposts() {
 	if (($handle = fopen($upload_basedir , "r")) !== FALSE) {
 		while (($data = fgetcsv($handle, 2000, ";")) !== FALSE) {
 			if ( $row > 1 && !empty($data[1]) ) {
-				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo
+				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie
 				$num = count($data);
 				$edat = explode('.',$data[1]);
 				$mydatum = $edat[2].'-'.$edat[1].'-'.$edat[0];
+				$category_id =__wp_insert_or_get_term_id( $data[11], 'quizcategory' );
 				$post_id = wp_insert_post(array (
 				   'post_type' => 'Question',
 				   'post_title' => $data[2].' '.$data[0],
@@ -641,6 +698,9 @@ function importposts() {
 				   'post_status' => 'publish',
 				   'comment_status' => 'closed',
 				   'ping_status' => 'closed', 
+				   'tax_input'     => array(
+                           'quizcategory' => array( $category_id ),
+					),
 				));
 				if ($post_id) {
 				   // insert post meta
@@ -747,6 +807,12 @@ function quiz_show_form( $content ) {
 		  endwhile;
 		}
 		wp_reset_query();  
+		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+		if ( $terms && !is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
+					$content = '&nbsp; <i class="fa fa-folder-open-o"></i> ' . $term->name . ' &nbsp; ' . $content; 
+			}
+		}	
 		// get meta values for this question
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
@@ -1066,17 +1132,20 @@ add_filter( 'manage_question_posts_columns', 'set_custom_edit_question_columns' 
 function set_custom_edit_question_columns($columns) {
     $new = array();
 	$columns['frageantwort'] = __( 'question/answer', 'WPdoodlez' );
+	$columns['quizcategory'] = __( 'quiz category', 'WPdoodlez' );
     $frageantwort = $columns['frageantwort'];  // save the tags column
+    $quizcatcol = $columns['quizcategory'];  
     unset($columns['frageantwort']);   // remove it from the columns list
+    unset($columns['quizcategory']);   
     foreach($columns as $key=>$value) {
-        if($key=='categories') {  // when we find the date column
+        if($key=='tags') {  // when we find the date column
            $new['frageantwort'] = $frageantwort;  // put the tags column before it
+           $new['quizcategory'] = $quizcatcol;
         }    
         $new[$key]=$value;
     }  
 	return $new;
 }
-
 // Add the data to the custom columns for the book post type:
 add_action( 'manage_question_posts_custom_column' , 'custom_question_column', 10, 2 );
 function custom_question_column( $column, $post_id ) {
@@ -1084,6 +1153,14 @@ function custom_question_column( $column, $post_id ) {
 		case 'frageantwort' :
 			echo get_the_content( $post_id ).'<br>';
 			echo '<b>'.get_post_meta( $post_id , 'quizz_answer' , true ).'</b>'; 
+			break;
+		case 'quizcategory' :
+			$terms = get_the_terms($post_id, 'quizcategory'); // Get all terms of a taxonomy
+			if ( $terms && !is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+						echo $term->name; 
+				}
+			}	
 			break;
     }
 }

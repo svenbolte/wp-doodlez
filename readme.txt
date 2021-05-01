@@ -3,10 +3,10 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.14
-Stable tag: 9.1.1.14
+Version: 9.1.1.15
+Stable tag: 9.1.1.15
 Requires at least: 5.1
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 7.4
 
 ## Description  plan appointments, query polls and place a quiz on your wordpress site ( with csv import for questions) ##
@@ -59,6 +59,11 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.15 ===
+Add quizcategory (custom taxonomy only valid for CPT "Question" that can be imported as last column in the csv file (quizkat)
+Show category in question if one exists
+showing up categories in random question shortcode too
 
 === 9.1.1.14 ===
 copy question to clipboard to transfer it to teams chat or other platforms
