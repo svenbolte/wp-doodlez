@@ -3,17 +3,17 @@
 Plugin Name: WP Doodlez
 Plugin URI: https://github.com/svenbolte/WPdoodlez
 Author URI: https://github.com/svenbolte
-Description: Doodle like finding meeting date, polls, quizzz with csv import
+Description: Doodle like finding meeting date, polls, quizzz with one or four answers and hangman with csv question import
 Contributors: Robert Kolatzek, PBMod
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.15
-Stable tag: 9.1.1.15
+Version: 9.1.1.16
+Stable tag: 9.1.1.16
 Requires at least: 5.1
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.4
 */
 
@@ -623,7 +623,7 @@ function random_quote_func( $atts ){
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-					$quizkat .= '&nbsp; <i class="fa fa-folder-open-o"></i> ' . $term->name . ' &nbsp; ';
+					$quizkat .= '&nbsp; <i class="fa fa-folder-open-o"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
 			}
 		}	
 		$answers = get_post_custom_values('quizz_answer');
@@ -810,7 +810,7 @@ function quiz_show_form( $content ) {
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-					$content = '&nbsp; <i class="fa fa-folder-open-o"></i> ' . $term->name . ' &nbsp; ' . $content; 
+					$content = '&nbsp; <i class="fa fa-folder-open-o"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ' . $content; 
 			}
 		}	
 		// get meta values for this question
@@ -945,7 +945,14 @@ function quiz_show_form( $content ) {
 			$formstyle .='</style>';
 			$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
 			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
-			$copyfrage = wp_strip_all_tags(get_the_title().' '.get_the_content().' '.$ansmixed);
+			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+			$copytags = '';
+			if ( $terms && !is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+						$copytags .= '&nbsp; Kategorie: ' . $term->name; 
+				}
+			}	
+			$copyfrage = wp_strip_all_tags(get_the_title().'  '.$copytags.'   '.get_the_content().' '.$ansmixed);
 			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:40px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
