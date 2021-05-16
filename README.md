@@ -2,6 +2,7 @@
 Doodlez: plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress.
 Poll: create classic polls to let visitors vote about a question
 Quizzz: Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
+quizzz supports categories images and integrates them in single and header if used in theme
 
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.

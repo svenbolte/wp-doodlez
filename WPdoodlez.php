@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.16
-Stable tag: 9.1.1.16
+Version: 9.1.1.17
+Stable tag: 9.1.1.17
 Requires at least: 5.1
 Tested up to: 5.7.2
 Requires PHP: 7.4
@@ -142,7 +142,48 @@ add_action( 'wp_ajax_wpdoodlez_delete', 'wpdoodlez_delete_vote' );
  * Set cookie with the name of user (used by voting)
  */
 function wpdoodlez_cookie() {
-    include('wpdoodlez_post_type.php');
+	$labels = [
+		'name'               => 'WPdoodlez',
+		'singular_name'      => 'WPdoodle',
+		'menu_name'          => 'WPdoodle',
+		'parent_item_colon'  => '',
+		'all_items'          => __( 'All WPdoodlez', 'WPdoodlez'  ),
+		'view_item'          => __( 'Show WPdoodle', 'WPdoodlez'  ),
+		'add_new_item'       => __( 'New WPdoodle', 'WPdoodlez'  ),
+		'add_new'            => __( 'Add WPdoodle ', 'WPdoodlez'  ),
+		'edit_item'          => __( 'Edit WPdoodle', 'WPdoodlez'  ),
+		'update_item'        => __( 'Update WPdoodle', 'WPdoodlez'  ),
+		'search_items'       => __( 'Search WPdoodlez', 'WPdoodlez'  ),
+		'not_found'          => __( 'Not found', 'WPdoodlez'  ),
+		'not_found_in_trash' => __( 'Not found in trash', 'WPdoodlez'  ),
+	];
+	$args = [
+		'labels'              => $labels,
+		'supports'            => [ 'title', 'editor', 'thumbnail', 'comments', 'custom-fields', 'post-formats' ],
+		// 'show_in_rest' => true,   // Gutenberg Anzeige des Editors, über ... / Ansicht dann Eigene Felder einschalten!
+		 "taxonomies"		  => array("post_tag", "category"),
+		'description'         => __( 'appointment planner, polls, quizzes', 'WPdoodlez' ),
+		'hierarchical'        => false,
+		'public'              => true,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => true,
+		'show_in_admin_bar'   => true,
+		'menu_position'       => 5,
+		'menu_icon'           => 'dashicons-forms',
+		'can_export'          => false,
+		'has_archive'         => true,
+		'exclude_from_search' => TRUE,
+		'publicly_queryable'  => true,
+		'rewrite'             => [
+			'slug'       => 'wpdoodle',
+			'with_front' => true,
+			'pages'      => false,
+			'feeds'      => false,
+		],
+		'capability_type'     => 'page',
+	];
+	register_post_type( 'WPdoodle', $args );
     foreach ( $_COOKIE as $key => $value ) {
         if ( preg_match( '/wpdoodlez\-.+/i', (string)$key ) ) {
             setcookie( (string)$key, (string)$value, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
@@ -646,7 +687,9 @@ function random_quote_func( $atts ){
 			$antwortmaske .= $xlink.'">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a></div>';
 		}	
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
-		$message .= '<div style="margin-bottom:1em"><p><span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat.get_the_content().'</p>'.$antwortmaske.'</div>';
+		$message .= '<div style="margin-bottom:1em"><p>';
+		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
+		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat.get_the_content().'</p>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
@@ -991,7 +1034,7 @@ function quiz_show_form( $content ) {
 				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></div>'. $letztefrage;
 			} else {    // Zertifikat ausgeben
 				$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
-				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'lightbulb-1000-250.jpg" style="width:100%;border-radius:3px"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
+				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'/quizkatbilder/lightbulb-1000-250.jpg" style="width:100%;border-radius:3px"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
 				$theForm .= '<br><br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
 				$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
 				if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
