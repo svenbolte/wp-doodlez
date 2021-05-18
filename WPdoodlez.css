@@ -1,25 +1,8 @@
-.wpdoodle .entry-content table {
-    width: 100%;
-}
-.wpdoodle .entry-content table > caption {
-    padding: 1.5ex;
-    font-size: 150%;
-}
-.wpdoodle .entry-content table > thead > tr > th {
-    text-align: center;
-}
-.wpdoodle .entry-content table > tbody > tr > td {
-    text-align: center;
-}
-.wpdoodle .entry-content table > tfoot > tr > th {
-    text-align: center;
-}
-.wpdoodle .entry-footer {
-    text-align: right;
-}
-.wpdoodle table > tbody > tr.myvote > td, .wpdoodle table > tbody > tr.myvote > td * {
-    font-weight: bold;
-}
-.wpdoodle table > tbody > tr.myvote:hover * {
-    color: #aaa;
-}
+.wpdoodle .entry-content table {width: 100%;}
+.wpdoodle .entry-content table > caption {padding: 1.5ex;font-size: 150%;}
+.wpdoodle .entry-content table > thead > tr > th {text-align: center;}
+.wpdoodle .entry-content table > tbody > tr > td {text-align: center;}
+.wpdoodle .entry-content table > tfoot > tr > th {text-align: center;}
+.wpdoodle .entry-footer {text-align: right;}
+.wpdoodle table > tbody > tr.myvote > td, .wpdoodle table > tbody > tr.myvote > td * {font-weight: bold;}
+.wpdoodle table > tbody > tr.myvote:hover * {color: #aaa;}
