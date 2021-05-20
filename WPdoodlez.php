@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.17
-Stable tag: 9.1.1.17
+Version: 9.1.1.18
+Stable tag: 9.1.1.18
 Requires at least: 5.1
 Tested up to: 5.7.2
 Requires PHP: 7.4
@@ -673,8 +673,8 @@ function random_quote_func( $atts ){
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
-		$listyle='text-align:center;border:1px solid silver;border-radius:3px;padding:4px;display:block;margin:3px';
-		$xlink='<div class="nav-links"><a title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
+		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
+		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 			shuffle($ans);
@@ -686,7 +686,7 @@ function random_quote_func( $atts ){
 			// ansonsten freie Antwort anfordern von Antwort 1
 			$antwortmaske .= $xlink.'">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a></div>';
 		}	
-		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
+		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a class="page-numbers" title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
 		$message .= '<div style="margin-bottom:1em"><p>';
 		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
 		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat.get_the_content().'</p>'.$antwortmaske.'</div>';
@@ -978,8 +978,8 @@ function quiz_show_form( $content ) {
 				} else { $error = "";$showqform = ''; }
 			}
 			$accentcolor = get_theme_mod( 'link-color', '#888' );
-			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;cursor:pointer}';
-			$formstyle .= '.qiz input[type=radio] + label:hover{background:'.$accentcolor.'} .qiz input[type=radio] + label:hover a {color:#fff} ';
+			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block;width:100%;padding:8px;border-radius:3px;cursor:pointer;background:'.$accentcolor.'}';
+			$formstyle .= '.qiz input[type=radio] + label:hover{box-shadow:inset 0 0 100px 100px rgba(255,255,255,.15)} .qiz input[type=radio] + label a {color:#fff} ';
 			if ( empty($_POST) ) {
 				$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
 			} else {
