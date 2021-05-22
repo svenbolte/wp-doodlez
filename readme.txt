@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.18
-Stable tag: 9.1.1.18
+Version: 9.1.1.19
+Stable tag: 9.1.1.19
 Requires at least: 5.1
 Tested up to: 5.7.2
 Requires PHP: 7.4
@@ -60,7 +60,8 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 == Changelog ==
 
-=== 9.1.1.16 ===
+=== 9.1.1.19 ===
+singe answer mask style changed
 quizcategory images added. If an image is added via categories images plugin, it will be displayed on lists and on header in single view
 lightbulb pic moved to quizkatbilder folder
 

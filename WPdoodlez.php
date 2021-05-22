@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.18
-Stable tag: 9.1.1.18
+Version: 9.1.1.19
+Stable tag: 9.1.1.19
 Requires at least: 5.1
 Tested up to: 5.7.2
 Requires PHP: 7.4
@@ -916,7 +916,7 @@ function quiz_show_form( $content ) {
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
 				if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
-				$ansmixed .= '<div style="width:100%;display:block;border:1px solid silver;border-radius:3px;padding:8px;font-family:monospace">' . __('answer mask','WPdoodlez');
+				$ansmixed .= '<div style="width:100%;display:block;padding:8px;font-family:monospace">' . __('answer mask','WPdoodlez');
 				$ansmixed .= ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ] ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 				if ( empty($_POST) ) {
 					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
