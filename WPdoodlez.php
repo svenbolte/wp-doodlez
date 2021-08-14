@@ -3,17 +3,17 @@
 Plugin Name: WP Doodlez
 Plugin URI: https://github.com/svenbolte/WPdoodlez
 Author URI: https://github.com/svenbolte
-Description: Doodle like finding meeting date, polls, quizzz with one or four answers and hangman with csv question import
+Description: plan appointments, query polls and place a quiz on your wordpress site (with csv import for questions)
 Contributors: Robert Kolatzek, PBMod
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.19
-Stable tag: 9.1.1.19
+Version: 9.1.1.20
+Stable tag: 9.1.1.20
 Requires at least: 5.1
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 7.4
 */
 
@@ -1019,16 +1019,18 @@ function quiz_show_form( $content ) {
 			if (!$ende) {
 				$antwortmaske = $content . '<div class="qiz">';
 				$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
-				$antwortmaske .= "<!-- noformat on --><script>function empty() { var x; x = document.getElementById('answer').value; if (x == '') { alert('".__('please enter a value','WPdoodlez')."'); return false; }; }</script>";
-				if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
-				if ( empty($_POST) && $timeranaus == '0' && ( !empty($answersb) && strlen($answersb[0])>1 ) ) {     // Timer 30 Sekunden
-					$admincanstop = 'clearInterval(myTimer)';
-					  // if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
-					$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress onclick="'.$admincanstop.'" id="sec" class="progress" value="" max="30"></progress>';
-					$antwortmaske .= "<!-- noformat on --><script>var myTimer; function clock(c) { myTimer = setInterval(myClock, 1000); ";
-					$antwortmaske .= "     function myClock() { document.getElementById('sec').value = --c; ";
-					$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('ans2').checked=true;document.getElementById('ans2').value='".__(' no answer (timeout occured)','WPdoodlez')."'; document.getElementById('quizform').submit(); }  }  } ";
-					$antwortmaske .= "clock(30);</script><!-- noformat off -->";
+				if ( !current_user_can('administrator') ) {      // Nur Timer anzeigen, wenn kein Admin angemeldet
+					$antwortmaske .= "<!-- noformat on --><script>function empty() { var x; x = document.getElementById('answer').value; if (x == '') { alert('".__('please enter a value','WPdoodlez')."'); return false; }; }</script>";
+					if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
+					if ( empty($_POST) && $timeranaus == '0' && ( !empty($answersb) && strlen($answersb[0])>1 ) ) {     // Timer 30 Sekunden
+						$admincanstop = 'clearInterval(myTimer)';
+						  // if ( current_user_can('administrator') ) $admincanstop = 'clearInterval(myTimer)'; else $admincanstop='';
+						$antwortmaske .= '<style>.progress:before {content:attr(value) " Sekunden" }</style><progress onclick="'.$admincanstop.'" id="sec" class="progress" value="" max="30"></progress>';
+						$antwortmaske .= "<!-- noformat on --><script>var myTimer; function clock(c) { myTimer = setInterval(myClock, 1000); ";
+						$antwortmaske .= "     function myClock() { document.getElementById('sec').value = --c; ";
+						$antwortmaske .= "       if (c == 0) { clearInterval(myTimer); document.getElementById('ans2').checked=true;document.getElementById('ans2').value='".__(' no answer (timeout occured)','WPdoodlez')."'; document.getElementById('quizform').submit(); }  }  } ";
+						$antwortmaske .= "clock(30);</script><!-- noformat off -->";
+					}
 				}	
 				$antwortmaske .= $ansmixed;
 				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></div>'. $letztefrage;
@@ -1249,71 +1251,71 @@ function play_hangman($rein) {
 	' _______
 	 |/    | 
 	 |
-	 |
+	 0
 	 |
 	 |
 	 | 
-	/|\
+	_|_______
 	'));
 	$hang[1] =nl2br(str_replace (" ","&nbsp;",
-	' _______
+	' _______ 
 	 |/    | 
 	 |     o
-	 |
+	 1
 	 |
 	 |
 	 | 
-	/|\
+	_|_______
 	'));
 	$hang[2] =nl2br(str_replace (" ","&nbsp;",
 	' _______
 	 |/    | 
 	 |     o
-	 |     |
+	 2     |
 	 |     |
 	 |
 	 | 
-	/|\
+	_|_______
 	'));
 	$hang[3] =nl2br(str_replace (" ","&nbsp;",
 	' _______
 	 |/    | 
 	 |     o
-	 |     |
+	 3     |
 	 |     |
 	 |    /
 	 | 
-	/|\
+	_|_______
 	'));
 	$hang[4] =nl2br(str_replace (" ","&nbsp;",
 	' _______
 	 |/    | 
 	 |     o
-	 |     |
+	 4     |
 	 |     |
 	 |    / \
 	 | 
-	/|\
+	_|_______
 	'));
 	$hang[5] =nl2br(str_replace (" ","&nbsp;",
 	' _______
 	 |/    | 
 	 |     o
-	 |   --|
+	 5   --|
 	 |     |
 	 |    / \
 	 | 
-	/|\
+	_|_______
 	'));
 	$hang[6] =nl2br(str_replace (" ","&nbsp;",
 	' _______
 	 |/    | 
 	 |     o
-	 |   --|--
+	 6   --|--
 	 |     |
 	 |    / \
 	 | 
-	/|\
+	_|_______
 	'));
 	global $words;
 	$ers = array('Ä' => 'Ae', 'Ö' => 'Oe', 'Ü' => 'Ue', 'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss' );

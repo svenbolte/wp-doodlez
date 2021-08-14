@@ -3,13 +3,13 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.19
-Stable tag: 9.1.1.19
+Version: 9.1.1.20
+Stable tag: 9.1.1.20
 Requires at least: 5.1
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 7.4
 
-## Description  plan appointments, query polls and place a quiz on your wordpress site ( with csv import for questions) ##
+## Description##
 
 QUIZZZ: Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
 
