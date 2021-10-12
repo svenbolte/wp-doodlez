@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.20
-Stable tag: 9.1.1.20
+Version: 9.1.1.21
+Stable tag: 9.1.1.21
 Requires at least: 5.1
 Tested up to: 5.8.1
 Requires PHP: 7.4
@@ -664,7 +664,7 @@ function random_quote_func( $atts ){
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-					$quizkat .= '&nbsp; <i class="fa fa-folder-open-o"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
+					$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
 			}
 		}	
 		$answers = get_post_custom_values('quizz_answer');
@@ -853,7 +853,7 @@ function quiz_show_form( $content ) {
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-					$content = '&nbsp; <i class="fa fa-folder-open-o"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ' . $content; 
+					$content = '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ' . $content; 
 			}
 		}	
 		// get meta values for this question
@@ -952,8 +952,8 @@ function quiz_show_form( $content ) {
 						$goto = $nextlevel[0];
 						wp_safe_redirect( get_post_permalink($goto) );
 					} else {
-						$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
-						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+						$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:#fff;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
+						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px;color:#fff"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
 						$error .= '</div>'.$wikinachschlag;
 						$showqform = 'display:none';
 					}
@@ -965,10 +965,10 @@ function quiz_show_form( $content ) {
 				}
 			} else {
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_GET['ans']) ) {
-					$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px">';
+					$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:#fff;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
 					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
-					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px;color:#fff"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
 					$error .= '</div>'.$wikinachschlag;
 					$showqform = 'display:none';
 					ob_start();
