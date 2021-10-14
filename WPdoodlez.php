@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.21
-Stable tag: 9.1.1.21
+Version: 9.1.1.22
+Stable tag: 9.1.1.22
 Requires at least: 5.1
 Tested up to: 5.8.1
 Requires PHP: 7.4
@@ -360,9 +360,9 @@ function get_doodlez_content() {
 			$xsum = 0;
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
-				if ($key != "post_views_count" && $key != "likes" ) {
+				if ($key != "post_views_count" && $key != "likes" && $value > 0 ) {
 					$xsum += $value;
-					$pielabel.=$suggestions[$key][0].','; $piesum .= $value.','; 
+					$pielabel.=str_replace(',','',$suggestions[$key][0]).','; $piesum .= $value.','; 
 				}
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
