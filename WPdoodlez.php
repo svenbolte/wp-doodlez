@@ -653,7 +653,7 @@ function random_quote_func( $atts ){
       'posts_per_page' => $attrs['items'],
 	  'showposts' => $attrs['items'],
     );
-    $my_query = null;
+	$my_query = null;
     $my_query = new WP_Query($args);
 	$accentcolor = get_theme_mod( 'link-color', '#888' );
     $message = '';
@@ -688,6 +688,19 @@ function random_quote_func( $atts ){
 		}	
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a class="page-numbers" title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
 		$message .= '<div style="margin-bottom:1em"><p>';
+		// Wenn eine Quizkategorie da, Katbild anzeigen
+		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+		if ( $terms && !is_wp_error( $terms ) ) {
+			$category = $terms;
+		} else {
+			$category = get_the_category(); 
+		}	
+		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+			$cbild = z_taxonomy_image_url($category[0]->term_id);
+			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
+			$message .= '<img alt="Kategoriebild" width="100%" height="100%" src="' . $cbild . '" class="wp-post-image" style="max-height:200px" />';	
+			$message .= '</div>';
+		}			
 		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
 		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat.get_the_content().'</p>'.$antwortmaske.'</div>';
       endwhile;
