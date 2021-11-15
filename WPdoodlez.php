@@ -698,11 +698,12 @@ function random_quote_func( $atts ){
 		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 			$cbild = z_taxonomy_image_url($category[0]->term_id);
 			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
-			$message .= '<img alt="Kategoriebild" width="100%" height="100%" src="' . $cbild . '" class="wp-post-image" style="max-height:200px" />';	
+			$message .= '<img alt="Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="width: calc(100% + 16px);margin-left: -8px">';	
 			$message .= '</div>';
 		}			
 		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
-		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat.get_the_content().'</p>'.$antwortmaske.'</div>';
+		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat;
+		$message .= '</p><p>'.get_the_content().'</p>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
