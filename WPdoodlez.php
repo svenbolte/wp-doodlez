@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.22
-Stable tag: 9.1.1.22
+Version: 9.1.1.23
+Stable tag: 9.1.1.23
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -1348,9 +1348,9 @@ function play_hangman($rein) {
 		$lettersguessed = $lettersguessed . $letter;
 		$guesstemplate = matchLetters($word, $lettersguessed);
 		if (!strstr($guesstemplate, "_")) {
-			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Gewonnen - Gratulation. Sie haben <em>'.$word.'</em> erraten.</p></div>';
+			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Gewonnen - Gratulation. Sie haben <i>'.$word.'</i> erraten.</div>';
 		} else if ($wrong >= 6) {
-			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px"><p>Verloren - <em>'.$word.'</em> war die Lösung.</p></div>';
+			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Verloren - <i>'.$word.'</i> war die Lösung.</div>';
 		} else {
 			return printPage($hang[$wrong], $guesstemplate, $which, $lettersguessed, $wrong);
 		}
