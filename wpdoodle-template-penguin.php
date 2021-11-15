@@ -14,20 +14,20 @@ get_header();
 		<?php
 		while ( have_posts() ) : the_post(); // Start the loop.	?>
 			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<?php 
-			penguin_entry_top(); ?>
-			<header class="entry-header">
-				<?php
-				echo '<div class="entry-meta-top">';
-				meta_icons(); 
-				echo '</div>';
-				if ( is_single() ) {
-					the_title( '<h1 class="entry-title">', '</h1>' );
-				} else {
-					the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-				}
-				?>
-			</header><!-- .entry-header -->
+			<?php penguin_entry_top();
+			echo '<header class="entry-header">';
+			$tcolor = get_theme_mod( 'link-color', '#006060' );
+			$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
+			echo '<div class="entry-meta-top" style="background-color:rgba('.$backgd.')">';
+			meta_icons(); 
+			echo '</div>';
+			if ( is_single() ) {
+				the_title( '<h1 class="entry-title">', '</h1>' );
+			} else {
+				the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
+			}
+			echo '</header><!-- .entry-header -->';
+			?>
 			<div class="entry-content">
 				<?php get_doodlez_content(); ?>
             </div><!-- .entry-content -->
