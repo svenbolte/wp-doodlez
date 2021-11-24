@@ -593,8 +593,8 @@ add_action( 'init', 'create_quiz_tax_category' );
 
 function create_quiz_post() {
 	// Init Session score
-	if (empty($_COOKIE['rightscore'])) setcookie('rightscore', 0, time()+60*60*24*30, '/');
-	if (empty($_COOKIE['wrongscore'])) setcookie('wrongscore', 0, time()+60*60*24*30, '/');
+	if (empty($_COOKIE['rightscore']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', 0, time()+60*60*24*30, '/');
+	if (empty($_COOKIE['wrongscore']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('wrongscore', 0, time()+60*60*24*30, '/');
 	$labels = array(
 		'name'                => __( 'Questions', 'WPdoodlez' ),
 		'singular_name'       => __( 'Question', 'WPdoodlez' ),
@@ -778,37 +778,42 @@ function importposts() {
 	}		
 }
 
+
 function quiz_adminstats() {
 	// wenn admin eingeloggt, Admin stats anzeigen
 	if( current_user_can('administrator') &&  ( is_singular() ) ) {
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 		global $wpdb;
 		$message = '<h6>Admin-Statistik</h6>';
-		$toprights = $wpdb->get_results(" SELECT posts.guid, posts.post_content, postmeta.meta_value
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC LIMIT 5 ");
-		$rct = 0;
-		foreach ($toprights as $topright) {
-			$rct += $topright->meta_value;
-			$message .= 'R:'.$topright->meta_value.' <a href="'.$topright->guid.$timerurl.'">'.$topright->post_content.'</a><br>';
-		}	
-		$rightcounter = $wpdb->get_results(" SELECT postmeta.meta_value
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_rightstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
-		$rct = 0;
-		foreach ($rightcounter as $top5right) {
-			$rct += $top5right->meta_value;
-		}	
-		$wrongcounter = $wpdb->get_results(" SELECT postmeta.meta_value 
-		  FROM $wpdb->posts as posts JOIN $wpdb->postmeta as postmeta
-		  ON postmeta.post_id = posts.ID AND postmeta.meta_key = 'quizz_wrongstat'
-		  GROUP BY posts.ID HAVING COUNT(*) >= 1 ORDER BY postmeta.meta_value DESC");
-		$wct = 0;
-		foreach ($wrongcounter as $top5wrong) {
-			$wct += $top5wrong->meta_value;
-		}	
+		// Top5 Right
+		$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => 5, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
+		if ( $the_query->have_posts() ) {
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$message .= '<span style="color:green;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
+			}
+		}
+		wp_reset_postdata();
+		// Top5 wrong
+		$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => 5, 'meta_key' => 'quizz_wrongstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
+		if ( $the_query->have_posts() ) {
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><span style="color:green;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
+			}
+		}
+		wp_reset_postdata();
+		// totals Right/wrong
+		$rct=0;$wct=0;
+		$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
+		if ( $the_query->have_posts() ) {
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
+				$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
+			}
+		}
+		wp_reset_postdata();
 		if ($rct >0 || $wct > 0) {
 			$message .= '<p>Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct;
 			$message .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
@@ -817,8 +822,7 @@ function quiz_adminstats() {
 		}	
 		return $message;
 	}
-	// Ende Admin Stats
-}
+}	// Ende Admin Stats
 
 // // Schulnote auflösen
 function get_schulnote( $prozent ) {
