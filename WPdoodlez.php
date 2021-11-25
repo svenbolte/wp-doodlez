@@ -88,7 +88,7 @@ function wpdoodlez_save_vote() {
         wp_die();
     }
     update_option( 'wpdoodlez_' . (string)$_POST[ 'data' ][ 'wpdoodle' ], $values );
-    setcookie( 'wpdoodlez-' . (string)$_POST[ 'data' ][ 'wpdoodle' ], $name, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+    if ($_COOKIE['hidecookiebannerx']==2 ) setcookie( 'wpdoodlez-' . (string)$_POST[ 'data' ][ 'wpdoodle' ], $name, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
     echo json_encode( array( 'save' => true ) );
     wp_die();
 }
@@ -186,7 +186,7 @@ function wpdoodlez_cookie() {
 	register_post_type( 'WPdoodle', $args );
     foreach ( $_COOKIE as $key => $value ) {
         if ( preg_match( '/wpdoodlez\-.+/i', (string)$key ) ) {
-            setcookie( (string)$key, (string)$value, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+            if ($_COOKIE['hidecookiebannerx']==2 ) setcookie( (string)$key, (string)$value, time() + (3600 * 24 * 30), COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
         }
     }
 }
@@ -896,13 +896,13 @@ function quiz_show_form( $content ) {
 			$theForm .= '<ul class="footer-menu" style="text-align:center;margin-top:20px;list-style:none;text-transform:uppercase;"><li><a href="' . $random_post_url .'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li></ul>';
 			if ( strpos($theForm,"background-color:green") !== false ) {	
 				ob_start();
-				setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
+				if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
 				update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
 			}
 			if ( strpos($theForm,"background-color:tomato") !== false ) {	
 				ob_start();
-				setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+				if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
 				update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
 			}
@@ -960,7 +960,7 @@ function quiz_show_form( $content ) {
 		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<br><div class="nav_links" style="text-align:center"><i class="fa fa-wikipedia-w"></i> <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a></div>'; } else { $wikinachschlag='';}
 			if ( $correct == "yes" ) {
 				ob_start();
-				setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
+				if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
 				update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
 				if ($last_bool[0] != "last") {
@@ -990,7 +990,7 @@ function quiz_show_form( $content ) {
 					$error .= '</div>'.$wikinachschlag;
 					$showqform = 'display:none';
 					ob_start();
-					setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+					if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
 					ob_flush();
 					update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
 				} else { $error = "";$showqform = ''; }
