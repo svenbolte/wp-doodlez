@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.23
-Stable tag: 9.1.1.23
+Version: 9.1.1.24
+Stable tag: 9.1.1.24
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -59,6 +59,9 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.24 ===
+Cookies wrongscore and rightsccore will only be set if cookie hidecookiebannerx = 2
 
 === 9.1.1.19 ===
 singe answer mask style changed

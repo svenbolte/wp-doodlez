@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.23
-Stable tag: 9.1.1.23
+Version: 9.1.1.24
+Stable tag: 9.1.1.24
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -592,9 +592,6 @@ function create_quiz_tax_category() {
 add_action( 'init', 'create_quiz_tax_category' );
 
 function create_quiz_post() {
-	// Init Session score
-	if (empty($_COOKIE['rightscore']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', 0, time()+60*60*24*30, '/');
-	if (empty($_COOKIE['wrongscore']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('wrongscore', 0, time()+60*60*24*30, '/');
 	$labels = array(
 		'name'                => __( 'Questions', 'WPdoodlez' ),
 		'singular_name'       => __( 'Question', 'WPdoodlez' ),
