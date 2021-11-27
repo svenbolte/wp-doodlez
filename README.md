@@ -7,6 +7,7 @@ quizzz supports categories images and integrates them in single and header if us
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.
 Completed the german and german formal translations. Added method to use structure for polls (only one answer allowed)
+Added quiz custom post type "question" to make a 4 answers and single answer quiz with results certificate. questions can be played as hangman, when answer ist suitable
 
 ## GDPR (DSGVO) notice
 Participiants do net need to enter their full name (a nick name would do).
@@ -17,7 +18,7 @@ Doodlez can be password protected (with builtin wordpress logic) to prevent othe
 Archives, Post Content, Post-Thumbnail, Categories and Tags have been enabled to provide full integration like a normal post.
 
 Quiz game has a shortcode for random questions and a custom post type "question" for quiz. It can display a certificate to print
-and stores your ranking in a personal cookie. personal rankings are only stored in your browser, not the web server
+and stores your ranking in a personal cookie. personal rankings are only stored in your browser, not the web server and only if you allow comfort cookies
 
 ## Highlights
 * WPDoodlez can handle classic polls and doodle like appointment planning

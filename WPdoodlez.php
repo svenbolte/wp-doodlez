@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.24
-Stable tag: 9.1.1.24
+Version: 9.1.1.25
+Stable tag: 9.1.1.25
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -729,15 +729,24 @@ function __wp_insert_or_get_term_id($name, $taxonomy, $parent = 0) {
 
 // Fragen importieren
 function importposts() {
-	set_time_limit(600);
-	// Alle Fragen löschen
-	$allposts= get_posts( array('post_type'=>'Question','numberposts'=>-1) );
-	foreach ($allposts as $eachpost) { wp_delete_post( $eachpost->ID, true ); }
+	set_time_limit(800);
 	$edat= array();
 	$upload_dir = wp_upload_dir();
 	$upload_basedir = $upload_dir['basedir'] . '/public_histereignisse.csv';
+	$uploaddiff_basedir = $upload_dir['basedir'] . '/public_histereignisse-update.csv';
 	$row = 1;
-	if (($handle = fopen($upload_basedir , "r")) !== FALSE) {
+	if ( file_exists( $upload_basedir ) ) {
+		// Alle Fragen löschen
+		$allposts= get_posts( array('post_type'=>'Question','numberposts'=>-1) );
+		foreach ($allposts as $eachpost) { wp_delete_post( $eachpost->ID, true ); }
+		$fullimport = 1;
+		$handle = fopen($upload_basedir , "r");
+	}
+	if ( file_exists( $uploaddiff_basedir ) ) {
+		$handle = fopen($uploaddiff_basedir , "r");
+		$fullimport = 0;
+	}
+	if ( $handle !== FALSE ) {
 		while (($data = fgetcsv($handle, 2000, ";")) !== FALSE) {
 			if ( $row > 1 && !empty($data[1]) ) {
 				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie

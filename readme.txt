@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.24
-Stable tag: 9.1.1.24
+Version: 9.1.1.25
+Stable tag: 9.1.1.25
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -38,8 +38,20 @@ After install this plugin you will see "WPDoodle" and "Questions" item in the me
 ##  Quizzz Module and shortcode  ##
 
 Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
-You can create rich questions, with rich text, images, videos, audio, as you would in any other WordPress post, and let the user answer in plain text, and move on to the next question if they've answered correctly.
+You can create rich questions, with rich text, images, videos, audio, as you would in any other WordPress post, and let the user answer in plain text, and move on to the next question if they have answered correctly.
 The answer conditions can be either 'exact match & case-sensitive', or can be phrase-matched (eg. the list of correct answers can be "xyz, abc, def", and if the user enters "abc", it's counted as the right answer.
+
+### How to import questions in csv format: ###
+
+Create a csv file with the following structure:
+	// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie
+name the file "public_histereignisse.csv" asnd upload it into your wordpress upload directory like: /wp-content/uploads
+	Goto admin areas, open questions list and press the CSV Import Button on top
+	present questions WILL BE DELETED and csv content imported as custom post type question
+	You may assign a categories images category image if using the plugin. It will show the cpt category image
+	Sample images are in the plugin subfolder quizkatbilder
+If you name the file "public_histereignisse-update.csv"	 questions in file will be added
+	
 
 Use the shortcode or link to custom post type "question" do display questions
 
@@ -59,6 +71,11 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.25 ===
+pressing csv import button behaviour in admin area changed:
+if naming the update-file: public_histereignisse-update.csv and uploading it to uploads folder of your wordpress site, it will ADD questions
+when named /public_histereignisse.csv' it WILL DELETE all present questions and replace them by import 
 
 === 9.1.1.24 ===
 Cookies wrongscore and rightsccore will only be set if cookie hidecookiebannerx = 2
