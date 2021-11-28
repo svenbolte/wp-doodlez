@@ -631,7 +631,7 @@ function create_quiz_post() {
 
 	// CSV Import starten, wenn Dateiname im upload dir public_histereignisse.csv ist	
 	if( isset($_REQUEST['quizzzcsv']) && ( $_REQUEST['quizzzcsv'] == true ) && isset( $_REQUEST['nonce'] ) ) {
-		$nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
+		$nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_SPECIAL_CHARS );
 		if ( ! wp_verify_nonce( $nonce, 'dnonce' ) ) wp_die('Invalid nonce..!!');
 		importposts();
 		echo '<script>window.location.href="'.get_home_url().'/wp-admin/edit.php?post_type=question"</script>';
