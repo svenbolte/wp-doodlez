@@ -19,8 +19,9 @@ get_header();
 			$tcolor = get_theme_mod( 'link-color', '#006060' );
 			$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
 			echo '<div class="entry-meta-top" style="background-color:rgba('.$backgd.')">';
+			echo '<div style="padding: 0 4px 0 4px">';
 			meta_icons(); 
-			echo '</div>';
+			echo '</div></div>';
 			if ( is_single() ) {
 				the_title( '<h1 class="entry-title">', '</h1>' );
 			} else {
