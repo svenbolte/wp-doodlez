@@ -1036,9 +1036,11 @@ function quiz_show_form( $content ) {
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
 			$letztefrage .= '</ul><br><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
 			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
-			$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
-			$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . $_COOKIE['rightscore']. ' / F: '.$_COOKIE['wrongscore'];
-			$letztefrage .= '</li></ul></div>';
+			if ($_COOKIE['hidecookiebannerx']==2 ) {
+				$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
+				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . @$_COOKIE['rightscore']. ' / F: '.@$_COOKIE['wrongscore'].'</li>';
+			}	
+			$letztefrage .= '</ul></div>';
 			$letztefrage .= quiz_adminstats();
 			if (!$ende) {
 				$antwortmaske = $content . '<div class="qiz">';
