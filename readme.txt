@@ -3,18 +3,18 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.25
-Stable tag: 9.1.1.25
+Version: 9.1.1.26
+Stable tag: 9.1.1.26
 Requires at least: 5.1
 Tested up to: 5.8.2
-Requires PHP: 7.4
+Requires PHP: 8.0
 
 ## Description##
 
 QUIZZZ: Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
 
-WPDOODLEZ: Everyone knows [doodle](https://doodle.com) It is a plattform to poll, to find the best meeting date or place, to make a decision with many people.
-With this plugin you can create very simple doodles in your wordpress installation. If choosing custom fields names: vote0...votexxx a survey poll is done and the
+WPDOODLEZ: Works like the famous internet service with similar name. It is a plattform to poll, to find the best meeting date or place, to make a decision with many people.
+With this plugin you can create very simple doodlez in your wordpress installation. If choosing custom fields names: vote0...votexxx a survey poll is done and the
 voters stored anonymized. WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
 
 * can handle polls and doodlez, depending on what field names are set: vote1...x results in a poll, other field names like dates result in doodlez
@@ -30,10 +30,22 @@ voters stored anonymized. WPdoodlez are own post type and very similar to a post
 * The last row in the table contains total votes count
 
 == Installation ==
-
 To upload the plugin through WordPress, instead of FTP:
 1. Upload the downloaded zip file on the 'Add New' plugins screen (see the 'Upload' tab) in your WordPress admin area and activate.
-After install this plugin you will see "WPDoodle" and "Questions" item in the menu on the left site. 
+2. Goto Wordpress admin panel, settings, permalinks and update permalink structure!
+After that you will see "WPDoodle" and "Questions" item in the menu on the left site. 
+
+== WPdoodlez Usage as appointment planner (Terminplaner) ==
+For colums Create Custom fields and enter Date values or date and time values in following formats:
+  field name:	15.02.2022     or      15.02.22 16:00  <-- These field names must be unique!
+  field value: X or JA or whatever you want as marker  <-- the values may all be the same
+  
+== WPdoodlez Usage as poll  (Umfrage) ==
+For colums Create Custom fields and enter the following data
+  field name:  vote1            <-- must be vote1 for 1st field, vote2 for 2nd field (case sensitive, must be lower case)
+  field value: your option text <-- The answer/option you want to display (examples 'Yes', 'No', 'i want beer', 'i like it so much')
+  
+-----------------------------------------------------------------------------------------
 
 ##  Quizzz Module and shortcode  ##
 
@@ -51,7 +63,6 @@ name the file "public_histereignisse.csv" asnd upload it into your wordpress upl
 	You may assign a categories images category image if using the plugin. It will show the cpt category image
 	Sample images are in the plugin subfolder quizkatbilder
 If you name the file "public_histereignisse-update.csv"	 questions in file will be added
-	
 
 Use the shortcode or link to custom post type "question" do display questions
 
@@ -59,8 +70,7 @@ The plugin also raises the following hooks:
 quizz_level_updated: raised when the user's answer is considered correct and they're pushed to the next question
 quizz_ended: raised when the list of questions comes to an end, and the user is sent to a designated page (eg. a congratulations page)
 
-
-== Usage ==
+== Quiz Usage ==
 
 1. Under Questions in the WordPress admin menu, click on Add New Question. 
 2. Enter the question in the big post area. This can be plain text, images, or embedded multimedia. 
@@ -71,6 +81,11 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 == Changelog ==
+
+=== 9.1.1.26 ===
+Updated documentation
+integrated ical download on doodlez when feed type icalfeed is present (comes from penguin plugin)
+
 
 === 9.1.1.25 ===
 pressing csv import button behaviour in admin area changed:

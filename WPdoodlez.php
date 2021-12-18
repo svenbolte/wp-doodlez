@@ -10,11 +10,11 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.25
-Stable tag: 9.1.1.25
+Version: 9.1.1.26
+Stable tag: 9.1.1.26
 Requires at least: 5.1
 Tested up to: 5.8.2
-Requires PHP: 7.4
+Requires PHP: 8.0
 */
 
 /**
@@ -173,13 +173,13 @@ function wpdoodlez_cookie() {
 		'menu_icon'           => 'dashicons-forms',
 		'can_export'          => false,
 		'has_archive'         => true,
-		'exclude_from_search' => TRUE,
+		'exclude_from_search' => false,
 		'publicly_queryable'  => true,
 		'rewrite'             => [
 			'slug'       => 'wpdoodle',
 			'with_front' => true,
 			'pages'      => false,
-			'feeds'      => false,
+			'feeds'      => true,
 		],
 		'capability_type'     => 'page',
 	];
@@ -424,7 +424,16 @@ function get_doodlez_content() {
 						<?php
 							foreach ( $suggestions as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes" ) {
-									?><th style="overflow-wrap:anywhere"><?php	echo $key; ?></th><?php
+									?><th style="word-wrap:break-all;overflow-wrap:anywhere"><?php
+									
+									// ICS Download zum Termin anbieten
+									if( function_exists('export_ics') && is_singular() ) {
+										$nextnth = strtotime($key);
+										$nextnth1h = strtotime($key);
+										echo ' <a title="'.__("ICS add reminder to your calendar", 'WPdoodlez').'" href="'.home_url(add_query_arg($_GET,$wp->request)).'/icalfeed?start='.wp_date('Ymd\THis', $nextnth).'&ende='.wp_date('Ymd\THis', $nextnth1h).'"><i class="fa fa-calendar-check-o"></i></a> ';
+									}	
+									
+									echo $key; ?></th><?php
 								}	
 							}
 							?>
@@ -464,20 +473,20 @@ function get_doodlez_content() {
 					//					foreach ( $votes as $name => $vote ) {
 					foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
 						?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
-								class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
-								<?php
-								echo '<td>' . substr($name,0,20);
-								// Wenn ipflag plugin aktiv und user angemeldet
-								if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
-									global $ipflag;
-									$nameip = substr($name,21,strlen($name)-21);
-									if(isset($ipflag) && is_object($ipflag)){
-										if(($info = $ipflag->get_info($nameip)) != false){
-											echo ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
-										} else { echo ' '. $ipflag->get_flag($info, '') . ' '; }
-									} 
-								}	
-							echo '</td>';
+							  class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
+						<?php
+						echo '<td style="text-align:left">'; 
+						// Wenn ipflag plugin aktiv und user angemeldet
+						if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
+							global $ipflag;
+							$nameip = substr($name,21,strlen($name)-21);
+							if(isset($ipflag) && is_object($ipflag)){
+								if(($info = $ipflag->get_info($nameip)) != false){
+									echo ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
+								} else { echo ' '. $ipflag->get_flag($info, '') . ' '; }
+							} 
+						}	
+							echo ' ' . substr($name,0,20) . '</td>';
 							foreach ( $suggestions as $key => $value ) {
 								if ($key != "post_views_count" && $key != "likes") {
 									?><td>
@@ -497,19 +506,13 @@ function get_doodlez_content() {
 							}	
 							?>
 						<td><?php
-						if ( current_user_can( 'delete_published_posts' ) ) {
-								?>
-								<button class="wpdoodlez-delete" 
-										data-vote="<?php echo md5( $name ); ?>" 
-										data-realname="<?php echo $name; ?>"
-										><?php echo __( 'delete', 'WPdoodlez' ); ?></button><?php
+						if ( current_user_can( 'delete_published_posts' ) ) { ?>
+								<button style="padding:3px 10px 3px 10px" class="wpdoodlez-delete" data-vote="<?php echo md5( $name ); ?>" data-realname="<?php echo $name; ?>">
+									<?php echo '<i title="'.__( 'delete', 'WPdoodlez' ).'" class="fa fa-trash-o"></i>'; ?></button><?php
 									}
-									if ( !empty($myname) && $myname == $name ) {
-										?>
-								<button class="wpdoodlez-edit" 
-										data-vote="<?php echo md5( $name ); ?>" 
-										data-realname="<?php echo $name; ?>"
-										><?php echo __( 'edit', 'WPdoodlez' ); ?></button><?php
+									if ( !empty($myname) && $myname == $name ) { ?>
+								<button style="padding:3px 10px 3px 10px" class="wpdoodlez-edit" data-vote="<?php echo md5( $name ); ?>" data-realname="<?php echo $name; ?>">
+									<?php echo '<i title="'.__( 'edit', 'WPdoodlez' ).'" class="fa fa-edit"></i>'; ?></button><?php
 							}
 							?></td>
 						</tr><?php
@@ -518,7 +521,7 @@ function get_doodlez_content() {
 				</tbody>
 			<tfoot>
 				<tr>
-					<th><?php echo __( 'total votes', 'WPdoodlez'  ); ?></th>
+					<th><?php echo __( 'total votes', 'WPdoodlez' ); ?></th>
 					<?php
 						$pielabel = ''; $piesum = '';
 						foreach ( $votes_cout as $key => $value ) {
@@ -625,7 +628,7 @@ function create_quiz_post() {
 		'can_export'          => true,
 		'rewrite'             => true,
 		'capability_type'     => 'post',
-		'supports'            => array(	'title', 'editor', 'thumbnail',	)
+		'supports'            => array(	'title', 'editor', 'thumbnail', 'comments' )
 	);
 	register_post_type( 'Question', $args );
 
