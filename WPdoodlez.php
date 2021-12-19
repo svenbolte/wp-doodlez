@@ -430,7 +430,7 @@ function get_doodlez_content() {
 									if( function_exists('export_ics') && is_singular() ) {
 										$nextnth = strtotime($key);
 										$nextnth1h = strtotime($key);
-										echo ' <a title="'.__("ICS add reminder to your calendar", 'WPdoodlez').'" href="'.home_url(add_query_arg($_GET,$wp->request)).'/icalfeed?start='.wp_date('Ymd\THis', $nextnth).'&ende='.wp_date('Ymd\THis', $nextnth1h).'"><i class="fa fa-calendar-check-o"></i></a> ';
+										echo ' <a title="'.__("ICS add reminder to your calendar","penguin").'" href="'.home_url(add_query_arg(array($_GET, 'start' =>wp_date('Ymd\THis', $nextnth), 'ende' => wp_date('Ymd\THis', $nextnth1h) ),$wp->request.'/icalfeed/')).'"><i class="fa fa-calendar-check-o"></i></a> ';
 									}	
 									
 									echo $key; ?></th><?php
