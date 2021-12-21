@@ -38,11 +38,14 @@ get_header();
 				var wpdoodle = '<?php echo md5( AUTH_KEY . get_the_ID() ); ?>';
 			</script>
           </article>
-		  <?php // If comments are open or we have at least one comment, load up the comment template.
-		  if ( comments_open() || get_comments_number() ) comments_template();
-		  setPostViews(get_the_ID());
+		  <?php
+			the_post_navigation();
+			// If comments are open or we have at least one comment, load up the comment template
+			if ( comments_open() || get_comments_number() ) comments_template(); 
+			setPostViews(get_the_ID());
 		  // End the loop.
         endwhile; ?>
+		<br>
     </main><!-- .site-main -->
 	</div><!-- #primary -->
 <?php get_sidebar(); ?>
