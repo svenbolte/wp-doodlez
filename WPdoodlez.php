@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.26
-Stable tag: 9.1.1.26
+Version: 9.1.1.27
+Stable tag: 9.1.1.27
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 8.0
@@ -880,7 +880,7 @@ function quiz_show_form( $content ) {
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-					$content = '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ' . $content; 
+				$content = '<span style="font-size:1.2em">Kategorie: ' . $term->name . ' <br>' . $content.'</span>'; 
 			}
 		}	
 		// get meta values for this question
