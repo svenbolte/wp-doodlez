@@ -684,7 +684,7 @@ function random_quote_func( $atts ){
 			unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= $xlink.'">[ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ]</a></div>';
+			$antwortmaske .= $xlink.'"><span style="border-radius:3px;color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
 		}	
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<div class="nav-links"><a class="page-numbers" title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'" style="'.$listyle.'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></div>';
 		$message .= '<div style="margin-bottom:1em"><p>';
@@ -943,12 +943,12 @@ function quiz_show_form( $content ) {
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
 				if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
-				$ansmixed .= '<div style="width:100%;display:block;padding:8px;font-family:monospace">' . __('answer mask','WPdoodlez');
-				$ansmixed .= ' [ '.preg_replace( '/[^( |aeiouAEIOU.)$]/', 'X', esc_html($answers[0])).' ] ' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
+				$ansmixed .= __('answer mask','WPdoodlez'). '<span style="border-radius:3px;background-color:#eee;margin:0 5px;font-weight:700;font-size:1.2em;padding:3px 0 3px 9px;letter-spacing:.5em;font-family:monospace">';
+				$ansmixed .= preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span>' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 				if ( empty($_POST) ) {
 					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
-					$ansmixed .='</div><input style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
-				} else $ansmixed .='</div>';
+					$ansmixed .='<input autocomplete="off" style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
+				}
 			}	
 
 			if ($exact[0]=="exact") {
