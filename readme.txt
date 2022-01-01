@@ -3,13 +3,15 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.27
-Stable tag: 9.1.1.27
+Version: 9.1.1.28
+Stable tag: 9.1.1.28
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 8.0
 
 ## Description##
+
+CROSSWORD: creates an easy crossword game from 16 words of a word list that can be falled from random question or by shortcocde
 
 QUIZZZ: Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
 
@@ -45,9 +47,8 @@ For colums Create Custom fields and enter the following data
   field name:  vote1            <-- must be vote1 for 1st field, vote2 for 2nd field (case sensitive, must be lower case)
   field value: your option text <-- The answer/option you want to display (examples 'Yes', 'No', 'i want beer', 'i like it so much')
   
------------------------------------------------------------------------------------------
 
-##  Quizzz Module and shortcode  ##
+##  ------------------------------- Quizzz Module and shortcode -----------------------------  ##
 
 Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
 You can create rich questions, with rich text, images, videos, audio, as you would in any other WordPress post, and let the user answer in plain text, and move on to the next question if they have answered correctly.
@@ -63,7 +64,6 @@ name the file "public_histereignisse.csv" asnd upload it into your wordpress upl
 	You may assign a categories images category image if using the plugin. It will show the cpt category image
 	Sample images are in the plugin subfolder quizkatbilder
 If you name the file "public_histereignisse-update.csv"	 questions in file will be added
-
 Use the shortcode or link to custom post type "question" do display questions
 
 The plugin also raises the following hooks:
@@ -71,7 +71,6 @@ quizz_level_updated: raised when the user's answer is considered correct and the
 quizz_ended: raised when the list of questions comes to an end, and the user is sent to a designated page (eg. a congratulations page)
 
 == Quiz Usage ==
-
 1. Under Questions in the WordPress admin menu, click on Add New Question. 
 2. Enter the question in the big post area. This can be plain text, images, or embedded multimedia. 
 3. Enter the correct answer in the Answer field below the question field.
@@ -79,13 +78,26 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 5. Select which question leads to the current question.
 6. Select whether this is the final question of the series, and if it is, choose the Page which will be displayed when the player is done with the quiz. Eg. a thank you page, or a success page.
 
+##  ------------------------------- Crossword Module and shortcode -----------------------------  ##
 
-== Changelog ==
+You can add a random crossword game to your pages and posts or call the crossword game from the random quizzz widget.
+16 random words and questions will be chosen and put into a crossword game. Admin can display the solutions, users can see vocals as hints.
+
+== Crossword Usage ==
+
+Add Shortcode ```[xwordquiz]``` to any page or post
+   or 
+use the Crossword Button on random quiz widget
+
+
+== -----------------------  Changelog ---------------------- ==
+
+=== 9.1.1.26 ===
+added Crossword game to play from widget or by shortcode
 
 === 9.1.1.26 ===
 Updated documentation
 integrated ical download on doodlez when feed type icalfeed is present (comes from penguin plugin)
-
 
 === 9.1.1.25 ===
 pressing csv import button behaviour in admin area changed:
