@@ -3,10 +3,10 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.28
-Stable tag: 9.1.1.28
+Version: 9.1.1.29
+Stable tag: 9.1.1.29
 Requires at least: 5.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 8.0
 
 ## Description##
@@ -92,8 +92,12 @@ use the Crossword Button on random quiz widget
 
 == -----------------------  Changelog ---------------------- ==
 
-=== 9.1.1.26 ===
+=== 9.1.1.29 ===
+5.8.3 compatibility and some styling optimized
+
+=== 9.1.1.28 ===
 added Crossword game to play from widget or by shortcode
+set crossword to fullwidth size (primary)
 
 === 9.1.1.26 ===
 Updated documentation

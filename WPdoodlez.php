@@ -10,10 +10,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.28
-Stable tag: 9.1.1.28
+Version: 9.1.1.29
+Stable tag: 9.1.1.29
 Requires at least: 5.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 8.0
 */
 
@@ -905,7 +905,7 @@ function quiz_show_form( $content ) {
 		$lactualanswer = strtolower($answers[0]);
 		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
 		// Hangman spielen oder normale Beantwortung
-		if ( isset($_GET['crossword'])) {
+		if ( isset($_GET['crossword']) && is_singular() ) {
 			$theForm = do_shortcode('[xwordquiz]');
 		} else if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
 			$theForm = $content . play_hangman($answers[0]);
@@ -1446,7 +1446,8 @@ function xwordquiz( $atts ) {
     ));
     $html = '';
     if ($rows) {
-        $html .= '<style>@media print{@page {size: landscape}}</style><div class="crossword_wrapper">';
+		$html .= '<script>document.getElementById("primary").className="page-fullwidth"</script>';
+        $html .= '<style>@media print{@page {size: landscape}}#secondary{width:100%!important}</style><div class="crossword_wrapper">';
         $html .= '<div class="cwd-row cwd-crossword-row"><div class="cwd-crossword-container">';
         $html .= ' <div class="cwd-center cwd-crossword" id="cwd-crossword"></div><br>';
         $html .= '</div></div>';
