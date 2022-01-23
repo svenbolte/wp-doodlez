@@ -703,8 +703,7 @@ function random_quote_func( $atts ){
 		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 			$cbild = z_taxonomy_image_url($category[0]->term_id);
 			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
-			$message .= '<img alt="Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="width: calc(100% + 16px);margin-left: -8px">';	
-			$message .= '</div>';
+			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image"></div>';	
 		}			
 		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
 		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat;
