@@ -267,15 +267,15 @@ function wpdoodle_doku() {
 function mini_calendar($month,$year,$eventarray){
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	/* days and weeks vars now ... */
-	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
-	$running_day = date('w',mktime(0,0,0,$month,1,$year));
+	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
+	$running_day = date('w',mktime(2,0,0,$month,1,$year));
 	if ( $running_day == 0 ) { $running_day = 7; }
-	$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+	$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
 	$days_in_this_week = 1;
 	$day_counter = 0;
 	$dates_array = array();
 	/* draw table */
-	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
+	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
 	/* table headings */
 	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
 	$calendar.= '<tr><td style="padding:2px;text-align:center">'.implode('</td><td style="padding:2px;text-align:center">',$headings).'</td></tr>';
@@ -283,7 +283,7 @@ function mini_calendar($month,$year,$eventarray){
 	$calendar.= '<tr>';
 	/* print "blank" days until the first of the current week */
 	for($x = 1; $x < $running_day; $x++):
-		$calendar.= '<td style="padding:2px;background:rgba(222,222,222,0.1);"></td>';
+		$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
 		$days_in_this_week++;
 	endfor;
 	/* keep going with days.... */
@@ -291,15 +291,15 @@ function mini_calendar($month,$year,$eventarray){
 		/* add in the day number */
 		$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
 		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
-		$stylez= '<td style="padding:2px">';
+		$stylez= '<td style="text-align:center;padding:2px">';
 		foreach ($eventarray as $calevent) {
-			if ( date('Ymd',mktime(0,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(0,0,0,$month,$list_day,$year)) ) {
-				$stylez= '<td style="padding:2px;background:#ffd800;font-weight:700">';
+			if ( date('Ymd',mktime(2,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
+				$stylez= '<td style="text-align:center;padding:2px;background:#ffd800;font-weight:700">';
 			}
 		}	
 		$calendar.= $stylez . $list_day . '</td>';
 		if($running_day == 7):
-			$calendar.= '<td style="padding:2px;background:rgba(222,222,222,0.1);"	>'.$running_week.'</td></tr>';
+			$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"	>'.$running_week.'</td></tr>';
 			if(($day_counter + 1 ) != $days_in_month):
 				$calendar.= '<tr>';
 			endif;
@@ -311,7 +311,7 @@ function mini_calendar($month,$year,$eventarray){
 	/* finish the rest of the days in the week */
 	if($days_in_this_week < 8 && $days_in_this_week > 1):
 		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
-			$calendar.= '<td style="padding:2px"></td>';
+			$calendar.= '<td style="text-align:center;padding:2px"></td>';
 		endfor;
 		$calendar.= '<td style="padding:2px;text-align:center">'.$running_week.'</td></tr>';
 	endif;
