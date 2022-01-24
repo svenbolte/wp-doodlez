@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.29
-Stable tag: 9.1.1.29
+Version: 9.1.1.30
+Stable tag: 9.1.1.30
 Requires at least: 5.1
 Tested up to: 5.8.3
 Requires PHP: 8.0
@@ -20,9 +20,7 @@ Requires PHP: 8.0
 if (!defined('ABSPATH')) { exit; }
 if (!defined('WPINC')) { die; }
 
-/**
- * Load plugin textdomain.
- */
+// Load plugin textdomain.
 function WPdoodlez_load_textdomain() {
   load_plugin_textdomain( 'WPdoodlez', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' ); 
 }
@@ -48,21 +46,21 @@ function wpdoodlez_template( $single_template ) {
 }
 add_filter( 'single_template', 'wpdoodlez_template' );
 
-	// IP-Adresse des Users bekommen
-	function wd_get_the_user_ip() {
-		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			//check ip from share internet
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
-			} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-			//to check ip is pass from proxy
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-			} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
-		}
-		// letzte Stelle der IP anonymisieren (0 setzen)	
-		$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
-		return apply_filters( 'wpb_get_ip', $ip );
+// IP-Adresse des Users bekommen
+function wd_get_the_user_ip() {
+	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+		//check ip from share internet
+		$ip = $_SERVER['HTTP_CLIENT_IP'];
+		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+		//to check ip is pass from proxy
+		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+		$ip = $_SERVER['REMOTE_ADDR'];
 	}
+	// letzte Stelle der IP anonymisieren (0 setzen)	
+	$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
+	return apply_filters( 'wpb_get_ip', $ip );
+}
 
 /**
  * Save a single vote as ajax request and set cookie with given user name
@@ -476,7 +474,7 @@ function get_doodlez_content() {
 					//					foreach ( $votes as $name => $vote ) {
 					foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
 						?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
-							  class="<?php echo $myname == $name ? 'myvote' : '';  ?>">
+							  class="<?php echo @$myname == $name ? 'myvote' : '';  ?>">
 						<?php
 						echo '<td style="text-align:left">'; 
 						// Wenn ipflag plugin aktiv und user angemeldet
