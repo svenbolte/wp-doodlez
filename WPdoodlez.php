@@ -554,7 +554,7 @@ function get_doodlez_content() {
 		$piesum = rtrim($piesum, ",");
 		$pielabel = rtrim($pielabel, ",");
 		if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) ) {
-			echo do_shortcode('[chartscodes accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
+			echo do_shortcode('[chartscodes_polar accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 		}	
 	}
 	/* END password protected? */
@@ -1078,7 +1078,7 @@ function quiz_show_form( $content ) {
 				$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 				if( class_exists( 'PB_ChartsCodes' ) ) {
 					$piesum = $sperct . ',' . (100 - $sperct);
-					$theForm .= do_shortcode('[chartscodes accentcolor="1" title="" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
+					$theForm .= do_shortcode('[chartscodes_polar accentcolor="1" title="" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
 				}	
 			}
 		}		
