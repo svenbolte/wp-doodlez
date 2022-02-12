@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.30
-Stable tag: 9.1.1.30
+Version: 9.1.1.31
+Stable tag: 9.1.1.31
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
@@ -943,6 +943,7 @@ function quiz_show_form( $content ) {
 					$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
 				} 
 				$ansmixed .='<input type="hidden" name="answers4" id="answers4" value="'.implode(";",$ans).'">';
+				$pollyans = implode(" , ",$ans);
 				unset($choice);
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
@@ -953,6 +954,7 @@ function quiz_show_form( $content ) {
 					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
 					$ansmixed .='<input autocomplete="off" style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
 				}
+			$pollyans = esc_html(preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])));
 			}	
 			if ($exact[0]=="exact") {
 				//exact, strict match
@@ -1025,7 +1027,7 @@ function quiz_show_form( $content ) {
 						$copytags .= '&nbsp; Kategorie: ' . $term->name; 
 				}
 			}	
-			$copyfrage = wp_strip_all_tags(get_the_title().'  '.$copytags.'   '.get_the_content().' '.$ansmixed);
+			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,]/", '', get_the_title() ).'  '.$copytags.'  '. preg_replace("/[?,]/", '',get_the_content() ).' ? '.$pollyans);
 			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:40px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
