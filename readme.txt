@@ -11,20 +11,30 @@ Requires PHP: 8.0
 
 ## Description ##
 
-CROSSWORD:
- creates an easy crossword game from 16 words of a word list that can be falled from random question or by shortcocde
+### WPDoodlez
+plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
+It adds a custom post type "wpdoodlez".
 
-QUIZZZ:
- Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
+### Poll
+uses same technology and custom post type like WPDoodlez
+create classic polls to let visitors vote about a question
 
-WPDOODLEZ:
- WPdoodlez can handle classic polls and doodle like appointment planning.
- If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries
+### Quizzz
+Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
+Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
+see readme.txt for more details.
+Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
 
- If custom fields are dates e.g name: 12.12.2020 value: ja
- then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates
+#### Crossword
+display a crossword game built on the quizzz words
+Add Shortcode ´´´[xwordquiz]´´´ to any page or post
+   or 
+use the Crossword Button on random quiz widget
 
- Admins can invoke URL parameter: /admin=1 to display alternate votes display (more features when logged in as admin)
+WPDoodlez can handle classic polls and doodle like appointment planning
+If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries if custom fields are dates e.g name: 12.12.2020 value: ja
+then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates
+User parameter /admin=1 to display alternate votes display (more features when logged in as admin)
 
 Highlights
 * link to WPdoodlez is public, but post can have password
@@ -100,7 +110,7 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 use the Crossword Button on random quiz widget
 
 
-== -----------------------  Changelog ---------------------- ==
+## --------------------------------------- Changelog ---------------------------------------------------- ##
 
 === 9.1.1.33 ===
 add shortcode [wpdoodlez_sc id=xxxxx chart=0/1]. It can be called from all other posts or pages and displays just the content

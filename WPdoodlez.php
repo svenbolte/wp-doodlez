@@ -270,6 +270,26 @@ function wpdoodle_doku() {
 	echo '<h1>'. __( 'WPdoodlez Documentation','WPdoodlez' ).'</h1>';
 	echo '<div class="postbox" style="padding:8px">';
 	?>
+	### WPDoodlez<br>
+	plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
+	It adds a custom post type "wpdoodlez".<br>
+
+	### Poll<br>
+	uses same technology and custom post type like WPDoodlez
+	create classic polls to let visitors vote about a question<br>
+
+	### Quizzz<br>
+	Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
+	Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
+	see readme.txt for more details.
+	Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget<br>
+
+	#### Crossword<br>
+	display a crossword game built on the quizzz words
+	Add Shortcode ´´´[xwordquiz]´´´ to any page or post
+	   or 
+	use the Crossword Button on random quiz widget<br><br>
+
 	WPdoodlez can handle classic polls and doodle like appointment planning. It can be created in admin area<br>
 	Use custom post type to call posts or integrate post content to your normal posts using the shortcode<br><br>
 	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
