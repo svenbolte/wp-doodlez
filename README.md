@@ -1,12 +1,12 @@
 # WPdoodlez Forked Mod with Poll  and quizzz custom post type
 
-### WPDoodlez ###
-plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress.
+### WPDoodlez
+plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
 
-### Poll ### 
+### Poll
 create classic polls to let visitors vote about a question
 
-### Quizzz###
+### Quizzz
 Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 Quizzz supports categories images and integrates them in single and header if used in theme
 
@@ -44,7 +44,7 @@ User parameter /admin=1 to display alternate votes display (more features when l
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
 
-## Shortcode ##
+## Shortcode
 [wpdoodlez_sc id=post-ID chart=true] set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
 
 ## Details
