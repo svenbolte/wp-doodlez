@@ -960,7 +960,7 @@ function quiz_show_form( $content ) {
 					$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
 				} 
 				$ansmixed .='<input type="hidden" name="answers4" id="answers4" value="'.implode(";",$ans).'">';
-				$pollyans = '(A) '.$ans[0].' , (B) '.$ans[1].' , (C) '.$ans[2].' , (D) '.$ans[3];
+				$pollyans = '-A- '.$ans[0].' , -B- '.$ans[1].' , -C- '.$ans[2].' , -D- '.$ans[3];
 				unset($choice);
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
@@ -1041,10 +1041,10 @@ function quiz_show_form( $content ) {
 			$copytags = '';
 			if ( $terms && !is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
-						$copytags .= '&nbsp; Kategorie: ' . $term->name; 
+						$copytags .= ' Kategorie ' . $term->name; 
 				}
 			}	
-			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,]/", '', get_the_title() ).'  '.$copytags.'  '. preg_replace("/[?,]/", '',get_the_content() ).' ? '.$pollyans);
+			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
 			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:40px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
