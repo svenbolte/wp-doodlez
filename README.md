@@ -12,11 +12,11 @@ create classic polls to let visitors vote about a question
 Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
 see readme.txt for more details.
-Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
+Add Shortcode ```[random-question]``` to any post, page or html-widget
 
 #### Crossword
 display a crossword game built on the quizzz words
-Add Shortcode ´´´[xwordquiz]´´´ to any page or post
+Add Shortcode ```[xwordquiz]``` to any page or post
    or 
 use the Crossword Button on random quiz widget
 
@@ -57,7 +57,7 @@ User parameter /admin=1 to display alternate votes display (more features when l
 * The last row in the table contains total votes count
 
 ## Shortcode
-´´´[wpdoodlez_sc id=post-ID chart=true]´´´ set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
+```[wpdoodlez_sc id=post-ID chart=true]``` set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
 
 ## Details
 Based on Wordpress custom types. Rich text, media, comments and categories can 
