@@ -3,7 +3,7 @@
 ### WPDoodlez ###
 plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress.
 
-### Poll### 
+### Poll ### 
 create classic polls to let visitors vote about a question
 
 ### Quizzz###
