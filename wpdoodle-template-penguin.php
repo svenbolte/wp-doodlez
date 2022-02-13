@@ -3,7 +3,6 @@
  * The template for displaying all single wpdoodle - penguin theme required
  *
  */
-wp_enqueue_script( "jquery" );
 wp_enqueue_script( "WPdoodlez", plugins_url( 'WPdoodlez.js', __FILE__ ), array('jquery'), null, true);
 wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array(), null, 'all');
 get_header();
@@ -29,7 +28,7 @@ get_header();
 			echo '</header><!-- .entry-header -->';
 			?>
 			<div class="entry-content">
-				<?php get_doodlez_content(); ?>
+				<?php echo get_doodlez_content(true); ?>
             </div><!-- .entry-content -->
 			<footer class="entry-footer">
 			</footer><!-- .entry-footer -->

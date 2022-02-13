@@ -3,33 +3,43 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.31
-Stable tag: 9.1.1.31
+Version: 9.1.1.33
+Stable tag: 9.1.1.33
 Requires at least: 5.1
-Tested up to: 5.9.0
+Tested up to: 5.9
 Requires PHP: 8.0
 
-## Description##
+## Description ##
 
-CROSSWORD: creates an easy crossword game from 16 words of a word list that can be falled from random question or by shortcocde
+CROSSWORD:
+ creates an easy crossword game from 16 words of a word list that can be falled from random question or by shortcocde
 
-QUIZZZ: Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
+QUIZZZ:
+ Create a sequential quiz on WordPress with the Quizzz plugin. Use a shortcode random_question to display in posts/pages
 
-WPDOODLEZ: Works like the famous internet service with similar name. It is a plattform to poll, to find the best meeting date or place, to make a decision with many people.
-With this plugin you can create very simple doodlez in your wordpress installation. If choosing custom fields names: vote0...votexxx a survey poll is done and the
-voters stored anonymized. WPdoodlez are own post type and very similar to a post. A WPdoodle extends a post and uses custom fields to set possible answers.
+WPDOODLEZ:
+ WPdoodlez can handle classic polls and doodle like appointment planning.
+ If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries
 
-* can handle polls and doodlez, depending on what field names are set: vote1...x results in a poll, other field names like dates result in doodlez
-* link to WPdoodle is public, searchable and found in the archives
-* can be in a review and be published at given time
-* can have own URL 
-* password on post protects access if wanted
-* voters do not need to be valid logged in wordpress users
-* doodlez: Users with "delete published post" rights can delete votes
-* doodlez: Users name will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)
+ If custom fields are dates e.g name: 12.12.2020 value: ja
+ then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates
+
+ Admins can invoke URL parameter: /admin=1 to display alternate votes display (more features when logged in as admin)
+
+Highlights
+* link to WPdoodlez is public, but post can have password
+* A WPdoodlez can be in a review and be published at given time
+* A WPdoodlez can have own URL
+* Poll users do not need to be valid logged in wordpress users
+* Users with "delete published post" rights can delete votes
+* Users shortname will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)
 * Every custom field set in a WPdoodle is a possible answer
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
+
+Shortcode
+[wpdoodlez_sc id=post-ID chart=true] set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
+
 
 == Installation ==
 To upload the plugin through WordPress, instead of FTP:
@@ -91,6 +101,12 @@ use the Crossword Button on random quiz widget
 
 
 == -----------------------  Changelog ---------------------- ==
+
+=== 9.1.1.33 ===
+add shortcode [wpdoodlez_sc id=xxxxx chart=0/1]. It can be called from all other posts or pages and displays just the content
+  (with interactive fields) of the doodlez
+WP 5.9 compatibility
+optimized php code
 
 === 9.1.1.29 ===
 5.8.3 compatibility and some styling optimized

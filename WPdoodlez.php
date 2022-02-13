@@ -10,10 +10,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.31
-Stable tag: 9.1.1.31
+Version: 9.1.1.33
+Stable tag: 9.1.1.33
 Requires at least: 5.1
-Tested up to: 5.9.0
+Tested up to: 5.9
 Requires PHP: 8.0
 */
 
@@ -25,7 +25,6 @@ function WPdoodlez_load_textdomain() {
   load_plugin_textdomain( 'WPdoodlez', false, plugin_basename( dirname( __FILE__ ) ) . '/lang' ); 
 }
 add_action( 'plugins_loaded', 'WPdoodlez_load_textdomain' );
-
 
 /**
  * Register own template for doodles
@@ -61,6 +60,34 @@ function wd_get_the_user_ip() {
 	$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
 	return apply_filters( 'wpb_get_ip', $ip );
 }
+
+// wpdoodlez_sc(ID) - Call WPDoodles complete Content from another page or post as a shortcode
+function wpdoodlez_sc_func($atts) {
+	wp_enqueue_script( "WPdoodlez", plugins_url( 'WPdoodlez.js', __FILE__ ), array('jquery'), null, true);
+	wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array(), null, 'all');
+	global $post;
+	$args = shortcode_atts(array( 'id' => 0, 'chart' => true ), $atts);
+	$output ='';
+	$qargs = array(
+		'p'         => $args['id'],
+		'post_type' => array('wpdoodle'),
+		'post_status' => 'publish',
+		'posts_per_page' => 1
+	);
+	$query1 = new WP_Query( $qargs );
+	if ( $query1->have_posts() ) {
+		while ( $query1->have_posts() ) {
+			$query1->the_post();
+			$output .= get_doodlez_content($args['chart']);
+			$output .= '<script>var wpdoodle_ajaxurl = "' . admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ).'";'; 
+			$output .= 'var wpdoodle = "'. md5( AUTH_KEY . get_the_ID() ). '";</script>';
+		}
+		wp_reset_postdata();
+	}
+	return $output;
+}
+add_shortcode('wpdoodlez_sc', 'wpdoodlez_sc_func');
+
 
 /**
  * Save a single vote as ajax request and set cookie with given user name
@@ -240,14 +267,19 @@ add_submenu_page(
 add_action('admin_menu', 'create_menupages_wpdoodle');
 
 function wpdoodle_doku() {
-	echo '<h1>WPdoodlez Doku</h1>';
+	echo '<h1>'. __( 'WPdoodlez Documentation','WPdoodlez' ).'</h1>';
+	echo '<div class="postbox" style="padding:8px">';
 	?>
-	* WPdoodlez can handle classic polls and doodle like appointment planning
+	WPdoodlez can handle classic polls and doodle like appointment planning. It can be created in admin area<br>
+	Use custom post type to call posts or integrate post content to your normal posts using the shortcode<br><br>
 	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
 	if custom fields are dates e.g  name: 12.12.2020    value: ja<br>
 	then a doodlez is created where visitors can set their name or shortcut and vote for all given event dates<br>
 	<br>
-	User parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
+	Admins can invoke URL parameter /admin=1 to display alternate votes display (more features when logged in as admin)<br><br>
+	<?php
+	echo '</div><div class="postbox" style="padding:8px">';
+	?>
 	<h2>Highlights</h2>
 	* link to WPdoodlez is public, but post can have password <br>
 	* A WPdoodlez can be in a review and be published at given time<br>
@@ -255,10 +287,18 @@ function wpdoodle_doku() {
 	* Poll users do not need to be valid logged in wordpress users<br>
 	* Users with "delete published post" rights can delete votes<br>
 	* Users shortname will be stored in a cookie for 30 days (user can change only his own vote, but on the same computer)<br>
+	* GDPR: If Cookie policy is set to: required only, no cookies will be set. For vote polls, no cookies will be set at all
 	* Every custom field set in a WPdoodle is a possible answer<br>
 	* The first value of the custom field will be displayed in the row as users answer<br>
 	* The last row in the table contains total votes count<br>
 	<?php
+	echo '</div><div class="postbox" style="padding:8px">';
+	?>
+	<h2>Shortcode</h2>
+	<code>[wpdoodlez_sc id=post-ID chart=true]</code>  set post ID to integrate Doodlez or Poll in other pages,
+	 set chart to false if you do not want pie graph
+	<?php
+	echo '</div>';
 }
 
 // Mini Calendar display month 
@@ -321,10 +361,11 @@ function mini_calendar($month,$year,$eventarray){
 
 
 // Doodlez Inhalte anzeigen
-function get_doodlez_content() {
+function get_doodlez_content($chartan) {
 	global $wp;
+	$htmlout = '';
 	/* translators: %s: Name of current post */
-	the_content();
+	$htmlout .= get_the_content();
 	$suggestions = $votes_cout  = [ ];
 	$customs     = get_post_custom( get_the_ID() );
 	foreach ( $customs as $key => $value ) {
@@ -338,9 +379,9 @@ function get_doodlez_content() {
 	if (is_user_logged_in()) {
 		if ( array_key_exists('vote1', $suggestions) ) {
 			if (!isset($_GET['admin']) ) {
-				echo '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . __( 'poll details', 'WPdoodlez'  ) . '</a></span>';	
+				$htmlout .= '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . __( 'poll details', 'WPdoodlez' ) . '</a></span>';	
 			} else {
-				echo '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . __( 'poll results', 'WPdoodlez'  ) . '</a></span>';	
+				$htmlout .= '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . __( 'poll results', 'WPdoodlez' ) . '</a></span>';	
 			}	
 		}
 	}	
@@ -367,38 +408,28 @@ function get_doodlez_content() {
 				}
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
-			echo '<br><table id="pollselect"><thead><th colspan=3>' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
+			$htmlout .= '<br><table id="pollselect"><thead><th colspan=3>' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
 			$xperc = 0;
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
 				 if ($key != "post_views_count" && $key != "likes" ) {
 						$votecounter += 1;
 						if ($xsum>0) $xperc = sprintf("%.1f%%", ($votes_cout[ $key ]/$xsum) * 100);
-						echo'<tr><td><label><input type="checkbox" name="'.$key.'" id="'.$key.'" onclick="selectOnlyThis(this.id)" class="wpdoodlez-input"></td><td>';
-						echo $value[ 0 ] .'</label></td><td>'.$votes_cout[ $key ].' ('.$xperc.')</td></tr>';
-				 }	
-			 }
-			echo '<tr><td>' . __( 'total votes', 'WPdoodlez' ) . '</td><td></td><td style="font-size:1.1em">'.$xsum.'</td></tr>';
-			echo '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
-			echo '<button id="wpdoodlez_poll">' . __( 'Vote!', 'WPdoodlez' ) . '</button></td></tr>';
-			echo '</table>';
+						$htmlout .= '<tr><td  style="text-align:center"><label><input type="checkbox" name="'.$key.'" id="'.$key.'" onclick="selectOnlyThis(this.id)" class="wpdoodlez-input"></td><td>';
+						$htmlout .= $value[ 0 ] .'</label></td><td  style="text-align:center">'.$votes_cout[ $key ].' ('.$xperc.')</td></tr>';
+				}	
+			}
+			$htmlout .= '<tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td></td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td></tr>';
+			$htmlout .= '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
+			$htmlout .= '<button style="width:100%" id="wpdoodlez_poll">' . __( 'Vote!', 'WPdoodlez' ) . '</button></td></tr>';
+			$htmlout .= '</table>';
 			// only one selection allowed
-			?>
-			<script>
-				function selectOnlyThis(id) {
-					for (var i = 1;i <= <?php echo $votecounter ?>; i++)
-					{
-						document.getElementById('vote'+i).checked = false;
-					}
-					document.getElementById(id).checked = true;
-				}
-			</script>	
-			<?php
+			$htmlout .= '<script>function selectOnlyThis(id) {';
+			$htmlout .= 'for (var i = 1;i <= '. $votecounter.'; i++) { document.getElementById("vote"+i).checked = false; }';
+			$htmlout .= ' document.getElementById(id).checked = true;	}</script>';
 		} else {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
-			?>
-			<h6><?php echo __( 'Voting', 'WPdoodlez' ); ?></h6>
-			<?php
+			$htmlout .= '<h6>' . __( 'Voting', 'WPdoodlez' ) . '</h6>';
 			if ( !$polli && function_exists('mini_calendar')) {
 				$outputed_values = array();
 				$xevents = array();
@@ -411,134 +442,100 @@ function get_doodlez_content() {
 					if ($key != "post_views_count" && $key != "likes" ) {
 						$workername = substr($key,6,4) . substr($key,3,2);
 						if (!in_array($workername, $outputed_values)){
-							echo '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.mini_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
+							$htmlout .= '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.mini_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
 							array_push($outputed_values, $workername);
 						}
 					}	
 				}
 			}	
-			?>
-			<table>
-				<thead>
-					<tr>
-						<th><?php echo __( 'User name', 'WPdoodlez'  ); ?></th>
-						<?php
-							foreach ( $suggestions as $key => $value ) {
-								if ($key != "post_views_count" && $key != "likes" ) {
-									?><th style="word-wrap:break-all;overflow-wrap:anywhere"><?php
-									
-									// ICS Download zum Termin anbieten
-									if( function_exists('export_ics') && is_singular() ) {
-										$nextnth = strtotime($key);
-										$nextnth1h = strtotime($key);
-										echo ' <a title="'.__("ICS add reminder to your calendar","penguin").'" href="'.home_url(add_query_arg(array($_GET, 'start' =>wp_date('Ymd\THis', $nextnth), 'ende' => wp_date('Ymd\THis', $nextnth1h) ),$wp->request.'/icalfeed/')).'"><i class="fa fa-calendar-check-o"></i></a> ';
-									}	
-									
-									echo $key; ?></th><?php
-								}	
-							}
-							?>
-						<th><?php echo __( 'Manage vote', 'WPdoodlez'  ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					if (!empty($_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ] )) {
-						$myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
-					}
-					?>
-					<tr id="wpdoodlez-form">
-						<td><input type="text" 
-								   placeholder="<?php echo __( 'Your name', 'WPdoodlez'  ) ?>" 
-								   class="wpdoodlez-input"
-								   id="wpdoodlez-name" size="10"></td>
-							<?php
-							$votecounter = 0;
-							foreach ( $suggestions as $key => $value ) {
-								if ($key != "post_views_count" && $key != "likes"  ) {
-									$votecounter += 1;
-									?><td><label> <input type="checkbox" name="<?php echo $key; ?>" id="<?php echo 'doodsel'.$votecounter; ?>" class="wpdoodlez-input">
-									<?php echo $value[ 0 ]; ?></label></td><?php
-								}
+			$htmlout .= '<table><thead><tr><th>' . __( 'User name', 'WPdoodlez'  ) . '</th>';
+			foreach ( $suggestions as $key => $value ) {
+				if ($key != "post_views_count" && $key != "likes" ) {
+					$htmlout .= '<th style="word-wrap:break-all;overflow-wrap:anywhere">';
+					// ICS Download zum Termin anbieten
+					if( function_exists('export_ics') && is_singular() ) {
+						$nextnth = strtotime($key);
+						$nextnth1h = strtotime($key);
+						$htmlout .= ' <a title="'.__("ICS add reminder to your calendar","penguin").'" href="'.home_url(add_query_arg(array($_GET, 'start' =>wp_date('Ymd\THis', $nextnth), 'ende' => wp_date('Ymd\THis', $nextnth1h) ),$wp->request.'/icalfeed/')).'"><i class="fa fa-calendar-check-o"></i></a> ';
+					}	
+					$htmlout .= $key . '</th>';
+				}	
+			}
+			$htmlout .= '<th>' . __( 'Manage vote', 'WPdoodlez'  ). '</th>';
+			$htmlout .= '</tr></thead><tbody>';
+			if (!empty($_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ] )) {
+				$myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
+			}
+			$htmlout .= '<tr id="wpdoodlez-form">';
+			$htmlout .= '<td><input type="text" placeholder="'. __( 'Your name', 'WPdoodlez'  ) .'" ';			
+			$htmlout .= ' class="wpdoodlez-input" id="wpdoodlez-name" size="10"></td>';			
+			$votecounter = 0;
+			foreach ( $suggestions as $key => $value ) {
+				if ($key != "post_views_count" && $key != "likes"  ) {
+					$votecounter += 1;
+					$htmlout .= '<td><label> <input type="checkbox" name="'. $key.'" id="doodsel'.$votecounter.'" class="wpdoodlez-input">';
+					$htmlout .= $value[ 0 ].'</label></td>';
+				}
+			}
+			$htmlout .= '<td><button id="wpdoodlez_vote">'. __( 'Vote!', 'WPdoodlez'  ).'</button></td></tr>';
+			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+			// Page navigation
+			if ( $polli ) { $nb_elem_per_page = 20; } else { $nb_elem_per_page = 100; }
+			$number_of_pages = intval(count($votes)/$nb_elem_per_page)+1;
+			$page = isset($_GET['seite'])?intval($_GET['seite']):0;
+			//					foreach ( $votes as $name => $vote ) {
+			foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
+				$htmlout .= '<tr id="wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ) .'" ';
+				$htmlout .= 'class="'. @$myname == $name ? 'myvote' : '' .'">';
+				$htmlout .= '<td style="text-align:left">'; 
+				// Wenn ipflag plugin aktiv und user angemeldet
+				if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
+					global $ipflag;
+					$nameip = substr($name,21,strlen($name)-21);
+					if(isset($ipflag) && is_object($ipflag)){
+						if(($info = $ipflag->get_info($nameip)) != false){
+							$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
+						} else { $htmlout .= ' '. $ipflag->get_flag($info, '') . ' '; }
+					} 
+				}	
+				$htmlout .= ' ' . substr($name,0,20) . '</td>';
+				foreach ( $suggestions as $key => $value ) {
+					if ($key != "post_views_count" && $key != "likes") {
+						$htmlout .= '<td>';
+						if ( !empty($vote[ $key ]) ) {
+							$votes_cout[ $key ] ++;
+							$htmlout .= '<label data-key="' . $key . '">'. $value[ 0 ].'</label>';
+						} else {
+							$htmlout .= '<label></label>';
 						}
-						?><td>
-							<button id="wpdoodlez_vote"><?php echo __( 'Vote!', 'WPdoodlez'  ); ?>
-							</button></td>
-					</tr>
-					<?php
-					$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
-					// Page navigation
-					if ( $polli ) { $nb_elem_per_page = 20; } else { $nb_elem_per_page = 100; }
-					$number_of_pages = intval(count($votes)/$nb_elem_per_page)+1;
-					$page = isset($_GET['seite'])?intval($_GET['seite']):0;
-					//					foreach ( $votes as $name => $vote ) {
-					foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
-						?><tr id="<?php echo 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ); ?>" 
-							  class="<?php echo @$myname == $name ? 'myvote' : '';  ?>">
-						<?php
-						echo '<td style="text-align:left">'; 
-						// Wenn ipflag plugin aktiv und user angemeldet
-						if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
-							global $ipflag;
-							$nameip = substr($name,21,strlen($name)-21);
-							if(isset($ipflag) && is_object($ipflag)){
-								if(($info = $ipflag->get_info($nameip)) != false){
-									echo ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
-								} else { echo ' '. $ipflag->get_flag($info, '') . ' '; }
-							} 
-						}	
-							echo ' ' . substr($name,0,20) . '</td>';
-							foreach ( $suggestions as $key => $value ) {
-								if ($key != "post_views_count" && $key != "likes") {
-									?><td>
-										<?php
-										if ( !empty($vote[ $key ]) ) {
-											$votes_cout[ $key ] ++;
-											?>
-										<label 
-											data-key="<?php echo $key; ?>"
-											><?php echo $value[ 0 ]; ?></label><?php
-										} else {
-											?>
-										<label></label><?php }
-										?>
-								</td><?php
-								}
-							}	
-							?>
-						<td><?php
-						if ( current_user_can( 'delete_published_posts' ) ) { ?>
-								<button style="padding:3px 10px 3px 10px" class="wpdoodlez-delete" data-vote="<?php echo md5( $name ); ?>" data-realname="<?php echo $name; ?>">
-									<?php echo '<i title="'.__( 'delete', 'WPdoodlez' ).'" class="fa fa-trash-o"></i>'; ?></button><?php
-									}
-									if ( !empty($myname) && $myname == $name ) { ?>
-								<button style="padding:3px 10px 3px 10px" class="wpdoodlez-edit" data-vote="<?php echo md5( $name ); ?>" data-realname="<?php echo $name; ?>">
-									<?php echo '<i title="'.__( 'edit', 'WPdoodlez' ).'" class="fa fa-edit"></i>'; ?></button><?php
-							}
-							?></td>
-						</tr><?php
+						$htmlout .= '</td>';
 					}
-					?>
-				</tbody>
-			<tfoot>
-				<tr>
-					<th><?php echo __( 'total votes', 'WPdoodlez' ); ?></th>
-					<?php
-						$pielabel = ''; $piesum = '';
-						foreach ( $votes_cout as $key => $value ) {
-							if ($key != "post_views_count" && $key != "likes" ) {
-								?><th id="total-<?php echo $key; ?>"><?php echo $value;  $pielabel .=  strtoupper($key) . ','; $piesum .= $value . ','; ?></th><?php
-							} }
-						?>
-					<td><?php echo '<b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b>';  ?></td>
-				</tr>
-			</tfoot>
-			<?php   
-			}     //    Ende Terminabstimmung oder Umfrage, nun Fusszeile
-			?>
-				
-		</table>
-		<?php
+				}	
+				$htmlout .= '<td>';
+				if ( current_user_can( 'delete_published_posts' ) ) {
+					$htmlout .= '<button style="padding:3px 10px 3px 10px" class="wpdoodlez-delete" data-vote="'. md5( $name ).'" data-realname="'. $name.'">';
+					$htmlout .= '<i title="' . __( 'delete', 'WPdoodlez' ) . '" class="fa fa-trash-o"></i></button>';
+				}
+				if ( !empty($myname) && $myname == $name ) {
+					$htmlout .= '<button style="padding:3px 10px 3px 10px" class="wpdoodlez-edit" data-vote="'. md5( $name ). '" data-realname="'. $name.'">';
+					$htmlout .= '<i title="'.__( 'edit', 'WPdoodlez' ).'" class="fa fa-edit"></i></button>';
+				}
+				$htmlout .= '</td></tr>';
+			}
+			$htmlout .= '</tbody><tfoot>';
+			$htmlout .= '<tr><th>' . __( 'total votes', 'WPdoodlez' ).':</th>';
+			$pielabel = ''; $piesum = '';
+			foreach ( $votes_cout as $key => $value ) {
+				if ($key != "post_views_count" && $key != "likes" ) {
+					$htmlout .= '<th id="total-'. $key .'">'. $value.'</td>';
+					$pielabel .=  strtoupper($key) . ',';
+					$piesum .= $value . ',';
+				}
+			}
+			$htmlout .= '<td><b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b></td>';
+			$htmlout .= '</tr></tfoot>';
+		}     //    Ende Terminabstimmung oder Umfrage, nun Fusszeile
+		$htmlout .= '</table>';
 		if ( isset($_GET['admin']) || !$polli) {
 			if ( $number_of_pages >1 ) {
 				// Page navigation		
@@ -547,18 +544,18 @@ function get_doodlez_content() {
 					$seitennummer = $i+1;
 					$html .= ' &nbsp;<a class="page-numbers" href="'.add_query_arg( array('admin'=>'1', 'seite'=>$i), home_url( $wp->request ) ).'">'.$seitennummer.'</a>';
 				}	
-				echo $html . '</div>';
+				$htmlout .= $html . '</div>';
 			}	
 		}	
 		// Chart Pie anzeigen zu den Ergebnissen
 		$piesum = rtrim($piesum, ",");
 		$pielabel = rtrim($pielabel, ",");
-		if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) ) {
-			echo do_shortcode('[chartscodes_polar accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
+		if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) && ($chartan) ) {
+			$htmlout .= do_shortcode('[chartscodes_polar accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 		}	
-	}
-	/* END password protected? */
-}     // end of get doodlez content	
+	}		/* END password protected? */
+	return $htmlout;
+} // end of get doodlez content	
 
 // ------------------- quizzz code and shortcode ---------------------------------------------------------------
 
