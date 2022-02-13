@@ -960,7 +960,7 @@ function quiz_show_form( $content ) {
 					$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
 				} 
 				$ansmixed .='<input type="hidden" name="answers4" id="answers4" value="'.implode(";",$ans).'">';
-				$pollyans = implode(" , ",$ans);
+				$pollyans = '(A) '.$ans[0].' , (B) '.$ans[1].' , (C) '.$ans[2].' , (D) '.$ans[3];
 				unset($choice);
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
@@ -971,7 +971,7 @@ function quiz_show_form( $content ) {
 					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
 					$ansmixed .='<input autocomplete="off" style="width:100%" type="text" name="answer" id="answer" placeholder="'. __('your answer','WPdoodlez').'" class="quiz_answer answers">';
 				}
-			$pollyans = esc_html(preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])));
+				$pollyans = esc_html(preg_replace( '/[^( |aeiouAEIOU.)$]/', '*', esc_html($answers[0])));
 			}	
 			if ($exact[0]=="exact") {
 				//exact, strict match
