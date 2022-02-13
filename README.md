@@ -1,8 +1,14 @@
-# WPdoodlez Forked Mod with Poll quizzz
-Doodlez: plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress.
-Poll: create classic polls to let visitors vote about a question
-Quizzz: Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
-quizzz supports categories images and integrates them in single and header if used in theme
+# WPdoodlez Forked Mod with Poll  and quizzz custom post type
+
+### WPDoodlez ###
+plan and vote to find a common appointment date with participiants for an event. Works similar to Doodle(TM) for WordPress.
+
+### Poll### 
+create classic polls to let visitors vote about a question
+
+### Quizzz###
+Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
+Quizzz supports categories images and integrates them in single and header if used in theme
 
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.
@@ -14,7 +20,7 @@ Participiants do net need to enter their full name (a nick name would do).
 A cookie "wpdoodlez-hashofthevote" with the given nic name is stored on the local computer to
 notice that one has voted already - so you should opt-in cookies and place a note on your GDPR statement.
 
-Doodlez can be password protected (with builtin wordpress logic) to prevent others seeing the content
+WPDoodlez can be password protected (with builtin wordpress logic) to prevent others seeing the content
 Archives, Post Content, Post-Thumbnail, Categories and Tags have been enabled to provide full integration like a normal post.
 
 Quiz game has a shortcode for random questions and a custom post type "question" for quiz. It can display a certificate to print
@@ -38,6 +44,8 @@ User parameter /admin=1 to display alternate votes display (more features when l
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
 
+## Shortcode ##
+[wpdoodlez_sc id=post-ID chart=true] set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
 
 ## Details
 Based on Wordpress custom types. Rich text, media, comments and categories can 
