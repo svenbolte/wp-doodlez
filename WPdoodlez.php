@@ -1041,7 +1041,7 @@ function quiz_show_form( $content ) {
 			$copytags = '';
 			if ( $terms && !is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
-						$copytags .= ' Kategorie ' . $term->name; 
+						$copytags .= ' Kategorie: ' . $term->name . ' - '; 
 				}
 			}	
 			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
