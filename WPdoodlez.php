@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.34
-Stable tag: 9.1.1.34
+Version: 9.1.1.35
+Stable tag: 9.1.1.35
 Requires at least: 5.1
 Tested up to: 5.9.1
 Requires PHP: 8.0
@@ -357,7 +357,7 @@ function mini_calendar($month,$year,$eventarray){
 		}	
 		$calendar.= $stylez . $list_day . '</td>';
 		if($running_day == 7):
-			$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"	>'.$running_week.'</td></tr>';
+			$calendar.= '<td style="text-align:center" >'.$running_week.'</td></tr>';
 			if(($day_counter + 1 ) != $days_in_month):
 				$calendar.= '<tr>';
 			endif;
