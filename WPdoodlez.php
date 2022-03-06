@@ -324,7 +324,6 @@ function wpdoodle_doku() {
 // Mini Calendar display month 
 function mini_calendar($month,$year,$eventarray){
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
-	/* days and weeks vars now ... */
 	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
 	$running_day = date('w',mktime(2,0,0,$month,1,$year));
 	if ( $running_day == 0 ) { $running_day = 7; }
@@ -332,13 +331,11 @@ function mini_calendar($month,$year,$eventarray){
 	$days_in_this_week = 1;
 	$day_counter = 0;
 	$dates_array = array();
-	/* draw table */
 	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
-	/* table headings */
 	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
-	$calendar.= '<tr><td style="padding:2px;text-align:center">'.implode('</td><td style="padding:2px;text-align:center">',$headings).'</td></tr>';
+	$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
 	/* row for week one */
-	$calendar.= '<tr>';
+	$calendar.= '<tr style="padding:2px">';
 	/* print "blank" days until the first of the current week */
 	for($x = 1; $x < $running_day; $x++):
 		$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
@@ -373,12 +370,9 @@ function mini_calendar($month,$year,$eventarray){
 		endfor;
 		$calendar.= '<td style="padding:2px;text-align:center">'.$running_week.'</td></tr>';
 	endif;
-	/* end the table */
 	$calendar.= '</table>';
-	/* all done, return result */
 	return $calendar;
 }
-
 
 // Doodlez Inhalte anzeigen
 function get_doodlez_content($chartan) {
