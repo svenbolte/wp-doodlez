@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.35
-Stable tag: 9.1.1.35
+Version: 9.1.1.36
+Stable tag: 9.1.1.36
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -891,9 +891,11 @@ function quiz_show_form( $content ) {
 		}
 		wp_reset_query();  
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+		$tcolor = get_theme_mod( 'link-color', '#006060' );
+		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-				$content = '<span style="font-size:1.2em">Kategorie: ' . $term->name . ' <br>' . $content.'</span>'; 
+				$content = '<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em">Kategorie <strong>' . $term->name . '</strong>: ' . $content.'</div>'; 
 			}
 		}	
 		// get meta values for this question
@@ -982,7 +984,7 @@ function quiz_show_form( $content ) {
 					$correct = "no";
 				}
 			}
-		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<br><div class="nav_links" style="text-align:center"><i class="fa fa-wikipedia-w"></i> <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a></div>'; } else { $wikinachschlag='';}
+		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<br><i class="fa fa-wikipedia-w"></i> &nbsp; <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a>'; } else { $wikinachschlag='';}
 			if ( $correct == "yes" ) {
 				ob_start();
 				if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
@@ -995,9 +997,9 @@ function quiz_show_form( $content ) {
 						$goto = $nextlevel[0];
 						wp_safe_redirect( get_post_permalink($goto) );
 					} else {
-						$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:#fff;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
-						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px;color:#fff"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-						$error .= '</div>'.$wikinachschlag;
+						$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
+						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+						$error .= ' &nbsp; '.$wikinachschlag.'</div>';
 						$showqform = 'display:none';
 					}
 				} else {
@@ -1008,11 +1010,11 @@ function quiz_show_form( $content ) {
 				}
 			} else {
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_GET['ans']) ) {
-					$error = $ansmixed.'<div style="margin-top:30px;font-size:1.2em;color:#fff;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px">';
+					$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
 					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
-					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px;color:#fff"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-					$error .= '</div>'.$wikinachschlag;
+					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+					$error .= ' &nbsp; '.$wikinachschlag.'</div>';
 					$showqform = 'display:none';
 					ob_start();
 					if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
