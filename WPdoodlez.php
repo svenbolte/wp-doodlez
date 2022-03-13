@@ -287,8 +287,7 @@ function wpdoodle_doku() {
 	#### Crossword<br>
 	display a crossword game built on the quizzz words
 	Add Shortcode ´´´[xwordquiz]´´´ to any page or post
-	   or 
-	use the Crossword Button on random quiz widget<br><br>
+	<br><br>
 
 	WPdoodlez can handle classic polls and doodle like appointment planning. It can be created in admin area<br>
 	Use custom post type to call posts or integrate post content to your normal posts using the shortcode<br><br>
@@ -684,6 +683,7 @@ function random_quote_func( $atts ){
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
+		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
@@ -698,9 +698,6 @@ function random_quote_func( $atts ){
 			// ansonsten freie Antwort anfordern von Antwort 1
 			$antwortmaske .= $xlink.'"><span style="border-radius:3px;color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
 		}	
-		$antwortmaske.='<ul class="footer-menu"><li><a title="'.__('Crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'" style="margin-top:10px"><i class="fa fa-table"></i> '. __('Crossword','WPdoodlez').'</a></li>';
-		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $antwortmaske.='<li><a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></li>';
-		$antwortmaske.='</ul>';
 		$message .= '<div><p>';
 		// Wenn eine Quizkategorie da, Katbild anzeigen
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
@@ -716,7 +713,7 @@ function random_quote_func( $atts ){
 		}			
 		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
 		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat;
-		$message .= '</p><p>'.get_the_content().'</p>'.$antwortmaske.'</div>';
+		$message .= '</p><p style="font-size:1.2em">'.get_the_content().'</p>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
@@ -812,7 +809,7 @@ function quiz_adminstats() {
 		if ( $the_query->have_posts() ) {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-				$message .= '<span style="color:green;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
+				$message .= '<span style="color:#1bab1b;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
 			}
 		}
 		wp_reset_postdata();
@@ -821,7 +818,7 @@ function quiz_adminstats() {
 		if ( $the_query->have_posts() ) {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><span style="color:green;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
+				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><span style="color:#1bab1b;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
 			}
 		}
 		wp_reset_postdata();
@@ -873,10 +870,10 @@ function quiz_show_form( $content ) {
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	if (get_post_type()=='question'):
 		global $answer;
-		if (isset($_POST['answer'])) $answer = $_POST['answer'];	// user submitted answer
-		if (isset($_POST['ans'])) $answer = $_POST['ans'];   // Answer is radio button selection 1 of 4
-		if (isset($_GET['ans']))  $answer = sanitize_text_field($_GET['ans']);  // Answer is given from shortcode
-		if (isset($_GET['ende'])) { $ende = sanitize_text_field($_GET['ende']); } else { $ende = 0; }
+		if (isset($_POST['answer'])) $answer = esc_html($_POST['answer']);	// user submitted answer
+		if (isset($_POST['ans'])) $answer = esc_html($_POST['ans']);   // Answer is radio button selection 1 of 4
+		if (isset($_GET['ans']))  $answer = esc_html($_GET['ans']);  // Answer is given from shortcode
+		if (isset($_GET['ende'])) { $ende = esc_html($_GET['ende']); } else { $ende = 0; }
 		// Link für nächste Zufallsfrage
 		$args=array(
 		  'orderby'=>'rand', 'post_type' => 'question', 'post_status' => 'publish', 'posts_per_page' => 1, 'showposts' => 1,
@@ -911,16 +908,14 @@ function quiz_show_form( $content ) {
 		$rightstat = get_post_custom_values('quizz_rightstat');
 		$wrongstat = get_post_custom_values('quizz_wrongstat');
 		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
-		$lsubmittedanswer = strtolower($answer);
-		$lactualanswer = strtolower($answers[0]);
+		$lsubmittedanswer = preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($answer)));
+		$lactualanswer = preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($answers[0])));
 		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
 		// Hangman spielen oder normale Beantwortung
-		if ( isset($_GET['crossword']) && is_singular() ) {
-			$theForm = do_shortcode('[xwordquiz]');
-		} else if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
+		if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
 			$theForm = $content . play_hangman($answers[0]);
 			$theForm .= '<ul class="footer-menu" style="text-align:center;margin-top:20px;list-style:none;text-transform:uppercase;"><li><a href="' . $random_post_url .'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li></ul>';
-			if ( strpos($theForm,"background-color:green") !== false ) {	
+			if ( strpos($theForm,"background-color:#1bab1b") !== false ) {	
 				ob_start();
 				if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
@@ -948,9 +943,9 @@ function quiz_show_form( $content ) {
 				foreach ($ans as $choice) {
 					$xex++;
 					$labstyle = ''; $astyle='';
-					if (!empty($_POST) ) {
-						if ( $choice == $answer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
-						if ( $choice == $answers[0] ) { $labstyle = 'background:green'; $astyle='color:#fff'; } 
+					if (!empty($_POST) || isset($_GET['ans']) ) {
+						if ( preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($choice))) == $lsubmittedanswer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
+						if ( preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($choice))) == $lactualanswer ) { $labstyle = 'background:#1bab1b'; $astyle='color:#fff'; } 
 					}	
 					$ansmixed .= '<input onclick="'.$hideplay.'" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
 					$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
@@ -998,7 +993,7 @@ function quiz_show_form( $content ) {
 						wp_safe_redirect( get_post_permalink($goto) );
 					} else {
 						$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
-						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
 						$error .= ' &nbsp; '.$wikinachschlag.'</div>';
 						$showqform = 'display:none';
 					}
@@ -1013,7 +1008,7 @@ function quiz_show_form( $content ) {
 					$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
 					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
-					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:30px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
+					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
 					$error .= ' &nbsp; '.$wikinachschlag.'</div>';
 					$showqform = 'display:none';
 					ob_start();
@@ -1032,7 +1027,7 @@ function quiz_show_form( $content ) {
 			}
 			$formstyle .='</style>';
 			$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
-			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="list-style:none;display:inline;text-transform:uppercase;">';
+			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			$copytags = '';
 			if ( $terms && !is_wp_error( $terms ) ) {
@@ -1109,10 +1104,8 @@ function quizz_add_custom_box() {
     $screens = array( 'question' );
     foreach ( $screens as $screen ) {
         add_meta_box(
-            'answers-more',
-            __( 'Answers &amp; more', 'WPdoodlez' ),
-            'quizz_inner_custom_box',
-            $screen, 'normal'
+            'answers-more', __( 'Answers &amp; more', 'WPdoodlez' ),
+            'quizz_inner_custom_box', $screen, 'normal'
         );
     }
 }
@@ -1270,7 +1263,7 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 	global $hang;
 	global $wp;
 	$gtml = '<style>input[type=button][disabled],button:disabled,button[disabled] { border: 1px solid #999999;background-color:#cccccc;color: #666666;}</style>';
-	$gtml .= '<code style="font-family:monospace;font-size:1.5em">';
+	$gtml .= '<code style="background:#fff;font-family:monospace;font-size:1.5em">';
 	$gtml .= $guesstemplate. '<br>';
 	$formurl = add_query_arg( array('hangman'=>'1' ), home_url( $wp->request ) );
 	$gtml .= '</code><form name="galgen" method="post" action="'. $formurl .'">';
@@ -1286,7 +1279,7 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 		$gtml .= '> &nbsp;';
 	}  
 	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
-	$gtml .= '<div style="float:left;width:38%"><code style="font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
+	$gtml .= '<div style="float:left;width:38%"><code style="background:#fff;font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
 	$gtml .= '<div style="padding-top:5%;float:left;width:58%;height:220px"><b>Galgenmännchen</b> Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Es bleiben <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen</div>';
 	return $gtml;
 }
@@ -1381,9 +1374,9 @@ function play_hangman($rein) {
 		$lettersguessed = $lettersguessed . $letter;
 		$guesstemplate = matchLetters($word, $lettersguessed);
 		if (!strstr($guesstemplate, "_")) {
-			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:green;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Gewonnen - Gratulation. Sie haben <i>'.$word.'</i> erraten.</div>';
+			return '<div style="margin-top:15px;font-size:1.2em;color:white;background-color:#1bab1b;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Gewonnen - Gratulation. Sie haben <i>'.$word.'</i> erraten.</div>';
 		} else if ($wrong >= 6) {
-			return '<div style="margin-top:30px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Verloren - <i>'.$word.'</i> war die Lösung.</div>';
+			return '<div style="margin-top:15px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Verloren - <i>'.$word.'</i> war die Lösung.</div>';
 		} else {
 			return printPage($hang[$wrong], $guesstemplate, $which, $lettersguessed, $wrong);
 		}
@@ -1452,9 +1445,8 @@ function xwordquiz( $atts ) {
 	wp_enqueue_style('crossword-style');
 	wp_enqueue_script('crossword-script');
     /* Adds additional data */
-     wp_localize_script('crossword-script', 'crossword_vars', array(
-        'cwdcw_ansver' => 'yes',
-        'cwdcw_ansver_incorect' => 'yes',
+    wp_localize_script('crossword-script', 'crossword_vars', array(
+        'cwdcw_ansver' => 'yes', 'cwdcw_ansver_incorect' => 'yes',
     ));
     $html = '';
     if ($rows) {
