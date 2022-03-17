@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.36
-Stable tag: 9.1.1.36
+Version: 9.1.1.37
+Stable tag: 9.1.1.37
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -908,9 +908,9 @@ function quiz_show_form( $content ) {
 		$rightstat = get_post_custom_values('quizz_rightstat');
 		$wrongstat = get_post_custom_values('quizz_wrongstat');
 		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
-		$lsubmittedanswer = preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($answer)));
-		$lactualanswer = preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($answers[0])));
-		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
+		$lsubmittedanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answer)));
+		$lactualanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answers[0])));
+		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 		// Hangman spielen oder normale Beantwortung
 		if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
 			$theForm = $content . play_hangman($answers[0]);
@@ -944,8 +944,8 @@ function quiz_show_form( $content ) {
 					$xex++;
 					$labstyle = ''; $astyle='';
 					if (!empty($_POST) || isset($_GET['ans']) ) {
-						if ( preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($choice))) == $lsubmittedanswer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
-						if ( preg_replace("/[^A-Za-z]/", '', strtolower(esc_html($choice))) == $lactualanswer ) { $labstyle = 'background:#1bab1b'; $astyle='color:#fff'; } 
+						if ( preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($choice))) == $lsubmittedanswer ) { $labstyle = 'background:tomato'; $astyle='color:#fff'; } 
+						if ( preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($choice))) == $lactualanswer ) { $labstyle = 'background:#1bab1b'; $astyle='color:#fff'; } 
 					}	
 					$ansmixed .= '<input onclick="'.$hideplay.'" type="radio" name="ans" id="ans'.$xex.'" value="'.$choice.'">';
 					$ansmixed .= ' &nbsp; <label style="'.$labstyle.'" for="ans'.$xex.'"><a style="'.$astyle.'"><b>'.chr($xex+64).'</b> &nbsp; '.$choice.'</a></label>';
