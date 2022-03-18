@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.37
-Stable tag: 9.1.1.37
+Version: 9.1.1.39
+Stable tag: 9.1.1.39
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -682,8 +682,9 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
-		$hangrein = preg_replace("/[^A-Za-z]/", '', $answers[0]);
+		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
+		$quizkat .= ' &nbsp; <a href="'.add_query_arg( array('crossword'=>1), home_url() ).'"><i class="fa fa-th"></i> '. __('Crossword','WPdoodlez').'</a>';
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
@@ -698,7 +699,7 @@ function random_quote_func( $atts ){
 			// ansonsten freie Antwort anfordern von Antwort 1
 			$antwortmaske .= $xlink.'"><span style="border-radius:3px;color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
 		}	
-		$message .= '<div><p>';
+		$message .= '<div>';
 		// Wenn eine Quizkategorie da, Katbild anzeigen
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
@@ -711,9 +712,9 @@ function random_quote_func( $atts ){
 			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
 			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image"></div>';	
 		}			
-		$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
-		$message .= '<span class="headline"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a></span> '.$quizkat;
-		$message .= '</p><p style="font-size:1.2em">'.get_the_content().'</p>'.$antwortmaske.'</div>';
+		$message .= '<div class="greybox"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
+		$message .= $quizkat.'</div><h6><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
+		$message .= ' &nbsp; '.get_the_content().'</h6>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
@@ -866,6 +867,11 @@ function get_schulnote( $prozent ) {
 
 // Einzelanzeige
 function quiz_show_form( $content ) {
+	// lieber Kreuzworträtsel spielen
+	if ( isset($_GET['crossword'])) {
+		return do_shortcode('[xwordquiz]');
+		exit;
+	}	
 	global $wp;
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	if (get_post_type()=='question'):
@@ -892,7 +898,7 @@ function quiz_show_form( $content ) {
 		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-				$content = '<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em">Kategorie <strong>' . $term->name . '</strong>: ' . $content.'</div>'; 
+				$content = '<div style="background-color:rgba('.$backgd.');margin-bottom:12px;padding:8px;border-radius:3px;font-size:1.2em">Kategorie <strong>' . $term->name . '</strong>: ' . $content.'</div>'; 
 			}
 		}	
 		// get meta values for this question
@@ -956,7 +962,7 @@ function quiz_show_form( $content ) {
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
 				if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
-				$ansmixed .= __('answer mask','WPdoodlez'). '<span style="border-radius:3px;background-color:#eee;margin:0 5px;font-weight:700;font-size:1.2em;padding:3px 0 3px 9px;letter-spacing:.5em;font-family:monospace">';
+				$ansmixed .= __('answer mask','WPdoodlez'). '<span style="border-radius:3px;background-color:#eee;margin:8px 5px;font-weight:700;font-size:1.2em;padding:3px 0 3px 9px;letter-spacing:.5em;font-family:monospace">';
 				$ansmixed .= preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span>' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 				if ( empty($_POST) ) {
 					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
@@ -1026,7 +1032,7 @@ function quiz_show_form( $content ) {
 				$formstyle .= '.qiz input[type=radio] + label {cursor:not-allowed} ';
 			}
 			$formstyle .='</style>';
-			$listyle = '<li style="padding:6px;display:inline;margin-right:10px;">';
+			$listyle = '<li style="padding:6px 0 6px 0;display:inline;margin-right:10px;">';
 			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			$copytags = '';
@@ -1036,7 +1042,7 @@ function quiz_show_form( $content ) {
 				}
 			}	
 			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
-			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:40px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
+			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
 				$letztefrage.='</li>'.$listyle;
@@ -1047,6 +1053,7 @@ function quiz_show_form( $content ) {
 				$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
 				if (strlen($hangrein) <= 14 && strlen($hangrein) >= 5) $letztefrage.='</li>'.$listyle.'<a href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></li>';
 			}
+			$letztefrage.='</li>'.$listyle.'<a href="'.add_query_arg( array('crossword'=>1), home_url() ).'"><i class="fa fa-th"></i> '. __('Crossword','WPdoodlez').'</a></li>';
 			$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
@@ -1452,7 +1459,7 @@ function xwordquiz( $atts ) {
     if ($rows) {
 		$html .= '<script>document.getElementById("primary").className="page-fullwidth"</script>';
         $html .= '<style>@media print{@page {size: landscape}}#secondary{width:100%!important}</style><div class="crossword_wrapper">';
-        $html .= '<div class="cwd-row cwd-crossword-row"><div class="cwd-crossword-container">';
+        $html .= '<div class="cwd-row cwd-crossword-row" style="width:100%"><div class="cwd-crossword-container">';
         $html .= ' <div class="cwd-center cwd-crossword" id="cwd-crossword"></div><br>';
         $html .= '</div></div>';
         $html .= '<div class="cwd-center cwd-crossword-questions">';

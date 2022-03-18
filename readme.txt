@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.37
-Stable tag: 9.1.1.37
+Version: 9.1.1.39
+Stable tag: 9.1.1.39
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -111,10 +111,6 @@ use the Crossword Button on random quiz widget
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
-
-=== 9.1.1.34-37 ===
-bugfixes in quizzz engine
-wp592 compatibility tests
 
 === 9.1.1.33 ===
 add shortcode [wpdoodlez_sc id=xxxxx chart=0/1]. It can be called from all other posts or pages and displays just the content
