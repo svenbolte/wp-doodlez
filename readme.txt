@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.39
-Stable tag: 9.1.1.39
+Version: 9.1.1.40
+Stable tag: 9.1.1.40
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -25,11 +25,9 @@ Quizzz supports categories images and integrates them in single and header if us
 see readme.txt for more details.
 Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
 
-#### Crossword
+#### Crossword Shortcode
 display a crossword game built on the quizzz words
 Add Shortcode ´´´[xwordquiz]´´´ to any page or post
-   or 
-use the Crossword Button on random quiz widget
 
 WPDoodlez can handle classic polls and doodle like appointment planning
 If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries if custom fields are dates e.g name: 12.12.2020 value: ja
@@ -106,11 +104,12 @@ You can add a random crossword game to your pages and posts or call the crosswor
 == Crossword Usage ==
 
 Add Shortcode ```[xwordquiz]``` to any page or post
-   or 
-use the Crossword Button on random quiz widget
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
+
+=== 9.1.1.40 ===
+Styling and crossword and quizzz fixes and optimizations
 
 === 9.1.1.33 ===
 add shortcode [wpdoodlez_sc id=xxxxx chart=0/1]. It can be called from all other posts or pages and displays just the content

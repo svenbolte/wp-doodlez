@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.39
-Stable tag: 9.1.1.39
+Version: 9.1.1.40
+Stable tag: 9.1.1.40
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -684,7 +684,6 @@ function random_quote_func( $atts ){
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
-		$quizkat .= ' &nbsp; <a href="'.add_query_arg( array('crossword'=>1), home_url() ).'"><i class="fa fa-th"></i> '. __('Crossword','WPdoodlez').'</a>';
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
@@ -713,8 +712,8 @@ function random_quote_func( $atts ){
 			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image"></div>';	
 		}			
 		$message .= '<div class="greybox"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
-		$message .= $quizkat.'</div><h6><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
-		$message .= ' &nbsp; '.get_the_content().'</h6>'.$antwortmaske.'</div>';
+		$message .= $quizkat.'</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
+		$message .= ' &nbsp; '.get_the_content().'</div>'.$antwortmaske.'</div>';
       endwhile;
     }
     wp_reset_query();  
@@ -1053,13 +1052,12 @@ function quiz_show_form( $content ) {
 				$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
 				if (strlen($hangrein) <= 14 && strlen($hangrein) >= 5) $letztefrage.='</li>'.$listyle.'<a href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></li>';
 			}
-			$letztefrage.='</li>'.$listyle.'<a href="'.add_query_arg( array('crossword'=>1), home_url() ).'"><i class="fa fa-th"></i> '. __('Crossword','WPdoodlez').'</a></li>';
 			$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
 			$letztefrage .= '</ul><br><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
 			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
-			if ($_COOKIE['hidecookiebannerx']==2 ) {
+			if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) {
 				$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
 				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . @$_COOKIE['rightscore']. ' / F: '.@$_COOKIE['wrongscore'].'</li>';
 			}	
@@ -1090,13 +1088,28 @@ function quiz_show_form( $content ) {
 				$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
 				if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
 				$theForm .= '<p style="margin-top:20px">In Schulnoten ausgedrückt: '.get_schulnote( $sperct ).',<br>somit <strong>'.$fail.' bestanden</strong>.</p>';
-				$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
-				$theForm .= '<span style="font-family:Brush Script MT;font-size:2em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
-				$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
-				if( class_exists( 'PB_ChartsCodes' ) ) {
-					$piesum = $sperct . ',' . (100 - $sperct);
-					$theForm .= do_shortcode('[chartscodes_polar accentcolor="1" title="" values="'.$piesum.'" labels="richtig,falsch" absolute="1"]');
+
+				// totals Right/wrong
+				$rct=0;$wct=0;
+				$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
+				if ( $the_query->have_posts() ) {
+					while ( $the_query->have_posts() ) {
+						$the_query->the_post();
+						$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
+						$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
+					}
+				}
+				wp_reset_postdata();
+				if ($rct >0 || $wct > 0) {
+					$theForm .= '<p style="margin:2em 0 2em 0">Insgesamt wurden gespielt: '.intval($rct + $wct).' Fragen,<br>davon richtig: ' .$rct;
+					$theForm .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
+					$theForm .= ' &nbsp; falsch: '.$wct;
+					$theForm .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
 				}	
+
+				$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+				$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
+				$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 			}
 		}		
 		return $theForm;
