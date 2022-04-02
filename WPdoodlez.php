@@ -809,7 +809,12 @@ function quiz_adminstats() {
 		if ( $the_query->have_posts() ) {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-				$message .= '<span style="color:#1bab1b;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
+				$rite = (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
+				$wrg = (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
+				if ( $wrg == 0) { $rpct = 100; } else { $rpct = round($rite / $wrg * 100); }
+				$message .= '<span style="color:#1bab1b;display:inline-block;width:55px">';
+				$message .= 'R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true )).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true )).'</span>';
+				$message .= ' <progress id="rfs" value="'.$rpct.'" max="100" style="width:80px"></progress> <a href="'.get_the_permalink().'">'.substr(get_the_content(),0,80).'</a><br>';
 			}
 		}
 		wp_reset_postdata();
@@ -818,7 +823,11 @@ function quiz_adminstats() {
 		if ( $the_query->have_posts() ) {
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.get_post_meta( get_the_ID(), 'quizz_wrongstat', true ).'</span><span style="color:#1bab1b;display:inline-block;width:55px">R:'.get_post_meta( get_the_ID(), 'quizz_rightstat', true ).'</span><a href="'.get_the_permalink().'">'.substr(get_the_content(),0,90).'</a><br>';
+				$rite = (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
+				$wrg = (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
+				if ( $rite == 0) { $rpct = 100; } else { $rpct = round($wrg / $rite * 100); }
+				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true )).'</span><span style="color:#1bab1b;display:inline-block;width:55px">R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true )).'</span>';
+				$message .= ' <progress id="rfs" value="'.$rpct.'" max="100" style="width:80px"></progress> <a href="'.get_the_permalink().'">'.substr(get_the_content(),0,80).'</a><br>';
 			}
 		}
 		wp_reset_postdata();
@@ -834,9 +843,9 @@ function quiz_adminstats() {
 		}
 		wp_reset_postdata();
 		if ($rct >0 || $wct > 0) {
-			$message .= '<p>Gesamt gespielt: '.intval($rct + $wct).' Fragen, davon richtig: ' .$rct;
+			$message .= '<p>Gesamt gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct)).' Fragen, davon richtig: ' .wpdoo_number_format_short( (float) $rct);
 			$message .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
-			$message .= ' &nbsp; falsch: '.$wct;
+			$message .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct);
 			$message .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
 		}	
 		return $message;
@@ -863,6 +872,37 @@ function get_schulnote( $prozent ) {
 	if ($prozent <30 ) $snote = 'ungenügend (6.0, unter 30%)';
 	return $snote;
 }
+
+// Converts a number into a short version, eg: 1000 -> 1k
+function wpdoo_number_format_short( $n ) {
+	if ($n < 900) {
+		$precision = 0;
+		$n_format = number_format($n, $precision, ',', '.');
+		$suffix = '';
+	} else if ($n < 900000) {
+		$precision = 2;
+		$n_format = number_format($n / 1000, $precision, ',', '.');
+		$suffix = 'k';
+	} else if ($n < 900000000) {
+		$precision = 2;
+		$n_format = number_format($n / 1000000, $precision, ',', '.');
+		$suffix = 'M';
+	} else if ($n < 900000000000) {
+		$precision = 2;
+		$n_format = number_format($n / 1000000000, $precision, ',', '.');
+		$suffix = 'G';
+	} else {
+		$precision = 2;
+		$n_format = number_format($n / 1000000000000, $precision, ',', '.');
+		$suffix = 'T';
+	}
+	if ( $precision > 0 ) {
+		$dotzero = '.' . str_repeat( '0', $precision );
+		$n_format = str_replace( $dotzero, '', $n_format );
+	}
+	return '<span title="'.number_format_i18n($n).'">' . $n_format . $suffix . '</span>';
+}
+
 
 // Einzelanzeige
 function quiz_show_form( $content ) {
@@ -1056,10 +1096,10 @@ function quiz_show_form( $content ) {
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
 			$letztefrage .= '</ul><br><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
-			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. @$rightstat[0].' / F: '. @$wrongstat[0];
+			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. number_format_i18n(@$rightstat[0]).' / F: '. number_format_i18n(@$wrongstat[0]);
 			if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) {
 				$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
-				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . @$_COOKIE['rightscore']. ' / F: '.@$_COOKIE['wrongscore'].'</li>';
+				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . number_format_i18n(@$_COOKIE['rightscore']). ' / F: '.number_format_i18n(@$_COOKIE['wrongscore']).'</li>';
 			}	
 			$letztefrage .= '</ul></div>';
 			$letztefrage .= quiz_adminstats();
@@ -1101,9 +1141,9 @@ function quiz_show_form( $content ) {
 				}
 				wp_reset_postdata();
 				if ($rct >0 || $wct > 0) {
-					$theForm .= '<p style="margin:2em 0 2em 0">Insgesamt wurden gespielt: '.intval($rct + $wct).' Fragen,<br>davon richtig: ' .$rct;
+					$theForm .= '<p style="margin:2em 0 2em 0">Insgesamt wurden gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct)).' Fragen,<br>davon richtig: ' .wpdoo_number_format_short( (float) $rct);
 					$theForm .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
-					$theForm .= ' &nbsp; falsch: '.$wct;
+					$theForm .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct);
 					$theForm .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
 				}	
 
