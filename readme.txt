@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.40
-Stable tag: 9.1.1.40
+Version: 9.1.1.41
+Stable tag: 9.1.1.41
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -15,19 +15,26 @@ Requires PHP: 8.0
 plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
 It adds a custom post type "wpdoodlez".
 
+Shortcode: ´´´[wpdoodlez_sc id=post-ID chart=true]´´´
+ set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
+
 ### Poll
 uses same technology and custom post type like WPDoodlez
 create classic polls to let visitors vote about a question
 
+Shortcode: ```[wpdoodlez_stats]``` show stats of all polls in a list
+
 ### Quizzz
 Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
-Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
-see readme.txt for more details.
+Quizzz supports categories images and integrates them in single and header if used in theme.
+It adds a custom post type "question". See readme.txt for more details.
+
 Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
 
 #### Crossword Shortcode
 display a crossword game built on the quizzz words
-Add Shortcode ´´´[xwordquiz]´´´ to any page or post
+
+Add Shortcode ´´´[xwordquiz]´´´ to any page or post or html widget
 
 WPDoodlez can handle classic polls and doodle like appointment planning
 If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries if custom fields are dates e.g name: 12.12.2020 value: ja
@@ -44,9 +51,7 @@ Highlights
 * Every custom field set in a WPdoodle is a possible answer
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
-
-Shortcode
-[wpdoodlez_sc id=post-ID chart=true] set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
+* shortcodes for poll stats and to embed a poll in any page or post or html widget
 
 
 == Installation ==

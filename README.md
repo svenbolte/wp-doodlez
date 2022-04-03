@@ -1,12 +1,15 @@
 # WPdoodlez, Polls, Quizz and Crossword
 
 ### WPDoodlez
-plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
-It adds a custom post type "wpdoodlez".
+plan and vote to find a common appointment date with participiants for an event. It adds a custom post type "wpdoodlez".
+
+Shortcode: ```[wpdoodlez_sc id=post-ID chart=true]``` set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
 
 ### Poll
 uses same technology and custom post type like WPDoodlez
 create classic polls to let visitors vote about a question
+
+Shortcode: ```[wpdoodlez_stats]``` show stats of all polls in a list
 
 ### Quizzz
 Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
@@ -14,11 +17,9 @@ Quizzz supports categories images and integrates them in single and header if us
 see readme.txt for more details.
 Add Shortcode ```[random-question]``` to any post, page or html-widget
 
-#### Crossword
+### Crossword
 display a crossword game built on the quizzz words
 Add Shortcode ```[xwordquiz]``` to any page or post
-   or 
-use the Crossword Button on random quiz widget
 
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.
@@ -35,7 +36,7 @@ If Using penguin-mod theme cookies will only be set after visitor allows comfort
 WPDoodlez (posts or posts with wpd shortcode) can be password protected (with builtin wordpress logic) to prevent others seeing the content
 Archives, Post Content, Post-Thumbnail, Categories and Tags have been enabled to provide full integration like a normal post.
 
-Quiz game has a shortcode for random questions and a custom post type "question" for quiz. It can display a certificate to print
+Quizzz game has a shortcode for random questions and a custom post type "question" for quiz. It can display a certificate to print
 and stores your ranking in a personal cookie. personal rankings are only stored in your browser, not the web server and only if you allow comfort cookies
 
 ## Highlights for WPDoodlez
@@ -55,9 +56,6 @@ User parameter /admin=1 to display alternate votes display (more features when l
 * Every custom field set in a WPdoodle is a possible answer
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
-
-## Shortcode
-```[wpdoodlez_sc id=post-ID chart=true]``` set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
 
 ## Details
 Based on Wordpress custom types. Rich text, media, comments and categories can 

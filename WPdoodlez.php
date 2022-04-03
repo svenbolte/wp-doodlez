@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.40
-Stable tag: 9.1.1.40
+Version: 9.1.1.41
+Stable tag: 9.1.1.41
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -87,6 +87,68 @@ function wpdoodlez_sc_func($atts) {
 	return $output;
 }
 add_shortcode('wpdoodlez_sc', 'wpdoodlez_sc_func');
+
+
+// wpdoodlez-adminstats
+function wpdoodlez_stats_func($atts) {
+	global $post;
+	$args = shortcode_atts(array( 'id' => 0 ), $atts);
+	$output ='';
+	$qargs = array(
+		'post_type' => array('wpdoodle'),
+		'post_status' => 'publish',
+		'posts_per_page' => -1
+	);
+	$query1 = new WP_Query( $qargs );
+	if ( $query1->have_posts() ) {
+		while ( $query1->have_posts() ) {
+			$query1->the_post();
+			$suggestions = $votes_cout  = [ ];
+			$customs     = get_post_custom( get_the_ID() );
+			foreach ( $customs as $key => $value ) {
+				if ( !preg_match( '/^_/is', $key ) ) {
+					$suggestions[ $key ] = $value;
+					$votes_cout[ $key ]  = 0;
+				}
+			}
+			$polli = array_key_exists('vote1', $suggestions);
+			if ( $polli ) {
+				$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+				foreach ( $votes as $name => $vote ) {
+					foreach ( $suggestions as $key => $value ) {
+						if ($key != "post_views_count" && $key != "likes") {
+							if ( !empty($vote[ $key ]) ) {	$votes_cout[ $key ] ++; }
+						}	
+					}
+				}	
+				$xsum = 0;
+				foreach ( $votes_cout as $key => $value ) {
+					if ($key != "post_views_count" && $key != "likes" && $value > 0 ) {
+						$xsum += $value;
+					}
+				}
+				$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
+				$output .= '<table><thead><th colspan=3><a href="'.get_the_permalink().'">' . get_the_title() . '</a></th></thead>';	
+				$xperc = 0;
+				$votecounter = 0;
+				foreach ( $suggestions as $key => $value ) {
+					 if ($key != "post_views_count" && $key != "likes" ) {
+							$votecounter += 1;
+							if ($xsum>0) $xperc = round(($votes_cout[ $key ]/$xsum) * 100,1);
+							$output .= '<tr><td style="text-align:center">';
+							$output .= $value[ 0 ] .'</label></td><td style="text-align:center">'.$votes_cout[ $key ].'</td>';
+							$output .= '<td style="max-width:120px"><progress style="width:100px" max="100" value="'.$xperc.'"></td></tr>';
+					}	
+				}
+				$output .= '<tfoot><tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td></td></tr></tfoot>';
+				$output .= '</table>';
+			}	
+		}
+		wp_reset_postdata();
+	}
+	return $output;
+}
+add_shortcode('wpdoodlez_stats', 'wpdoodlez_stats_func');
 
 
 /**
@@ -427,13 +489,14 @@ function get_doodlez_content($chartan) {
 			foreach ( $suggestions as $key => $value ) {
 				 if ($key != "post_views_count" && $key != "likes" ) {
 						$votecounter += 1;
-						if ($xsum>0) $xperc = sprintf("%.1f%%", ($votes_cout[ $key ]/$xsum) * 100);
+						if ($xsum>0) $xperc = round(($votes_cout[ $key ]/$xsum) * 100,1);
 						$htmlout .= '<tr><td  style="text-align:center"><label><input type="checkbox" name="'.$key.'" id="'.$key.'" onclick="selectOnlyThis(this.id)" class="wpdoodlez-input"></td><td>';
-						$htmlout .= $value[ 0 ] .'</label></td><td  style="text-align:center">'.$votes_cout[ $key ].' ('.$xperc.')</td></tr>';
+						$htmlout .= $value[ 0 ] .'</label></td><td style="text-align:center">'.$votes_cout[ $key ].'</td>';
+						$htmlout .= '<td style="max-width:120px"><progress style="width:100px" max="100" value="'.$xperc.'"></td></tr>';
 				}	
 			}
-			$htmlout .= '<tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td></td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td></tr>';
-			$htmlout .= '<tr><td colspan=3><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
+			$htmlout .= '<tfoot><tr><td colspan=2 style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td></td></tr></tfoot>';
+			$htmlout .= '<tr><td colspan=4><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
 			$htmlout .= '<button style="width:100%" id="wpdoodlez_poll">' . __( 'Vote!', 'WPdoodlez' ) . '</button></td></tr>';
 			$htmlout .= '</table>';
 			// only one selection allowed
