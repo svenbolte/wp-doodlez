@@ -335,22 +335,21 @@ function wpdoodle_doku() {
 	### WPDoodlez<br>
 	plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
 	It adds a custom post type "wpdoodlez".<br>
-
+	Add Shortcode [wpdoodlez_sc id=post-ID chart=true] to any page or post or html widget to embed poll/doodlez into them<br><br>
 	### Poll<br>
 	uses same technology and custom post type like WPDoodlez
 	create classic polls to let visitors vote about a question<br>
-
+	Add Shortcode [wpdoodlez_stats] to any page or post for stats on all polls in a list
+	<br><br>
 	### Quizzz<br>
 	Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 	Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
 	see readme.txt for more details.
-	Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget<br>
-
+	Add Shortcode [random-question] to any post, page or html-widget<br><br>
 	#### Crossword<br>
 	display a crossword game built on the quizzz words
-	Add Shortcode ´´´[xwordquiz]´´´ to any page or post
+	Add Shortcode [xwordquiz] to any page or post
 	<br><br>
-
 	WPdoodlez can handle classic polls and doodle like appointment planning. It can be created in admin area<br>
 	Use custom post type to call posts or integrate post content to your normal posts using the shortcode<br><br>
 	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
@@ -373,13 +372,6 @@ function wpdoodle_doku() {
 	* The first value of the custom field will be displayed in the row as users answer<br>
 	* The last row in the table contains total votes count<br>
 	<?php
-	echo '</div><div class="postbox" style="padding:8px">';
-	?>
-	<h2>Shortcode</h2>
-	<code>[wpdoodlez_sc id=post-ID chart=true]</code>  set post ID to integrate Doodlez or Poll in other pages,
-	 set chart to false if you do not want pie graph
-	<?php
-	echo '</div>';
 }
 
 // Mini Calendar display month 
@@ -439,8 +431,6 @@ function mini_calendar($month,$year,$eventarray){
 function get_doodlez_content($chartan) {
 	global $wp;
 	$htmlout = '';
-	/* translators: %s: Name of current post */
-	$htmlout .= get_the_content();
 	$suggestions = $votes_cout  = [ ];
 	$customs     = get_post_custom( get_the_ID() );
 	foreach ( $customs as $key => $value ) {
@@ -464,8 +454,9 @@ function get_doodlez_content($chartan) {
 	/* password protected? */
 	if ( !post_password_required() ) {
 		// Wenn Feldnamen vote1...20, dann eine Umfrage machen, sonst eine Terminabstimmung
-		$polli = array_key_exists('vote1', $suggestions);
-		if (  $polli  && !isset($_GET['admin']) ) {
+		$polli = array_key_exists('vote1', $suggestions);   // if polli add icon to content
+		if ( $polli  && !isset($_GET['admin']) ) {
+			$htmlout .= '<i class="fa fa-lg fa-check-square-o"></i> Umfrage: '. get_the_content();
 			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 			foreach ( $votes as $name => $vote ) {
 				foreach ( $suggestions as $key => $value ) {
@@ -505,6 +496,7 @@ function get_doodlez_content($chartan) {
 			$htmlout .= ' document.getElementById(id).checked = true;	}</script>';
 		} else {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
+			$htmlout .= '<i class="fa fa-lg fa-calendar-o"></i> Terminabstimmung: '. get_the_content();
 			$htmlout .= '<h6>' . __( 'Voting', 'WPdoodlez' ) . '</h6>';
 			if ( !$polli && function_exists('mini_calendar')) {
 				$outputed_values = array();
