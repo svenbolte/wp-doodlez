@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.41
-Stable tag: 9.1.1.41
+Version: 9.1.1.42
+Stable tag: 9.1.1.42
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -137,7 +137,7 @@ function wpdoodlez_stats_func($atts) {
 							if ($xsum>0) $xperc = round(($votes_cout[ $key ]/$xsum) * 100,1);
 							$output .= '<tr><td style="text-align:center">';
 							$output .= $value[ 0 ] .'</label></td><td style="text-align:center">'.$votes_cout[ $key ].'</td>';
-							$output .= '<td style="max-width:120px"><progress style="width:100px" max="100" value="'.$xperc.'"></td></tr>';
+							$output .= '<td style="min-width:200px;width:30%"><progress style="width:100%" max="100" value="'.$xperc.'"></td></tr>';
 					}	
 				}
 				$output .= '<tfoot><tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td></td></tr></tfoot>';
@@ -281,6 +281,24 @@ function wpdoodlez_cookie() {
     }
 }
 add_action( 'init', 'wpdoodlez_cookie' );
+
+function columns_wpdoodle($columns) {
+    $columns['Shortcode'] = 'Doodlez-Shortcode';
+    return $columns;
+}
+add_filter('manage_wpdoodle_posts_columns', 'columns_wpdoodle');
+
+add_action ('manage_wpdoodle_posts_custom_column','wpdoo_post_custom_columns');
+function wpdoo_post_custom_columns($column) {
+  global $post;
+  $custom = get_post_custom();
+  switch ($column) {
+    case "Shortcode":
+		echo '<input type="text" title="id=&quot;' . esc_attr( $post->ID ) . '&quot;" class="copy-to-clipboard" value="[ddownload id=&quot;' . esc_attr( $post->ID ) . '&quot;]" readonly>';
+		echo '<p class="description" style="display: none;">' . __( 'Shortcode copied to clipboard.', 'delightful-downloads' ) . '</p>';
+		break;
+  }
+}
 
 /**
  * Register WPdoodle post type and refresh rewrite rules
