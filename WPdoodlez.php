@@ -294,8 +294,8 @@ function wpdoo_post_custom_columns($column) {
   $custom = get_post_custom();
   switch ($column) {
     case "Shortcode":
-		echo '<input type="text" title="id=&quot;' . esc_attr( $post->ID ) . '&quot;" class="copy-to-clipboard" value="[ddownload id=&quot;' . esc_attr( $post->ID ) . '&quot;]" readonly>';
-		echo '<p class="description" style="display: none;">' . __( 'Shortcode copied to clipboard.', 'delightful-downloads' ) . '</p>';
+		echo '<input type="text" title="id=&quot;' . esc_attr( $post->ID ) . '&quot;" class="copy-to-clipboard" value="[wpdoodlez_sc id=&quot;' . esc_attr( $post->ID ) . '&quot;]" readonly>';
+		echo '<p class="description" style="display: none;">' . __( 'Shortcode copied to clipboard.', 'WPdoodlez' ) . '</p>';
 		break;
   }
 }
