@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.42
-Stable tag: 9.1.1.42
+Version: 9.1.1.43
+Stable tag: 9.1.1.43
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -1100,9 +1100,9 @@ function quiz_show_form( $content ) {
 		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<br><i class="fa fa-wikipedia-w"></i> &nbsp; <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a>'; } else { $wikinachschlag='';}
 			if ( $correct == "yes" ) {
 				ob_start();
-				if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
+				if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
-				update_post_meta( get_the_ID(), 'quizz_rightstat', $rightstat[0] + 1 );
+				update_post_meta( get_the_ID(), 'quizz_rightstat', ($rightstat[0] + 1) ?? 0 );
 				if ($last_bool[0] != "last") {
 					if ( !empty($nextlevel[0]) ) {
 						// raise a hook for updating record
@@ -1130,9 +1130,9 @@ function quiz_show_form( $content ) {
 					$error .= ' &nbsp; '.$wikinachschlag.'</div>';
 					$showqform = 'display:none';
 					ob_start();
-					if ($_COOKIE['hidecookiebannerx']==2 ) setcookie('wrongscore', intval($_COOKIE['wrongscore']) + 1, time()+60*60*24*30, '/');
+					if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']== 2 ) setcookie('wrongscore', (intval($_COOKIE['wrongscore']) + 1), time()+60*60*24*30, '/');
 					ob_flush();
-					update_post_meta( get_the_ID(), 'quizz_wrongstat', $wrongstat[0] + 1 );
+					update_post_meta( get_the_ID(), 'quizz_wrongstat', ($wrongstat[0] + 1) ?? 0 );
 				} else { $error = "";$showqform = ''; }
 			}
 			$accentcolor = get_theme_mod( 'link-color', '#888' );
