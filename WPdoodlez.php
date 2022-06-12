@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.43
-Stable tag: 9.1.1.43
+Version: 9.1.1.44
+Stable tag: 9.1.1.44
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -392,58 +392,54 @@ function wpdoodle_doku() {
 	<?php
 }
 
-// Mini Calendar display month 
-function mini_calendar($month,$year,$eventarray){
-	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
-	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
-	$running_day = date('w',mktime(2,0,0,$month,1,$year));
-	if ( $running_day == 0 ) { $running_day = 7; }
-	$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
-	$days_in_this_week = 1;
-	$day_counter = 0;
-	$dates_array = array();
-	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
-	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
-	$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
-	/* row for week one */
-	$calendar.= '<tr style="padding:2px">';
-	/* print "blank" days until the first of the current week */
-	for($x = 1; $x < $running_day; $x++):
-		$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
-		$days_in_this_week++;
-	endfor;
-	/* keep going with days.... */
-	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-		/* add in the day number */
-		$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
-		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
-		$stylez= '<td style="text-align:center;padding:2px">';
-		foreach ($eventarray as $calevent) {
-			if ( date('Ymd',mktime(2,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
-				$stylez= '<td style="text-align:center;padding:2px;background:#ffd800;font-weight:700">';
-			}
-		}	
-		$calendar.= $stylez . $list_day . '</td>';
-		if($running_day == 7):
-			$calendar.= '<td style="text-align:center" >'.$running_week.'</td></tr>';
-			if(($day_counter + 1 ) != $days_in_month):
-				$calendar.= '<tr>';
-			endif;
-			$running_day = 0;
-			$days_in_this_week = 0;
-		endif;
-		$days_in_this_week++; $running_day++; $day_counter++;
-	endfor;
-	/* finish the rest of the days in the week */
-	if($days_in_this_week < 8 && $days_in_this_week > 1):
-		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
-			$calendar.= '<td style="text-align:center;padding:2px"></td>';
+// Mini-Kalender zeigt Datum aus event array im Kalender an (month calendar) time circles/wpdoodlez v2.1
+if( !function_exists('tc_mini_calendar')) {
+	function tc_mini_calendar($month,$year,$eventarray){
+		setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+		$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
+		$running_day = date('w',mktime(2,0,0,$month,1,$year));
+		if ( $running_day == 0 ) { $running_day = 7; }
+		$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
+		$days_in_this_week = 1;
+		$day_counter = 0;
+		$dates_array = array();
+		$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
+		$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
+		$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
+		$calendar.= '<tr style="padding:2px">';
+		for($x = 1; $x < $running_day; $x++):
+			$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
+			$days_in_this_week++;
 		endfor;
-		$calendar.= '<td style="padding:2px;text-align:center">'.$running_week.'</td></tr>';
-	endif;
-	$calendar.= '</table>';
-	return $calendar;
-}
+		for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+			$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
+			$stylez= '<td style="text-align:center;padding:2px">';
+			foreach ($eventarray as $calevent) {
+				if ( date('Ymd',mktime(2,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
+					$stylez= '<td style="text-align:center;padding:2px;background:#ffd800;font-weight:700">';
+				}
+			}	
+			$calendar.= $stylez . $list_day . '</td>';
+			if($running_day == 7):
+				$calendar.= '<td style="text-align:center" >'.$running_week.'</td></tr>';
+				if(($day_counter + 1 ) != $days_in_month):
+					$calendar.= '<tr>';
+				endif;
+				$running_day = 0;
+				$days_in_this_week = 0;
+			endif;
+			$days_in_this_week++; $running_day++; $day_counter++;
+		endfor;
+		if($days_in_this_week < 8 && $days_in_this_week > 1):
+			for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+				$calendar.= '<td style="text-align:center;padding:2px"></td>';
+			endfor;
+			$calendar.= '<td style="padding:2px;text-align:center">'.$running_week.'</td></tr>';
+		endif;
+		$calendar.= '</table>';
+		return $calendar;
+	}
+}	
 
 // Doodlez Inhalte anzeigen
 function get_doodlez_content($chartan) {
@@ -516,7 +512,7 @@ function get_doodlez_content($chartan) {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
 			$htmlout .= '<i class="fa fa-lg fa-calendar-o"></i> Terminabstimmung: '. get_the_content();
 			$htmlout .= '<h6>' . __( 'Voting', 'WPdoodlez' ) . '</h6>';
-			if ( !$polli && function_exists('mini_calendar')) {
+			if ( !$polli && function_exists('tc_mini_calendar')) {
 				$outputed_values = array();
 				$xevents = array();
 				foreach ( $suggestions as $key => $value ) {
@@ -528,7 +524,7 @@ function get_doodlez_content($chartan) {
 					if ($key != "post_views_count" && $key != "likes" ) {
 						$workername = substr($key,6,4) . substr($key,3,2);
 						if (!in_array($workername, $outputed_values)){
-							$htmlout .= '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.mini_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
+							$htmlout .= '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.tc_mini_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
 							array_push($outputed_values, $workername);
 						}
 					}	
