@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.44
-Stable tag: 9.1.1.44
+Version: 9.1.1.45
+Stable tag: 9.1.1.45
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -1006,7 +1006,7 @@ function quiz_show_form( $content ) {
 		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-				$content = '<div style="background-color:rgba('.$backgd.');margin-bottom:12px;padding:8px;border-radius:3px;font-size:1.2em">Kategorie <strong>' . $term->name . '</strong>: ' . $content.'</div>'; 
+				$content = '<blockquote style="font-size:1.2em"><strong>Kategorie ' . $term->name . '</strong>: ' . $content.'</blockquote>'; 
 			}
 		}	
 		// get meta values for this question
@@ -1093,7 +1093,7 @@ function quiz_show_form( $content ) {
 					$correct = "no";
 				}
 			}
-		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<br><i class="fa fa-wikipedia-w"></i> &nbsp; <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a>'; } else { $wikinachschlag='';}
+		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<p><i class="fa fa-wikipedia-w"></i> &nbsp; <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a></p>'; } else { $wikinachschlag='';}
 			if ( $correct == "yes" ) {
 				ob_start();
 				if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
@@ -1108,7 +1108,7 @@ function quiz_show_form( $content ) {
 					} else {
 						$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
 						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-						$error .= ' &nbsp; '.$wikinachschlag.'</div>';
+						$error .= $wikinachschlag.'</div>';
 						$showqform = 'display:none';
 					}
 				} else {
@@ -1119,11 +1119,11 @@ function quiz_show_form( $content ) {
 				}
 			} else {
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_GET['ans']) ) {
-					$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px">';
+					$error = $ansmixed.'<blockquote style="font-size:1.2em;margin-top:1.6em">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
 					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
 					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-					$error .= ' &nbsp; '.$wikinachschlag.'</div>';
+					$error .= $wikinachschlag.'</blockquote>';
 					$showqform = 'display:none';
 					ob_start();
 					if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']== 2 ) setcookie('wrongscore', (intval($_COOKIE['wrongscore']) + 1), time()+60*60*24*30, '/');
