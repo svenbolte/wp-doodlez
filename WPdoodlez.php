@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.45
-Stable tag: 9.1.1.45
+Version: 9.1.1.46
+Stable tag: 9.1.1.46
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -1106,7 +1106,7 @@ function quiz_show_form( $content ) {
 						$goto = $nextlevel[0];
 						wp_safe_redirect( get_post_permalink($goto) );
 					} else {
-						$error = $ansmixed.'<div style="background-color:rgba('.$backgd.');padding:8px;border-radius:3px;font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
+						$error = $ansmixed.'<blockquote style="font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
 						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
 						$error .= $wikinachschlag.'</div>';
 						$showqform = 'display:none';
