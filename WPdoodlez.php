@@ -1252,13 +1252,18 @@ function quizz_inner_custom_box( $post ) {
 	wp_nonce_field( 'quizz_inner_custom_box', 'quizz_inner_custom_box_nonce' );
 	// Use get_post_meta() to retrieve an existing value from the database and use the value for the form.
 	$herkunftsland = get_post_meta( $post->ID, 'quizz_herkunftsland', true );
+	if (empty($herkunftsland)) $herkunftsland="Deutschland";
+	$hkiso = get_post_meta( $post->ID, 'quizz_iso', true );
+	if (empty($hkiso)) $hkiso="DE";
 	$value = get_post_meta( $post->ID, 'quizz_answer', true );
 	$valueb = get_post_meta( $post->ID, 'quizz_answerb', true );
 	$valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
 	$valued = get_post_meta( $post->ID, 'quizz_answerd', true );
 	$zusatzinfo = get_post_meta( $post->ID, 'quizz_zusatzinfo', true );
 	echo '<label for="quizz_herkunftsland"><b>' . _e( "origin country", 'WPdoodlez' ) . ' </b></label> ';
-	echo ' <input type="text" id="quizz_herkunftsland" name="quizz_herkunftsland" value="' . esc_attr( $herkunftsland ) . '" size="50"><br>';
+	echo ' <input type="text" id="quizz_herkunftsland" name="quizz_herkunftsland" value="' . esc_attr( $herkunftsland ) . '" size="45"> &nbsp; ';
+	echo '<label for="quizz_iso"><b>' . _e( "origin ISO", 'WPdoodlez' ) . ' </b></label> ';
+	echo ' <input type="text" id="quizz_iso" name="quizz_iso" value="' . esc_attr( $hkiso ) . '" size="3"><br>';
 	echo '<label for="quizz_answer">' . _e( "correct answer", 'WPdoodlez' ) . ' <strong>A</strong> </label> ';
 	echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
 	$value1 = get_post_meta( $post->ID, 'quizz_exact', true);
@@ -1326,6 +1331,7 @@ function quizz_save_postdata( $post_id ) {
   }
   // Sanitize user input.OK, its safe for us to save the data now
   $myherkunft = sanitize_text_field( $_POST['quizz_herkunftsland'] );
+  $myiso = sanitize_text_field( $_POST['quizz_iso'] );
   $myanswer = sanitize_text_field( $_POST['quizz_answer'] );
   $myanswerb = sanitize_text_field( $_POST['quizz_answerb'] );
   $myanswerc = sanitize_text_field( $_POST['quizz_answerc'] );
@@ -1337,6 +1343,7 @@ function quizz_save_postdata( $post_id ) {
   $lastpage = $_POST['quizz_lastpage'];
   // Update the meta field in the database.
   update_post_meta( $post_id, 'quizz_herkunftsland', $myherkunft );
+  update_post_meta( $post_id, 'quizz_iso', $myiso );
   update_post_meta( $post_id, 'quizz_answer', $myanswer );
   update_post_meta( $post_id, 'quizz_answerb', $myanswerb );
   update_post_meta( $post_id, 'quizz_answerc', $myanswerc );
