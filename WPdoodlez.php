@@ -10,10 +10,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.46
-Stable tag: 9.1.1.46
+Version: 9.1.1.47
+Stable tag: 9.1.1.47
 Requires at least: 5.1
-Tested up to: 6.0
+Tested up to: 6.0.1
 Requires PHP: 8.0
 */
 
@@ -747,6 +747,7 @@ function random_quote_func( $atts ){
 					$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
 			}
 		}	
+		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
@@ -781,7 +782,8 @@ function random_quote_func( $atts ){
 			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image"></div>';	
 		}			
 		$message .= '<div class="greybox"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
-		$message .= $quizkat.'</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
+		$message .= $quizkat. ' &nbsp; <i title="Herkunftsland" class="fa fa-flag"></i> '.$herkunftsland[0];
+		$message .= '</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
 		$message .= ' &nbsp; '.get_the_content().'</div>'.$antwortmaske.'</div>';
       endwhile;
     }
@@ -849,6 +851,8 @@ function importposts() {
 				));
 				if ($post_id) {
 				   // insert post meta
+				  add_post_meta( $post_id, 'quizz_herkunftsland', esc_html($data[3]) );
+				  add_post_meta( $post_id, 'quizz_iso', esc_html($data[12]) );
 				  add_post_meta( $post_id, 'quizz_answer', esc_html($data[6]) );
 				  add_post_meta( $post_id, 'quizz_answerb', esc_html($data[7]) );
 				  add_post_meta( $post_id, 'quizz_answerc', esc_html($data[8]) );
@@ -1004,12 +1008,9 @@ function quiz_show_form( $content ) {
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		$tcolor = get_theme_mod( 'link-color', '#006060' );
 		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
-		if ( $terms && !is_wp_error( $terms ) ) {
-			foreach ( $terms as $term ) {
-				$content = '<blockquote style="font-size:1.2em"><strong>Kategorie ' . $term->name . '</strong>: ' . $content.'</blockquote>'; 
-			}
-		}	
 		// get meta values for this question
+		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+		$hkiso = get_post_custom_values('quizz_iso');
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
@@ -1025,6 +1026,11 @@ function quiz_show_form( $content ) {
 		$lsubmittedanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answer)));
 		$lactualanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answers[0])));
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
+		if ( $terms && !is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
+			$content = '<blockquote style="font-size:1.2em">'.do_shortcode('[ipflag iso='.$hkiso[0].']').'<p><strong>Kategorie ' . $term->name . ' &nbsp; eine Frage aus '.$herkunftsland[0]. '</strong></p>' . $content.'</blockquote>'; 
+			}
+		}	
 		// Hangman spielen oder normale Beantwortung
 		if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
 			$theForm = $content . play_hangman($answers[0]);
@@ -1149,7 +1155,8 @@ function quiz_show_form( $content ) {
 						$copytags .= ' Kategorie: ' . $term->name . ' - '; 
 				}
 			}	
-			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
+			// für die Zwischenablage 
+			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
 			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
@@ -1244,25 +1251,28 @@ function quizz_inner_custom_box( $post ) {
 	// Add an nonce field so we can check for it later.
 	wp_nonce_field( 'quizz_inner_custom_box', 'quizz_inner_custom_box_nonce' );
 	// Use get_post_meta() to retrieve an existing value from the database and use the value for the form.
+	$herkunftsland = get_post_meta( $post->ID, 'quizz_herkunftsland', true );
 	$value = get_post_meta( $post->ID, 'quizz_answer', true );
 	$valueb = get_post_meta( $post->ID, 'quizz_answerb', true );
 	$valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
 	$valued = get_post_meta( $post->ID, 'quizz_answerd', true );
 	$zusatzinfo = get_post_meta( $post->ID, 'quizz_zusatzinfo', true );
-	echo '<label for="quizz_answer">' . _e( "Answer", 'WPdoodlez' ) . ' A</label> ';
+	echo '<label for="quizz_herkunftsland"><b>' . _e( "origin country", 'WPdoodlez' ) . ' </b></label> ';
+	echo ' <input type="text" id="quizz_herkunftsland" name="quizz_herkunftsland" value="' . esc_attr( $herkunftsland ) . '" size="50"><br>';
+	echo '<label for="quizz_answer">' . _e( "correct answer", 'WPdoodlez' ) . ' <strong>A</strong> </label> ';
 	echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
 	$value1 = get_post_meta( $post->ID, 'quizz_exact', true);
 	echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
 	echo '<br />';
 	// Distraktoren, im Quiz werden die Antworten gemischt
-	echo '<label for="quizz_answerb">' . _e( "Answer", 'WPdoodlez' ) . ' B</label> ';
-	echo ' <input type="text" id="quizz_answerb" name="quizz_answerb" value="' . esc_attr( $valueb ) . '" size="75"> optional<br>';
-	echo '<label for="quizz_answerc">' . _e( "Answer", 'WPdoodlez' ) . ' C</label> ';
-	echo ' <input type="text" id="quizz_answerc" name="quizz_answerc" value="' . esc_attr( $valuec ) . '" size="75"> optional<br>';
-	echo '<label for="quizz_answerd">' . _e( "Answer", 'WPdoodlez' ) . ' D</label> ';
-	echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75"> optional<br>';
+	echo '<label for="quizz_answerb">' . _e( "wrong answer", 'WPdoodlez' ) . ' <strong>B</strong> </label> ';
+	echo ' <input type="text" id="quizz_answerb" name="quizz_answerb" value="' . esc_attr( $valueb ) . '" size="75" style="max-width:80%"> optional<br>';
+	echo '<label for="quizz_answerc">' . _e( "wrong answer", 'WPdoodlez' ) . ' <strong>C</strong></label> ';
+	echo ' <input type="text" id="quizz_answerc" name="quizz_answerc" value="' . esc_attr( $valuec ) . '" size="75" style="max-width:80%"> optional<br>';
+	echo '<label for="quizz_answerd">' . _e( "wrong answer", 'WPdoodlez' ) . ' <strong>D</strong></label> ';
+	echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75" style="max-width:80%"> optional<br>';
 	echo '<label for="quizz_zusatzinfo">' . _e( "moreinfo", 'WPdoodlez' ) . ' </label> ';
-	echo ' <input type="text" id="quizz_zusatzinfo" name="quizz_zusatzinfo" value="' . esc_attr( $zusatzinfo ) . '" size="75"> optional<br>';
+	echo ' <input type="text" id="quizz_zusatzinfo" name="quizz_zusatzinfo" value="' . esc_attr( $zusatzinfo ) . '" size="220" style="max-width:80%"> optional<br>';
 	global $wpdb;
 	$query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
 	$prev = $wpdb->get_var( $wpdb->prepare($query, $post->ID) );
@@ -1315,6 +1325,7 @@ function quizz_save_postdata( $post_id ) {
         return $post_id;
   }
   // Sanitize user input.OK, its safe for us to save the data now
+  $myherkunft = sanitize_text_field( $_POST['quizz_herkunftsland'] );
   $myanswer = sanitize_text_field( $_POST['quizz_answer'] );
   $myanswerb = sanitize_text_field( $_POST['quizz_answerb'] );
   $myanswerc = sanitize_text_field( $_POST['quizz_answerc'] );
@@ -1325,6 +1336,7 @@ function quizz_save_postdata( $post_id ) {
   $lastlevel_bool = $_POST['quizz_last'];
   $lastpage = $_POST['quizz_lastpage'];
   // Update the meta field in the database.
+  update_post_meta( $post_id, 'quizz_herkunftsland', $myherkunft );
   update_post_meta( $post_id, 'quizz_answer', $myanswer );
   update_post_meta( $post_id, 'quizz_answerb', $myanswerb );
   update_post_meta( $post_id, 'quizz_answerc', $myanswerc );
@@ -1342,7 +1354,7 @@ function admin_order_list_top_bar_button( $which ) {
     global $current_screen;
     if ('question' == $current_screen->post_type) {
      $nonce = wp_create_nonce( 'dnonce' );
-     echo " <a href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button'>";
+     echo " <a title=\"place public_histereignisse.csv in upload folder to DELETE and replace all questions &#10;or place public_histereignisse-update.csv in upload folder\" href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button'>";
         _e( 'Import from CSV', 'WPdoodlez' );
         echo '</a> ';
     }
