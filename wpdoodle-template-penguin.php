@@ -38,7 +38,15 @@ get_header();
 			</script>
           </article>
 		  <?php
-			the_post_navigation();
+				$prevpostid = get_previous_post()->ID;
+				$nextpostid = get_next_post()->ID;
+				$prevcat = @get_the_category($prevpostid)[0]->cat_name;
+				$nextcat = @get_the_category($nextpostid)[0]->cat_name;
+				$args = array(
+				  'prev_text'          => '<i title="jüngerer Post #'.$prevpostid.'" class="fa fa-arrow-up"></i> &nbsp; <i class="fa fa-folder"></i> '.$prevcat.'<br>%title',
+				  'next_text'          => '<i title="älterer Post #'.$nextpostid.'" class="fa fa-arrow-down"></i> &nbsp; <i class="fa fa-folder"></i> '.$nextcat.'<br>%title',
+				);
+				the_post_navigation($args); // Voriger und nächster Beitrag
 			// If comments are open or we have at least one comment, load up the comment template
 			if ( comments_open() || get_comments_number() ) comments_template(); 
 			setPostViews(get_the_ID());

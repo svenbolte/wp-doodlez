@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.47
-Stable tag: 9.1.1.47
+Version: 9.1.1.48
+Stable tag: 9.1.1.48
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -1411,14 +1411,14 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 	global $hang;
 	global $wp;
 	$gtml = '<style>input[type=button][disabled],button:disabled,button[disabled] { border: 1px solid #999999;background-color:#cccccc;color: #666666;}</style>';
-	$gtml .= '<blockquote style="background:none;font-family:monospace;font-size:1.5em">';
+	$gtml .= '<code style="background:#fff;font-family:monospace;font-size:1.5em">';
 	$gtml .= $guesstemplate. '<br>';
 	$formurl = add_query_arg( array('hangman'=>'1' ), home_url( $wp->request ) );
-	$gtml .= '</blockquote><form name="galgen" method="post" action="'. $formurl .'">';
+	$gtml .= '</code><form name="galgen" method="post" action="'. $formurl .'">';
 	$gtml .= '<input type="hidden" name="wrong" value="'.$wrong.'" />';
 	$gtml .= '<input type="hidden" name="lettersguessed" value="'.$guessed.'" />';
 	$gtml .= '<input type="hidden" name="word" value="'.$which.'" />';
-	$gtml .= '<input type="hidden" name="letter" id="letter" size="1" style="max-size:1" autofocus /><p style="text-align:center">';
+	$gtml .= '<input type="hidden" name="letter" id="letter" size="1" style="max-size:1" autofocus /><br><br>';
 	$ci=0;
 	foreach (range('A', 'Z') as $char) {
 		$ci += 1;
@@ -1426,8 +1426,8 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 		if ( !empty($guessed) && strpos($guessed,$char) !== false ) { $gtml .= ' disabled'; }
 		$gtml .= '> &nbsp;';
 	}  
-	$gtml .= '</p><input style="display:none" type="submit" value="raten"></form>';
-	$gtml .= '<div style="float:left;width:38%"><code style="background:none;font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
+	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
+	$gtml .= '<div style="float:left;width:38%"><code style="background:#fff;font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
 	$gtml .= '<div style="padding-top:5%;float:left;width:58%;height:220px"><b>Galgenmännchen</b> Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Es bleiben <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen</div>';
 	return $gtml;
 }
