@@ -8,53 +8,44 @@ wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array()
 get_header();
 ?>
 <div id="content-area">
-	<div id="primary">
-    <main id="main" class="site-main" role="main">
-		<?php
-		while ( have_posts() ) : the_post(); // Start the loop.	?>
-			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<?php penguin_entry_top();
-			echo '<header class="entry-header">';
-			$tcolor = get_theme_mod( 'link-color', '#006060' );
-			$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
-			echo '<div class="entry-meta-top" style="background-color:rgba('.$backgd.')">';
-			meta_icons(); 
-			echo '</div>';
-			if ( is_single() ) {
-				the_title( '<h1 class="entry-title">', '</h1>' );
-			} else {
-				the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-			}
-			echo '</header><!-- .entry-header -->';
-			?>
-			<div class="entry-content">
-				<?php echo get_doodlez_content(true); ?>
-            </div><!-- .entry-content -->
-			<footer class="entry-footer">
-			</footer><!-- .entry-footer -->
-			<script>
-				var wpdoodle_ajaxurl = '<?php echo admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ); ?>';
-				var wpdoodle = '<?php echo md5( AUTH_KEY . get_the_ID() ); ?>';
-			</script>
-          </article>
-		  <?php
-				$prevpostid = get_previous_post()->ID;
-				$nextpostid = get_next_post()->ID;
-				$prevcat = @get_the_category($prevpostid)[0]->cat_name;
-				$nextcat = @get_the_category($nextpostid)[0]->cat_name;
-				$args = array(
-				  'prev_text'          => '<i title="jüngerer Post #'.$prevpostid.'" class="fa fa-arrow-up"></i> &nbsp; <i class="fa fa-folder"></i> '.$prevcat.'<br>%title',
-				  'next_text'          => '<i title="älterer Post #'.$nextpostid.'" class="fa fa-arrow-down"></i> &nbsp; <i class="fa fa-folder"></i> '.$nextcat.'<br>%title',
-				);
-				the_post_navigation($args); // Voriger und nächster Beitrag
-			// If comments are open or we have at least one comment, load up the comment template
-			if ( comments_open() || get_comments_number() ) comments_template(); 
-			setPostViews(get_the_ID());
-		  // End the loop.
-        endwhile; ?>
-		<br>
-    </main><!-- .site-main -->
-	</div><!-- #primary -->
+<div id="primary">
+<main id="main" class="site-main" role="main">
+	<?php
+	while ( have_posts() ) : the_post(); // Start the loop.	?>
+		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+		<?php penguin_entry_top();
+		echo '<header class="entry-header">';
+		$tcolor = get_theme_mod( 'link-color', '#006060' );
+		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
+		echo '<div class="entry-meta-top" style="background-color:rgba('.$backgd.')">';
+		meta_icons(); 
+		echo '</div>';
+		if ( is_single() ) {
+			the_title( '<h1 class="entry-title">', '</h1>' );
+		} else {
+			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
+		}
+		echo '</header><!-- .entry-header -->';
+		?>
+		<div class="entry-content">
+			<?php echo get_doodlez_content(true); ?>
+		</div><!-- .entry-content -->
+		<footer class="entry-footer">
+		</footer><!-- .entry-footer -->
+		<script>
+			var wpdoodle_ajaxurl = '<?php echo admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ); ?>';
+			var wpdoodle = '<?php echo md5( AUTH_KEY . get_the_ID() ); ?>';
+		</script>
+	  </article>
+	  <?php
+		penguin_post_navigation();
+		// If comments are open or we have at least one comment, load up the comment template
+		if ( comments_open() || get_comments_number() ) comments_template(); 
+		setPostViews(get_the_ID());
+	  // End the loop.
+	endwhile; ?>
+</main><!-- .site-main -->
+</div><!-- #primary -->
 <?php get_sidebar(); ?>
 </div><!-- #content-area -->
 <?php get_footer(); ?>
