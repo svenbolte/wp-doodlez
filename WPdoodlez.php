@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.48
-Stable tag: 9.1.1.48
+Version: 9.1.1.50
+Stable tag: 9.1.1.50
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -392,50 +392,56 @@ function wpdoodle_doku() {
 	<?php
 }
 
-// Mini-Kalender zeigt Datum aus event array im Kalender an (month calendar) time circles/wpdoodlez v2.1
+// Mini-Kalender zeigt Datum aus event array im Kalender an (month calendar) penguinmod.timecircles/wpdoodlez v2.2
 if( !function_exists('tc_mini_calendar')) {
 	function tc_mini_calendar($month,$year,$eventarray){
 		setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 		$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
 		$running_day = date('w',mktime(2,0,0,$month,1,$year));
 		if ( $running_day == 0 ) { $running_day = 7; }
+		$daytoday = date('d',time());
+		$monthtoday = date('m',time());
+		$yeartoday = date('Y',time());
 		$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
 		$days_in_this_week = 1;
 		$day_counter = 0;
 		$dates_array = array();
 		$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
 		$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
-		$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
+		$calendar.= '<tr><td style="border-bottom:1px #888 dotted;font-weight:700;text-align:center">'.implode('</td><td style="border-bottom:1px #888 dotted;font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
 		$calendar.= '<tr style="padding:2px">';
-		for($x = 1; $x < $running_day; $x++):
-			$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
+		for($x = 1; $x < $running_day; $x++) { // Tage vor dem Ersten auffüllen
+			$calendar.= '<td style="text-align:center;padding:2px"></td>';
 			$days_in_this_week++;
-		endfor;
-		for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-			$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
-			$stylez= '<td style="text-align:center;padding:2px">';
-			foreach ($eventarray as $calevent) {
+		}
+		for ($list_day = 1; $list_day <= $days_in_month; $list_day++) {  // Tage eintragen
+			$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top"">';
+			$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
+			$istoday = (int) $daytoday == (int) $list_day && (int) $monthtoday == (int) $month && (int) $yeartoday == (int) $year;
+			if ( $istoday ) $todaycolor='#ffd80088;border:1px dotted black'; else $todaycolor='#ffffff77';
+			// Events verarbeiten
+			foreach ($eventarray as $calevent) {   // List of dates in array, colors day yellow
 				if ( date('Ymd',mktime(2,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
-					$stylez= '<td style="text-align:center;padding:2px;background:#ffd800;font-weight:700">';
+					$todaycolor = '#ffd80088;font-weight:700';
+					if ($istoday) $todaycolor .= ';border:1px dotted black';	
 				}
 			}	
-			$calendar.= $stylez . $list_day . '</td>';
-			if($running_day == 7):
-				$calendar.= '<td style="text-align:center" >'.$running_week.'</td></tr>';
-				if(($day_counter + 1 ) != $days_in_month):
-					$calendar.= '<tr>';
-				endif;
+			$calendar.= '<div title="'.ago(mktime(2,0,0,$month,$list_day,$year)).'" style="width:100%;background-color:'.$todaycolor.'">'.$list_day.'</div>';
+			// Events ende
+			if ($running_day == 7) {
+				$calendar.= '<td style="max-width:32px;width:30px;text-align:center"><span class="newlabel">'.$running_week.'</span></td></tr>';
+				if(($day_counter+1) != $days_in_month) { $calendar.= '<tr>'; }
 				$running_day = 0;
 				$days_in_this_week = 0;
-			endif;
+			}
 			$days_in_this_week++; $running_day++; $day_counter++;
-		endfor;
-		if($days_in_this_week < 8 && $days_in_this_week > 1):
-			for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+		}
+		if ($days_in_this_week < 8 && $days_in_this_week > 1) { // Tage nach dem letzten auffüllen
+			for ($x = 1; $x <= (8 - $days_in_this_week); $x++) {
 				$calendar.= '<td style="text-align:center;padding:2px"></td>';
-			endfor;
-			$calendar.= '<td style="padding:2px;text-align:center">'.$running_week.'</td></tr>';
-		endif;
+			}
+			$calendar.= '<td style="max-width:32px;width:30px;text-align:center"><span class="newlabel">'.$running_week.'</span></td></tr>';
+		}	
 		$calendar.= '</table>';
 		return $calendar;
 	}
