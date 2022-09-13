@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.50
-Stable tag: 9.1.1.50
+Version: 9.1.1.51
+Stable tag: 9.1.1.51
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -392,61 +392,6 @@ function wpdoodle_doku() {
 	<?php
 }
 
-// Mini-Kalender zeigt Datum aus event array im Kalender an (month calendar) penguinmod.timecircles/wpdoodlez v2.2
-if( !function_exists('tc_mini_calendar')) {
-	function tc_mini_calendar($month,$year,$eventarray){
-		setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
-		$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
-		$running_day = date('w',mktime(2,0,0,$month,1,$year));
-		if ( $running_day == 0 ) { $running_day = 7; }
-		$daytoday = date('d',time());
-		$monthtoday = date('m',time());
-		$yeartoday = date('Y',time());
-		$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
-		$days_in_this_week = 1;
-		$day_counter = 0;
-		$dates_array = array();
-		$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
-		$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
-		$calendar.= '<tr><td style="border-bottom:1px #888 dotted;font-weight:700;text-align:center">'.implode('</td><td style="border-bottom:1px #888 dotted;font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
-		$calendar.= '<tr style="padding:2px">';
-		for($x = 1; $x < $running_day; $x++) { // Tage vor dem Ersten auffüllen
-			$calendar.= '<td style="text-align:center;padding:2px"></td>';
-			$days_in_this_week++;
-		}
-		for ($list_day = 1; $list_day <= $days_in_month; $list_day++) {  // Tage eintragen
-			$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top"">';
-			$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
-			$istoday = (int) $daytoday == (int) $list_day && (int) $monthtoday == (int) $month && (int) $yeartoday == (int) $year;
-			if ( $istoday ) $todaycolor='#ffd80088;border:1px dotted black'; else $todaycolor='#ffffff77';
-			// Events verarbeiten
-			foreach ($eventarray as $calevent) {   // List of dates in array, colors day yellow
-				if ( date('Ymd',mktime(2,0,0,substr($calevent,3,2),substr($calevent,0,2),substr($calevent,6,4))) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
-					$todaycolor = '#ffd80088;font-weight:700';
-					if ($istoday) $todaycolor .= ';border:1px dotted black';	
-				}
-			}	
-			$calendar.= '<div title="'.ago(mktime(2,0,0,$month,$list_day,$year)).'" style="width:100%;background-color:'.$todaycolor.'">'.$list_day.'</div>';
-			// Events ende
-			if ($running_day == 7) {
-				$calendar.= '<td style="max-width:32px;width:30px;text-align:center"><span class="newlabel">'.$running_week.'</span></td></tr>';
-				if(($day_counter+1) != $days_in_month) { $calendar.= '<tr>'; }
-				$running_day = 0;
-				$days_in_this_week = 0;
-			}
-			$days_in_this_week++; $running_day++; $day_counter++;
-		}
-		if ($days_in_this_week < 8 && $days_in_this_week > 1) { // Tage nach dem letzten auffüllen
-			for ($x = 1; $x <= (8 - $days_in_this_week); $x++) {
-				$calendar.= '<td style="text-align:center;padding:2px"></td>';
-			}
-			$calendar.= '<td style="max-width:32px;width:30px;text-align:center"><span class="newlabel">'.$running_week.'</span></td></tr>';
-		}	
-		$calendar.= '</table>';
-		return $calendar;
-	}
-}	
-
 // Doodlez Inhalte anzeigen
 function get_doodlez_content($chartan) {
 	global $wp;
@@ -518,7 +463,7 @@ function get_doodlez_content($chartan) {
 			// Dies nur ausführen, wenn Feldnamen nicht vote1...20 oder Admin Details Modus
 			$htmlout .= '<i class="fa fa-lg fa-calendar-o"></i> Terminabstimmung: '. get_the_content();
 			$htmlout .= '<h6>' . __( 'Voting', 'WPdoodlez' ) . '</h6>';
-			if ( !$polli && function_exists('tc_mini_calendar')) {
+			if ( !$polli && function_exists('timeline_calendar')) {
 				$outputed_values = array();
 				$xevents = array();
 				foreach ( $suggestions as $key => $value ) {
@@ -530,7 +475,7 @@ function get_doodlez_content($chartan) {
 					if ($key != "post_views_count" && $key != "likes" ) {
 						$workername = substr($key,6,4) . substr($key,3,2);
 						if (!in_array($workername, $outputed_values)){
-							$htmlout .= '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.tc_mini_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
+							$htmlout .= '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.timeline_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
 							array_push($outputed_values, $workername);
 						}
 					}	
