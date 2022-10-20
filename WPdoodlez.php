@@ -10,10 +10,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.51
-Stable tag: 9.1.1.51
+Version: 9.1.1.52
+Stable tag: 9.1.1.52
 Requires at least: 5.1
-Tested up to: 6.0.1
+Tested up to: 6.0.3
 Requires PHP: 8.0
 */
 
@@ -439,7 +439,7 @@ function get_doodlez_content($chartan) {
 				}
 			}
 			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
-			$htmlout .= '<br><table id="pollselect"><thead><th colspan=3>' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
+			$htmlout .= '<br><table id="pollselect"><thead><th colspan="4">' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
 			$xperc = 0;
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
@@ -484,7 +484,7 @@ function get_doodlez_content($chartan) {
 			$htmlout .= '<table><thead><tr><th>' . __( 'User name', 'WPdoodlez'  ) . '</th>';
 			foreach ( $suggestions as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes" ) {
-					$htmlout .= '<th style="word-wrap:break-all;overflow-wrap:anywhere">';
+					$htmlout .= '<th style="word-break:break-all;overflow-wrap:anywhere">';
 					// ICS Download zum Termin anbieten
 					if( function_exists('export_ics') && is_singular() ) {
 						$nextnth = strtotime($key);
@@ -560,12 +560,12 @@ function get_doodlez_content($chartan) {
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes" ) {
-					$htmlout .= '<th id="total-'. $key .'">'. $value.'</td>';
+					$htmlout .= '<th id="total-'. $key .'">'. $value.'</th>';
 					$pielabel .=  strtoupper($key) . ',';
 					$piesum .= $value . ',';
 				}
 			}
-			$htmlout .= '<td><b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b></td>';
+			$htmlout .= '<th><b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b></th>';
 			$htmlout .= '</tr></tfoot>';
 		}     //    Ende Terminabstimmung oder Umfrage, nun Fusszeile
 		$htmlout .= '</table>';
