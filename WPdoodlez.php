@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.52
-Stable tag: 9.1.1.52
+Version: 9.1.1.60
+Stable tag: 9.1.1.60
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -114,12 +114,21 @@ function wpdoodlez_stats_func($atts) {
 			$polli = array_key_exists('vote1', $suggestions);
 			if ( $polli ) {
 				$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+				$cct = 0;
 				foreach ( $votes as $name => $vote ) {
+					$cct += 1;
 					foreach ( $suggestions as $key => $value ) {
 						if ($key != "post_views_count" && $key != "likes") {
 							if ( !empty($vote[ $key ]) ) {	$votes_cout[ $key ] ++; }
 						}	
 					}
+					if (isset($vote['zeit'])) {
+						$diff = time() - $vote['zeit'];
+						if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "yellow"; } else { $newcolor = "white"; }
+						$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')).' '.ago($vote['zeit']).'</abbr></br>';
+						if ($cct == 1 ) $firstvote = $votezeit;
+					} else { $votezeit=''; $firstvote=''; }
+					if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 				}	
 				$xsum = 0;
 				foreach ( $votes_cout as $key => $value ) {
@@ -127,7 +136,6 @@ function wpdoodlez_stats_func($atts) {
 						$xsum += $value;
 					}
 				}
-				$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
 				$output .= '<table><thead><th colspan=3><a href="'.get_the_permalink().'">' . get_the_title() . '</a></th></thead>';	
 				$xperc = 0;
 				$votecounter = 0;
@@ -140,7 +148,17 @@ function wpdoodlez_stats_func($atts) {
 							$output .= '<td style="min-width:200px;width:30%"><progress style="width:100%" max="100" value="'.$xperc.'"></td></tr>';
 					}	
 				}
-				$output .= '<tfoot><tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td></td></tr></tfoot>';
+				$output .= '<tfoot><tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . ' '.$firstvote.'</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td style="text-transform:none">'. $votezeit;
+				// Wenn ipflag plugin aktiv und user angemeldet
+				if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
+					global $ipflag;
+					if(isset($ipflag) && is_object($ipflag)){
+						if(($info = $ipflag->get_info($voteip)) != false){
+							$output .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$nameip;
+						} else { $output .= ' '. $ipflag->get_flag($info, '').' '.$voteip; }
+					} 
+				}	
+				$output .= '</td></tr></tfoot>';
 				$output .= '</table>';
 			}	
 		}
@@ -157,14 +175,14 @@ add_shortcode('wpdoodlez_stats', 'wpdoodlez_stats_func');
 function wpdoodlez_save_vote() {
     $values = get_option( 'wpdoodlez_' . strval($_POST[ 'data' ][ 'wpdoodle' ]), array() );
 	$name   = sanitize_text_field( $_POST[ 'data' ][ 'name' ]);
-    /* insert only without cookie (or empty name in cookie)
-     * update only with same name in cookie
-     */
+    //	insert only without cookie (or empty name in cookie) update only with same name in cookie
     $nameInCookie = strval($_COOKIE[ 'wpdoodlez-' . $_POST[ 'data' ][ 'wpdoodle' ] ]);
     if ( (isset( $values[ $name ] ) && $nameInCookie == $name) ||
     (!isset( $values[ $name ] ) && empty( $nameInCookie ))
     ) {
         $values[ $name ] = array();
+        $values[$name]['zeit'] = time();
+        $values[$name]['ipaddr'] = wd_get_the_user_ip();
         foreach ( $_POST[ 'data' ][ 'vote' ] as $option ) {
             $values[ $name ][ strval($option[ 'name' ]) ] =  sanitize_text_field($option[ 'value' ]);
         }
@@ -193,6 +211,8 @@ function wpdoodlez_save_poll() {
     $values = get_option( 'wpdoodlez_' . strval($_POST[ 'data' ][ 'wpdoodle' ]), array() );
 	$name   = sanitize_text_field( $_POST[ 'data' ][ 'name' ]);
     $values[ $name ] = array();
+    $values[$name]['zeit'] = time();
+    $values[$name]['ipaddr'] = wd_get_the_user_ip();
     foreach ( $_POST[ 'data' ][ 'vote' ] as $option ) {
     $values[ $name ][ strval($option[ 'name' ]) ] =  sanitize_text_field($option[ 'value' ]);
 	}
@@ -422,13 +442,23 @@ function get_doodlez_content($chartan) {
 		$polli = array_key_exists('vote1', $suggestions);   // if polli add icon to content
 		if ( $polli  && !isset($_GET['admin']) ) {
 			$htmlout .= '<i class="fa fa-lg fa-check-square-o"></i> Umfrage: '. get_the_content();
+			$hashuser = substr(md5(time()),1,20);
 			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+			$cct = 0;
 			foreach ( $votes as $name => $vote ) {
+				$cct += 1;
 				foreach ( $suggestions as $key => $value ) {
 					if ($key != "post_views_count" && $key != "likes") {
 						if ( !empty($vote[ $key ]) ) {	$votes_cout[ $key ] ++; }
 					}	
 				}
+				if (isset($vote['zeit'])) {
+					$diff = time() - $vote['zeit'];
+					if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "yellow"; } else { $newcolor = "white"; }
+					$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')).' '.ago($vote['zeit']).'</abbr></br>';
+					if ($cct == 1 ) $firstvote = $votezeit;
+				} else { $votezeit=''; $firstvote=''; }
+				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 			}	
 			$xsum = 0;
 			$pielabel = ''; $piesum = '';
@@ -438,7 +468,6 @@ function get_doodlez_content($chartan) {
 					$pielabel.=str_replace(',','',$suggestions[$key][0]).','; $piesum .= $value.','; 
 				}
 			}
-			$hashuser = substr(md5(time()),1,20) . '-' . wd_get_the_user_ip();
 			$htmlout .= '<br><table id="pollselect"><thead><th colspan="4">' . __( 'your choice', 'WPdoodlez'  ) . '</th></thead>';	
 			$xperc = 0;
 			$votecounter = 0;
@@ -448,10 +477,20 @@ function get_doodlez_content($chartan) {
 						if ($xsum>0) $xperc = round(($votes_cout[ $key ]/$xsum) * 100,1);
 						$htmlout .= '<tr><td  style="text-align:center"><label><input type="checkbox" name="'.$key.'" id="'.$key.'" onclick="selectOnlyThis(this.id)" class="wpdoodlez-input"></td><td>';
 						$htmlout .= $value[ 0 ] .'</label></td><td style="text-align:center">'.$votes_cout[ $key ].'</td>';
-						$htmlout .= '<td style="max-width:120px"><progress style="width:100px" max="100" value="'.$xperc.'"></td></tr>';
+						$htmlout .= '<td style="max-width:240px"><progress style="width:220px" max="100" value="'.$xperc.'"></td></tr>';
 				}	
 			}
-			$htmlout .= '<tfoot><tr><td colspan=2 style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . '</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td></td></tr></tfoot>';
+			$htmlout .= '<tfoot><tr><td colspan=2 style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . ' '.$firstvote. '</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td style="text-transform:none">'. $votezeit;
+			// Wenn ipflag plugin aktiv und user angemeldet
+			if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
+				global $ipflag;
+				if(isset($ipflag) && is_object($ipflag)){
+					if(($info = $ipflag->get_info($voteip)) != false){
+						$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$nameip;
+					} else { $htmlout .= ' '. $ipflag->get_flag($info, '').' '.$voteip; }
+				} 
+			}	
+			$htmlout .= '</td></tr></tfoot>';
 			$htmlout .= '<tr><td colspan=4><input type="hidden" id="wpdoodlez-name" value="'.$hashuser.'">';
 			$htmlout .= '<button style="width:100%" id="wpdoodlez_poll">' . __( 'Vote!', 'WPdoodlez' ) . '</button></td></tr>';
 			$htmlout .= '</table>';
@@ -481,7 +520,7 @@ function get_doodlez_content($chartan) {
 					}	
 				}
 			}	
-			$htmlout .= '<table><thead><tr><th>' . __( 'User name', 'WPdoodlez'  ) . '</th>';
+			$htmlout .= '<table><thead><tr><th>' . __( 'User name', 'WPdoodlez'  ) . '</th><th><i class="fa fa-clock-o"></i></th>';
 			foreach ( $suggestions as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes" ) {
 					$htmlout .= '<th style="word-break:break-all;overflow-wrap:anywhere">';
@@ -494,14 +533,14 @@ function get_doodlez_content($chartan) {
 					$htmlout .= $key . '</th>';
 				}	
 			}
-			$htmlout .= '<th>' . __( 'Manage vote', 'WPdoodlez'  ). '</th>';
+			$htmlout .= '<th title="' . __( 'Manage vote', 'WPdoodlez'  ). '"><i class="fa fa-cogs"></i></th>';
 			$htmlout .= '</tr></thead><tbody>';
 			if (!empty($_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ] )) {
 				$myname = $_COOKIE[ 'wpdoodlez-' . md5( AUTH_KEY . get_the_ID() ) ];
 			}
 			$htmlout .= '<tr id="wpdoodlez-form">';
 			$htmlout .= '<td><input type="text" placeholder="'. __( 'Your name', 'WPdoodlez'  ) .'" ';			
-			$htmlout .= ' class="wpdoodlez-input" id="wpdoodlez-name" size="10"></td>';			
+			$htmlout .= ' class="wpdoodlez-input" id="wpdoodlez-name" size="12"></td><td></td>';			
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes"  ) {
@@ -510,28 +549,32 @@ function get_doodlez_content($chartan) {
 					$htmlout .= $value[ 0 ].'</label></td>';
 				}
 			}
-			$htmlout .= '<td><button id="wpdoodlez_vote">'. __( 'Vote!', 'WPdoodlez'  ).'</button></td></tr>';
+			$htmlout .= '<td><button id="wpdoodlez_vote" title="' . __( 'Vote!', 'WPdoodlez'  ) . '" style="padding:6px">';
+			$htmlout .= '<i class="fa fa-check-square-o"></i> '. __( 'Go!', 'WPdoodlez'  ) .'</button></td></tr>';
 			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 			// Page navigation
-			if ( $polli ) { $nb_elem_per_page = 20; } else { $nb_elem_per_page = 100; }
+			if ( $polli ) { $nb_elem_per_page = 25; } else { $nb_elem_per_page = 100; }
 			$number_of_pages = intval(count($votes)/$nb_elem_per_page)+1;
 			$page = isset($_GET['seite'])?intval($_GET['seite']):0;
-			//					foreach ( $votes as $name => $vote ) {
+		
+			//	falls ohne paginierung:	foreach ( $votes as $name => $vote ) {
 			foreach (array_slice($votes, $page*$nb_elem_per_page, $nb_elem_per_page) as $name => $vote) { 
 				$htmlout .= '<tr id="wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ) . '-' . md5( $name ) .'" ';
 				$htmlout .= 'class="'. @$myname == $name ? 'myvote' : '' .'">';
-				$htmlout .= '<td style="text-align:left">'; 
+				$htmlout .= '<td style="text-align:left">'.$name.'</td>'; 
+				$htmlout .= '<td style="text-align:left"><abbr>'; 
+				if (isset($vote['zeit'])) $votezeit = date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')); else $votezeit='';
+				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 				// Wenn ipflag plugin aktiv und user angemeldet
 				if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
 					global $ipflag;
-					$nameip = substr($name,21,strlen($name)-21);
 					if(isset($ipflag) && is_object($ipflag)){
-						if(($info = $ipflag->get_info($nameip)) != false){
-							$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '') ;
-						} else { $htmlout .= ' '. $ipflag->get_flag($info, '') . ' '; }
+						if(($info = $ipflag->get_info($voteip)) != false){
+							$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$nameip;
+						} else { $htmlout .= ' '. $ipflag->get_flag($info, '').' '.$voteip; }
 					} 
 				}	
-				$htmlout .= ' ' . substr($name,0,20) . '</td>';
+				$htmlout .= ' ' . $votezeit.'</abbr></td>';
 				foreach ( $suggestions as $key => $value ) {
 					if ($key != "post_views_count" && $key != "likes") {
 						$htmlout .= '<td>';
@@ -546,26 +589,26 @@ function get_doodlez_content($chartan) {
 				}	
 				$htmlout .= '<td>';
 				if ( current_user_can( 'delete_published_posts' ) ) {
-					$htmlout .= '<button style="padding:3px 10px 3px 10px" class="wpdoodlez-delete" data-vote="'. md5( $name ).'" data-realname="'. $name.'">';
-					$htmlout .= '<i title="' . __( 'delete', 'WPdoodlez' ) . '" class="fa fa-trash-o"></i></button>';
+					$htmlout .= '<button title="' . __( 'delete', 'WPdoodlez' ) . '" style="padding:3px 6px 3px 6px" class="wpdoodlez-delete" data-vote="'. md5( $name ).'" data-realname="'. $name.'">';
+					$htmlout .= '<i class="fa fa-trash-o"></i></button>';
 				}
 				if ( !empty($myname) && $myname == $name ) {
-					$htmlout .= '<button style="padding:3px 10px 3px 10px" class="wpdoodlez-edit" data-vote="'. md5( $name ). '" data-realname="'. $name.'">';
-					$htmlout .= '<i title="'.__( 'edit', 'WPdoodlez' ).'" class="fa fa-edit"></i></button>';
+					$htmlout .= '<button title="'.__( 'edit', 'WPdoodlez' ).'" style="padding:3px 5px 3px 5px" class="wpdoodlez-edit" data-vote="'. md5( $name ). '" data-realname="'. $name.'">';
+					$htmlout .= '<i class="fa fa-edit"></i></button>';
 				}
 				$htmlout .= '</td></tr>';
 			}
 			$htmlout .= '</tbody><tfoot>';
-			$htmlout .= '<tr><th>' . __( 'total votes', 'WPdoodlez' ).':</th>';
+			$htmlout .= '<tr><td>' . __( 'total votes', 'WPdoodlez' ).':</td><td></td>';
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
 				if ($key != "post_views_count" && $key != "likes" ) {
-					$htmlout .= '<th id="total-'. $key .'">'. $value.'</th>';
+					$htmlout .= '<td id="total-'. $key .'">'. $value.'</td>';
 					$pielabel .=  strtoupper($key) . ',';
 					$piesum .= $value . ',';
 				}
 			}
-			$htmlout .= '<th><b>Zeilen: ' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b></th>';
+			$htmlout .= '<td><b>[' . ($nb_elem_per_page*($page) +1 )  . ' - '.($nb_elem_per_page*($page+1) ) .'</b>]</td>';
 			$htmlout .= '</tr></tfoot>';
 		}     //    Ende Terminabstimmung oder Umfrage, nun Fusszeile
 		$htmlout .= '</table>';

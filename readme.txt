@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.52
-Stable tag: 9.1.1.52
+Version: 9.1.1.60
+Stable tag: 9.1.1.60
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -112,6 +112,11 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
+
+=== 9.1.1.60 ===
+timestamp of booking and (last octet shortened) IP of user will be stored in database
+poll will show last and first date of bookings
+doodlez admin list and poll admin list will show each booking date and shortened ip
 
 === 9.1.1.43 ===
 Fixes Cookie empty index warnings, when allowed initially
