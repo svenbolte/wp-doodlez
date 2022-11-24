@@ -156,7 +156,7 @@ function wpdoodlez_stats_func($atts) {
 					global $ipflag;
 					if(isset($ipflag) && is_object($ipflag)){
 						if(($info = $ipflag->get_info($voteip)) != false){
-							$output .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$nameip;
+							$output .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$voteip;
 						} else { $output .= ' '. $ipflag->get_flag($info, '').' '.$voteip; }
 					} 
 				}	
@@ -489,7 +489,7 @@ function get_doodlez_content($chartan) {
 				global $ipflag;
 				if(isset($ipflag) && is_object($ipflag)){
 					if(($info = $ipflag->get_info($voteip)) != false){
-						$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$nameip;
+						$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$voteip;
 					} else { $htmlout .= ' '. $ipflag->get_flag($info, '').' '.$voteip; }
 				} 
 			}	
@@ -573,7 +573,7 @@ function get_doodlez_content($chartan) {
 					global $ipflag;
 					if(isset($ipflag) && is_object($ipflag)){
 						if(($info = $ipflag->get_info($voteip)) != false){
-							$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$nameip;
+							$htmlout .= ' '.$info->code .  ' ' .$info->name. ' ' . $ipflag->get_flag($info, '').' '.$voteip;
 						} else { $htmlout .= ' '. $ipflag->get_flag($info, '').' '.$voteip; }
 					} 
 				}	
