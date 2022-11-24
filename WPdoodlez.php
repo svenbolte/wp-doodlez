@@ -115,6 +115,7 @@ function wpdoodlez_stats_func($atts) {
 			if ( $polli ) {
 				$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 				$cct = 0;
+				$voteip='';$firstvote='';$votezeit='';
 				foreach ( $votes as $name => $vote ) {
 					$cct += 1;
 					foreach ( $suggestions as $key => $value ) {
@@ -445,6 +446,7 @@ function get_doodlez_content($chartan) {
 			$hashuser = substr(md5(time()),1,20);
 			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 			$cct = 0;
+			$voteip='';$firstvote='';$votezeit='';
 			foreach ( $votes as $name => $vote ) {
 				$cct += 1;
 				foreach ( $suggestions as $key => $value ) {
