@@ -137,7 +137,8 @@ function wpdoodlez_stats_func($atts) {
 						$xsum += $value;
 					}
 				}
-				$output .= '<table><thead><th colspan=3><a href="'.get_the_permalink().'">' . get_the_title() . '</a></th></thead>';	
+				$output .= '<p title="'.__( 'Vote!', 'WPdoodlez' ).'" style="font-size:1.1em;margin-bottom:8px"><i class="fa fa-lg fa-check-square-o"></i> <a href="'.get_the_permalink().'">'.get_the_id().' &nbsp; '.get_the_title().'?</a></p>';
+				$output .= '<table>';	
 				$xperc = 0;
 				$votecounter = 0;
 				foreach ( $suggestions as $key => $value ) {
@@ -149,7 +150,7 @@ function wpdoodlez_stats_func($atts) {
 							$output .= '<td style="min-width:200px;width:30%"><progress style="width:100%" max="100" value="'.$xperc.'"></td></tr>';
 					}	
 				}
-				$output .= '<tfoot><tr><td style="text-align:center">' . __( 'total votes', 'WPdoodlez' ) . ' '.$firstvote.'</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td style="text-transform:none">'. $votezeit;
+				$output .= '<tfoot><tr><td style="text-transform:none">' . __( 'total votes', 'WPdoodlez' ) . ' '.$firstvote.'</td><td style="text-align:center;font-size:1.2em">'.$xsum.'</td><td style="text-transform:none">'. $votezeit;
 				// Wenn ipflag plugin aktiv und user angemeldet
 				if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
 					global $ipflag;
