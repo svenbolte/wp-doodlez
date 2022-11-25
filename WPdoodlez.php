@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.60
-Stable tag: 9.1.1.60
+Version: 9.1.1.61
+Stable tag: 9.1.1.61
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -137,7 +137,9 @@ function wpdoodlez_stats_func($atts) {
 						$xsum += $value;
 					}
 				}
-				$output .= '<p title="'.__( 'Vote!', 'WPdoodlez' ).'" style="font-size:1.1em;margin-bottom:8px"><i class="fa fa-lg fa-check-square-o"></i> <a href="'.get_the_permalink().'">'.get_the_id().' &nbsp; '.get_the_title().'?</a></p>';
+				$titelqm = get_the_title();
+				if ( substr($titelqm, -1, 1) != '?' ) $titelqm .= '?';
+				$output .= '<p title="'.__( 'Vote!', 'WPdoodlez' ).'" style="font-size:1.1em;margin-bottom:8px"><i class="fa fa-lg fa-check-square-o"></i> <a href="'.get_the_permalink().'">'.get_the_id().' &nbsp; '.$titelqm.'</a></p>';
 				$output .= '<table>';	
 				$xperc = 0;
 				$votecounter = 0;
