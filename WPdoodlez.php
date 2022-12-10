@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.61
-Stable tag: 9.1.1.61
+Version: 9.1.1.70
+Stable tag: 9.1.1.70
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -885,7 +885,7 @@ function quiz_adminstats() {
 				$wrg = (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
 				if ( $wrg == 0) { $rpct = 100; } else { $rpct = round($rite / $wrg * 100); }
 				$message .= '<span style="color:#1bab1b;display:inline-block;width:55px">';
-				$message .= 'R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true )).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true )).'</span>';
+				$message .= 'R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true ) ?? 0).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true ) ?? 0).'</span>';
 				$message .= ' <progress id="rfs" value="'.$rpct.'" max="100" style="width:80px"></progress> <a href="'.get_the_permalink().'">'.substr(get_the_content(),0,80).'</a><br>';
 			}
 		}
@@ -898,7 +898,7 @@ function quiz_adminstats() {
 				$rite = (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
 				$wrg = (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
 				if ( $rite == 0) { $rpct = 100; } else { $rpct = round($wrg / $rite * 100); }
-				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true )).'</span><span style="color:#1bab1b;display:inline-block;width:55px">R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true )).'</span>';
+				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true ) ?? 0).'</span><span style="color:#1bab1b;display:inline-block;width:55px">R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true ) ?? 0).'</span>';
 				$message .= ' <progress id="rfs" value="'.$rpct.'" max="100" style="width:80px"></progress> <a href="'.get_the_permalink().'">'.substr(get_the_content(),0,80).'</a><br>';
 			}
 		}
@@ -915,9 +915,9 @@ function quiz_adminstats() {
 		}
 		wp_reset_postdata();
 		if ($rct >0 || $wct > 0) {
-			$message .= '<p>Gesamt gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct)).' Fragen, davon richtig: ' .wpdoo_number_format_short( (float) $rct);
+			$message .= '<p>Gesamt gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen, davon richtig: ' .wpdoo_number_format_short( (float) $rct ?? 0);
 			$message .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
-			$message .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct);
+			$message .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct ?? 0);
 			$message .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
 		}	
 		return $message;
@@ -947,6 +947,7 @@ function get_schulnote( $prozent ) {
 
 // Converts a number into a short version, eg: 1000 -> 1k
 function wpdoo_number_format_short( $n ) {
+	if (empty($n) || is_null($n)) $n = 0;
 	if ($n < 900) {
 		$precision = 0;
 		$n_format = number_format($n, $precision, ',', '.');
@@ -972,7 +973,7 @@ function wpdoo_number_format_short( $n ) {
 		$dotzero = '.' . str_repeat( '0', $precision );
 		$n_format = str_replace( $dotzero, '', $n_format );
 	}
-	return '<span title="'.number_format_i18n($n).'">' . $n_format . $suffix . '</span>';
+	return '<span title="'.number_format_i18n($n ?? 0).'">' . $n_format . $suffix . '</span>';
 }
 
 
@@ -1171,10 +1172,10 @@ function quiz_show_form( $content ) {
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
 			$letztefrage .= '</ul><br><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
-			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. number_format_i18n(@$rightstat[0]).' / F: '. number_format_i18n(@$wrongstat[0]);
+			$letztefrage .= ' <progress id="rf" value="'.$perct.'" max="100" style="width:100px"></progress> R: '. number_format_i18n(@$rightstat[0] ?? 0).' / F: '. number_format_i18n(@$wrongstat[0] ?? 0);
 			if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) {
 				$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
-				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . number_format_i18n(@$_COOKIE['rightscore']). ' / F: '.number_format_i18n(@$_COOKIE['wrongscore']).'</li>';
+				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . number_format_i18n(@$_COOKIE['rightscore'] ?? 0). ' / F: '.number_format_i18n(@$_COOKIE['wrongscore'] ?? 0).'</li>';
 			}	
 			$letztefrage .= '</ul></div>';
 			$letztefrage .= quiz_adminstats();
@@ -1216,9 +1217,9 @@ function quiz_show_form( $content ) {
 				}
 				wp_reset_postdata();
 				if ($rct >0 || $wct > 0) {
-					$theForm .= '<p style="margin:2em 0 2em 0">Insgesamt wurden gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct)).' Fragen,<br>davon richtig: ' .wpdoo_number_format_short( (float) $rct);
+					$theForm .= '<p style="margin:2em 0 2em 0">Insgesamt wurden gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen,<br>davon richtig: ' .wpdoo_number_format_short( (float) $rct ?? 0);
 					$theForm .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
-					$theForm .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct);
+					$theForm .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct  ?? 0);
 					$theForm .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
 				}	
 
