@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.70
-Stable tag: 9.1.1.70
+Version: 9.1.1.71
+Stable tag: 9.1.1.71
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -780,7 +780,7 @@ function random_quote_func( $atts ){
 			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
 			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image"></div>';	
 		}			
-		$message .= '<div class="greybox"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
+		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
 		$message .= $quizkat. ' &nbsp; <i title="Herkunftsland" class="fa fa-flag"></i> '.$herkunftsland[0];
 		$message .= '</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
 		$message .= ' &nbsp; '.get_the_content().'</div>'.$antwortmaske.'</div>';
