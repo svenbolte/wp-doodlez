@@ -15,9 +15,7 @@ get_header();
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<?php penguin_entry_top();
 		echo '<header class="entry-header">';
-		$tcolor = get_theme_mod( 'link-color', '#006060' );
-		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
-		echo '<div class="entry-meta-top" style="background-color:rgba('.$backgd.')">';
+		echo '<div class="entry-meta-top">';
 		echo meta_icons(); 
 		echo '</div>';
 		if ( is_single() ) {
