@@ -747,6 +747,7 @@ function random_quote_func( $atts ){
 			}
 		}	
 		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+		$hkiso = get_post_custom_values('quizz_iso');
 		$answers = get_post_custom_values('quizz_answer');
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
@@ -778,10 +779,11 @@ function random_quote_func( $atts ){
 		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 			$cbild = z_taxonomy_image_url($category[0]->term_id);
 			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
-			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image"></div>';	
+			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:60px"></div>';	
 		}			
 		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
-		$message .= $quizkat. ' &nbsp; <i title="Herkunftsland" class="fa fa-flag"></i> '.$herkunftsland[0];
+		$message .= $quizkat. ' &nbsp; <i title="Herkunftsland: '.$hkiso[0].'" class="fa fa-flag"></i> '.$herkunftsland[0];
+		$message .= ' '.do_shortcode('[ipflag iso='.$hkiso[0].']');
 		$message .= '</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
 		$message .= ' &nbsp; '.get_the_content().'</div>'.$antwortmaske.'</div>';
       endwhile;
