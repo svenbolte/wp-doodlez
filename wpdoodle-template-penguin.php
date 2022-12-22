@@ -13,7 +13,7 @@ get_header();
 	<?php
 	while ( have_posts() ) : the_post(); // Start the loop.	?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-		<?php penguin_entry_top();
+		<?php
 		echo '<header class="entry-header">';
 		echo '<div class="entry-meta-top">';
 		echo meta_icons(); 
