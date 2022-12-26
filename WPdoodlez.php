@@ -41,7 +41,13 @@ function wpdoodlez_template( $single_template ) {
 			$single_template = dirname( __FILE__ ) . '/wpdoodle-template.php';
 		}
     }
-    return $single_template;
+	// quiztype
+	if ( $post->post_type == 'question' ) {
+		if ($xpenguin) { $single_template = dirname( __FILE__ ) . '/question-template-penguin.php';	} else {
+			$single_template = dirname( __FILE__ ) . '/question-template.php';
+		}
+    }
+ 	return $single_template;
 }
 add_filter( 'single_template', 'wpdoodlez_template' );
 
@@ -754,7 +760,7 @@ function random_quote_func( $atts ){
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
-		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
+		$quizkat .= ' &nbsp; <a title="Kreuzworträtsel spielen" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
@@ -782,9 +788,9 @@ function random_quote_func( $atts ){
 			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:60px"></div>';	
 		}			
 		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
-		$message .= $quizkat. ' &nbsp; <i title="Herkunftsland: '.$hkiso[0].'" class="fa fa-flag"></i> '.$herkunftsland[0];
-		$message .= ' '.do_shortcode('[ipflag iso='.$hkiso[0].']');
+		$message .= $quizkat;
 		$message .= '</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
+		$message .= ' &nbsp; '.do_shortcode('[ipflag iso='.$hkiso[0].']').' '. $herkunftsland[0];
 		$message .= ' &nbsp; '.get_the_content().'</div>'.$antwortmaske.'</div>';
       endwhile;
     }
@@ -981,11 +987,6 @@ function wpdoo_number_format_short( $n ) {
 
 // Einzelanzeige
 function quiz_show_form( $content ) {
-	// lieber Kreuzworträtsel spielen
-	if ( isset($_GET['crossword'])) {
-		return do_shortcode('[xwordquiz]');
-		exit;
-	}	
 	global $wp;
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	if (get_post_type()=='question'):
@@ -1035,7 +1036,8 @@ function quiz_show_form( $content ) {
 		}	
 		// Hangman spielen oder normale Beantwortung
 		if ( isset($_GET['hangman']) && strlen($hangrein) <= 14 && strlen($hangrein) >= 5 ) {
-			$theForm = $content . play_hangman($answers[0]);
+			$hangwort = preg_replace("/[^A-Za-z]/", '', $answers[0]);
+			$theForm = $content . play_hangman($hangwort);
 			$theForm .= '<ul class="footer-menu" style="text-align:center;margin-top:20px;list-style:none;text-transform:uppercase;"><li><a href="' . $random_post_url .'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a></li></ul>';
 			if ( strpos($theForm,"background-color:#1bab1b") !== false ) {	
 				ob_start();
@@ -1413,10 +1415,10 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 	global $hang;
 	global $wp;
 	$gtml = '<style>input[type=button][disabled],button:disabled,button[disabled] { border: 1px solid #999999;background-color:#cccccc;color: #666666;}</style>';
-	$gtml .= '<code style="background:#fff;font-family:monospace;font-size:1.5em">';
+	$gtml .= '<div style="padding:5px;margin:5px;text-align:center;background:#fff;font-family:monospace;font-size:1.8em;letter-spacing:5px">';
 	$gtml .= $guesstemplate. '<br>';
 	$formurl = add_query_arg( array('hangman'=>'1' ), home_url( $wp->request ) );
-	$gtml .= '</code><form name="galgen" method="post" action="'. $formurl .'">';
+	$gtml .= '</div><form name="galgen" method="post" action="'. $formurl .'">';
 	$gtml .= '<input type="hidden" name="wrong" value="'.$wrong.'" />';
 	$gtml .= '<input type="hidden" name="lettersguessed" value="'.$guessed.'" />';
 	$gtml .= '<input type="hidden" name="word" value="'.$which.'" />';
@@ -1429,7 +1431,7 @@ function printPage($image, $guesstemplate, $which, $guessed, $wrong) {
 		$gtml .= '> &nbsp;';
 	}  
 	$gtml .= '<input style="display:none" type="submit" value="raten"></form>';
-	$gtml .= '<div style="float:left;width:38%"><code style="background:#fff;font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
+	$gtml .= '<div style="float:left;width:38%"><code style="background:transparent;font-family:monospace;font-size:1.3em;line-height:0">'.$image.'</code></div>';
 	$gtml .= '<div style="padding-top:5%;float:left;width:58%;height:220px"><b>Galgenmännchen</b> Die Lösung kann aus mehreren Wörtern bestehen. Leerzeichen, Umlaute und Sonderzeichen wurden aus den Lösungswörtern entfernt. Es bleiben <b>'.(strlen($guesstemplate)/ 2) .'</b> Zeichen</div>';
 	return $gtml;
 }
@@ -1564,14 +1566,14 @@ function cwdcw_setup_wdscript() {
 }
 
 function xwordquiz( $atts ) {
-	$attrs = shortcode_atts( array( 'items' => -1 ), $atts ); 
+	$attrs = shortcode_atts( array( 'items' => 21 ), $atts ); 
     $args=array(
       'orderby'=> 'rand',
       'order'=> 'rand',
       'post_type' => 'question',
       'post_status' => 'publish',
-      'posts_per_page' => $attrs['items'],
-	  'showposts' => $attrs['items'],
+      'posts_per_page' => -1,
+	  'showposts' => -1,
     );
     $my_query = new WP_Query($args);
 	$rows=array();
@@ -1581,7 +1583,6 @@ function xwordquiz( $atts ) {
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
 		$crossant = preg_replace("/[^A-Za-zäöüÄÖÜß]/", '', esc_html($answers[0]) );
 		$crossfrag = get_the_content();
-		// ansonsten freie Antwort anfordern von Antwort 1
 		if ($crossohneleer &&
 			strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
 			strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
@@ -1601,14 +1602,14 @@ function xwordquiz( $atts ) {
     $html = '';
     if ($rows) {
 		$html .= '<script>document.getElementById("primary").className="page-fullwidth"</script>';
-        $html .= '<style>@media print{@page {size: landscape}}#secondary{width:100%!important}</style><div class="crossword_wrapper">';
+        $html .= '<div class="crossword_wrapper">';
         $html .= '<div class="cwd-row cwd-crossword-row" style="width:100%"><div class="cwd-crossword-container">';
         $html .= ' <div class="cwd-center cwd-crossword" id="cwd-crossword"></div><br>';
         $html .= '</div></div>';
         $html .= '<div class="cwd-center cwd-crossword-questions">';
         $i = 1;
         foreach ($rows as $row) {
-				if ($i == 16){ break; }
+				if ($i == $attrs['items']){ break; }
 				if ( is_user_logged_in() ) {
 					$adminsolves = 'onclick="javascript:for (let el of document.querySelectorAll(\'.cwd-hide\')) { if (el.style.visibility==\'hidden\') { el.style.visibility=\'visible\';} else {el.style.visibility = \'hidden\';} };" ';
 				} else {

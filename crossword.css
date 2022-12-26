@@ -181,6 +181,8 @@ display:none;
 /*** ----  End modal --- ***/
 
 @media print {
+@page {size: landscape}
+
 .cwd-crossword-questions {
 display:block;
 max-width:100%;
