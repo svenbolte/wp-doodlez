@@ -3,15 +3,15 @@
 Plugin Name: WP Doodlez
 Plugin URI: https://github.com/svenbolte/WPdoodlez
 Author URI: https://github.com/svenbolte
-Description: plan appointments, query polls and place a quiz or a crossword game on your wordpress site (with csv import for questions)
+Description: plan appointments, query polls and place a quiz or a crossword or wordpuzzle game on your wordpress site (with csv import for questions)
 Contributors: Robert Kolatzek, PBMod, others
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.71
-Stable tag: 9.1.1.71
+Version: 9.1.1.80
+Stable tag: 9.1.1.80
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -393,11 +393,14 @@ function wpdoodle_doku() {
 	Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 	Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
 	see readme.txt for more details.
-	Add Shortcode [random-question] to any post, page or html-widget<br><br>
+	Add Shortcode [random-question] to any post, page or html-widget<br>
 	#### Crossword<br>
 	display a crossword game built on the quizzz words
-	Add Shortcode [xwordquiz] to any page or post
+	<br>
+	#### Wordpuzzle
+	display a wordpuzzle with random words from quizfragen Answers
 	<br><br>
+	## Details for WPDoodlez
 	WPdoodlez can handle classic polls and doodle like appointment planning. It can be created in admin area<br>
 	Use custom post type to call posts or integrate post content to your normal posts using the shortcode<br><br>
 	If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries<br><br>
@@ -759,8 +762,10 @@ function random_quote_func( $atts ){
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
-		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="Frage mit Hangman Spiel lösen" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
-		$quizkat .= ' &nbsp; <a title="Kreuzworträtsel spielen" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
+		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="'.__('answer with hangman','WPdoodlez').'" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
+		$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
+		$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
+		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
@@ -1150,7 +1155,7 @@ function quiz_show_form( $content ) {
 				$formstyle .= '.qiz input[type=radio] + label {cursor:not-allowed} ';
 			}
 			$formstyle .='</style>';
-			$listyle = '<li style="padding:6px 0 6px 0;display:inline;margin-right:10px;">';
+			$listyle = '<li style="padding:6px 0 6px 0;display:inline">';
 			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			$copytags = '';
@@ -1162,17 +1167,22 @@ function quiz_show_form( $content ) {
 			// für die Zwischenablage 
 			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
 			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
-			$letztefrage .= '</li>' . $listyle. '<a href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i> '. __('all questions overview','WPdoodlez').'</a>';
+			$letztefrage .= '</li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
-				$letztefrage.='</li>'.$listyle;
-				if ($last_bool[0] == "last") { $letztefrage .= 'letzte Frage'; } else { $letztefrage .= '<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i> nächste Frage: '.$nextlevel[0].'</a>'; }
-				$letztefrage.='</li>';
+				if ($last_bool[0] == "last") {
+					$letztefrage .= '</li>'.$listyle.__('last question','WPdoodlez').'</li>';
+				} else {
+					$letztefrage .= '</li>'.$listyle.'<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i>'. __('next random question','WPdoodlez').' '.$nextlevel[0].'</a></li>';
+				}
 			} else {
 				if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 				$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
 				if (strlen($hangrein) <= 14 && strlen($hangrein) >= 5) $letztefrage.='</li>'.$listyle.'<a href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a></li>';
+				$letztefrage.= $listyle.'<a title="Kreuzworträtsel spielen" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a></li>';
+				$letztefrage.= $listyle.'<a title="Wortsuche spielen" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a></li>';
+
 			}
-			$letztefrage.='</li>'.$listyle.'<a title="'.__('get certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('get certificate','WPdoodlez').'</a></li>';
+			$letztefrage.='</li>'.$listyle.'<a title="'.__('certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('certificate','WPdoodlez').'</a></li>';
 			if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 			if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
 			$letztefrage .= '</ul><br><br><ul></li>'.$listyle. __('Total scores','WPdoodlez');
@@ -1555,18 +1565,9 @@ function matchLetters($word, $guessedLetters) {
 // Hangman Ende
 //   ----------------------------- Quizzz module ended -------------------------------------
 
-// ------------------------------- Shortcode für crosswordquizz ----------------------------------
+// ------------------------------- crosswordquizz ----------------------------------
 
-// Register frontent scripts and styles - will be enqueued on shortcode usage
-add_action('wp_enqueue_scripts', 'cwdcw_setup_wdscript');
-function cwdcw_setup_wdscript() {
-    global $post;
-	wp_register_style('crossword-style', plugins_url('crossword.min.css', __FILE__) );
-	wp_register_script('crossword-script', plugins_url('crossword.min.js', __FILE__), array('jquery'), false, '', true);
-}
-
-function xwordquiz( $atts ) {
-	$attrs = shortcode_atts( array( 'items' => 21 ), $atts ); 
+function xwordquiz() {
     $args=array(
       'orderby'=> 'rand',
       'order'=> 'rand',
@@ -1599,7 +1600,7 @@ function xwordquiz( $atts ) {
     wp_localize_script('crossword-script', 'crossword_vars', array(
         'cwdcw_ansver' => 'yes', 'cwdcw_ansver_incorect' => 'yes',
     ));
-    $html = '';
+	$html = ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('start new game','WPdoodlez').'</a>';
     if ($rows) {
 		$html .= '<script>document.getElementById("primary").className="page-fullwidth"</script>';
         $html .= '<div class="crossword_wrapper">';
@@ -1609,7 +1610,7 @@ function xwordquiz( $atts ) {
         $html .= '<div class="cwd-center cwd-crossword-questions">';
         $i = 1;
         foreach ($rows as $row) {
-				if ($i == $attrs['items']){ break; }
+				if ($i == 21) break;
 				if ( is_user_logged_in() ) {
 					$adminsolves = 'onclick="javascript:for (let el of document.querySelectorAll(\'.cwd-hide\')) { if (el.style.visibility==\'hidden\') { el.style.visibility=\'visible\';} else {el.style.visibility = \'hidden\';} };" ';
 				} else {
@@ -1644,6 +1645,72 @@ function xwordquiz( $atts ) {
     return $html;
 
 }
-add_shortcode( 'xwordquiz', 'xwordquiz' );
 //   ----------------------------- Kreuzwort module ended -------------------------------------
+
+// ------------------------------- Shortcode für wordsearch puzzle ----------------------------------
+
+function xwordpuzzle() {
+    $args=array(
+      'orderby'=> 'rand',
+      'order'=> 'rand',
+      'post_type' => 'question',
+      'post_status' => 'publish',
+      'posts_per_page' => -1,
+	  'showposts' => -1,
+    );
+    $my_query = new WP_Query($args);
+	$rows=array();
+    if( $my_query->have_posts() ) {
+      while ($my_query->have_posts()) : $my_query->the_post(); 
+		$answers = get_post_custom_values('quizz_answer');
+		$crossohneleer =  (strpos($answers[0], ' ') == false);
+		$crossant = preg_replace("/[^A-Za-z]/", '', esc_html($answers[0]) );
+		$crossfrag = get_the_content();
+		if ($crossohneleer &&
+			strlen($crossant) <= 12 && strlen($crossant) >= 5 ) {
+				$element = array( "word" => $crossant );
+				$rows[] = $element;
+		}	
+      endwhile;
+    }
+    wp_reset_query();  
+    $html = '';
+    if ($rows) {
+		$i = 1;
+		$wdstring='[';
+        foreach ($rows as $row) {
+			if ($i == 8){ break; }
+			$wdstring .= "'".strtoupper($row['word'])."',";
+			$i++;
+		}
+		$wdstring=rtrim($wdstring,',').']';
+		$html .= '<p>'.__('please mark words with pressed mousekey','WPdoodlez');
+		$html .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('start new game','WPdoodlez').'</a>';
+		$html .= '</p><div class="wrap"><section id="ws-area"></section>';
+		$html .= '<ul class="ws-words"></ul></div>';
+		$html .= '<!-- noformat on --><script>';
+		$html .= " var inwords=$wdstring;
+			  var longest = inwords.sort( function (a, b) { return b.length - a.length; })[0];
+			  var gameAreaEl = document.getElementById('ws-area');
+			  var gameobj = gameAreaEl.wordSearch({
+			  'directions': ['W', 'N', 'WN', 'EN'],
+			  'words': inwords,
+			  'gridSize': longest.length,
+			  'wordsList' : [],
+			  'debug': false,}
+			  );
+			  var words = gameobj.settings.wordsList,
+				wordsWrap = document.querySelector('.ws-words');
+			  for (i in words) {
+				var liEl = document.createElement('li');
+				liEl.setAttribute('class', 'ws-word');
+				liEl.innerText = words[i];
+				wordsWrap.appendChild(liEl);
+			  }
+			</script><!-- noformat off -->
+		";
+		return $html;
+	}
+}
+//   ----------------------------- wortpuzzle module ended -------------------------------------
 ?>

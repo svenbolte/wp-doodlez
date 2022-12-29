@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.72
-Stable tag: 9.1.1.72
+Version: 9.1.1.80
+Stable tag: 9.1.1.80
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -31,11 +31,15 @@ It adds a custom post type "question". See readme.txt for more details.
 
 Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
 
-#### Crossword Shortcode
-display a crossword game built on the quizzz words (by shortcode and clickable in random question widget
+#### -  Crossword
+add crossword=1 to any quizfrage post commandline 
+displays a crossword game built on the quizzz words (by shortcode and clickable in random question widget
 
-Add Shortcode ´´´[xwordquiz items=21]´´´ to any page or post or html widget
-  with items = number of questions shown in crossword
+#### Wordpuzzle
+add crossword=2 to any quizfrage post commandline 
+displays a wordpuzzle with random words from quizfragen Answers
+
+## Details
 
 WPDoodlez can handle classic polls and doodle like appointment planning
 If custom fields are named vote1...vote10, a poll is created, just displaying the vote summaries if custom fields are dates e.g name: 12.12.2020 value: ja
