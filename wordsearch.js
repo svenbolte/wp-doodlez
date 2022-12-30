@@ -16,7 +16,7 @@ if (typeof Math.rangeInt != 'function') {
 }
 
 /**
- * Mege two objects
+ * Merge two objects
  *
  * @param {Object} o1 Object 1
  * @param {Object} o2 Object 2
@@ -30,7 +30,6 @@ if (typeof Object.merge != 'function') {
     return o2;
   }
 }
-
 
 (function(){
   'use strict';
@@ -61,11 +60,12 @@ if (typeof Object.merge != 'function') {
       'directions': ['W', 'N', 'WN', 'EN'],
       'gridSize': 10,
       'words': ['one', 'two', 'three', 'four', 'five'],
+      'clues': ['eine', 'zwei', 'drei', 'vier', 'fünf'],
 	  'wordsList' : [],
       'debug': false
     }
     this.settings = Object.merge(settings, default_settings);
-
+	
     // Check the words' length if it is overflow the grid
     if (this.parseWords(this.settings.gridSize)) {
       // Add words into the matrix data
@@ -355,7 +355,6 @@ if (typeof Object.merge != 'function') {
    */
   WordSearch.prototype.lookup = function(selected) {
     var words = [''];
-
     for (var i = 0; i < selected.length; i++) {
       words[0] += selected[i].letter;
     }
@@ -375,14 +374,12 @@ if (typeof Object.merge != 'function') {
       var wordList = document.querySelector(".ws-words");
       var wordListItems = wordList.getElementsByTagName("li");
       for(var i=0; i<wordListItems.length; i++){
-        if(words[0] == wordListItems[i].innerHTML.toUpperCase()){			
+		if(words[0] == wordListItems[i].innerHTML.toUpperCase()){			
           if(wordListItems[i].innerHTML != "<del>"+wordListItems[i].innerHTML+"</del>") { //Check the word is never found
-			wordListItems[i].innerHTML = "<del>"+wordListItems[i].innerHTML+"</del>";
+			wordListItems[i].innerHTML = "<del>"+wordListItems[i].innerHTML+"</del> | "+this.settings.clues[i];
 			//Increment solved words.
 			this.solved++;
 		  }
-		  
-	  
         }
       }
 
@@ -407,7 +404,7 @@ if (typeof Object.merge != 'function') {
     var overlay = document.getElementById("ws-game-over-outer");
       overlay.innerHTML = "<div class='ws-game-over-inner' id='ws-game-over-inner'>"+
                             "<div class='ws-game-over' id='ws-game-over'>"+
-                              "<h2>Glückwunsch</h2>"+
+                              "<h6>Glückwunsch</h6>"+
                               "<p>Alle Wörter gefunden</p>"+
                             "</div>"+
                           "</div>";
@@ -470,24 +467,6 @@ function searchLanguage(firstLetter)
 	var codeLetter = [65,90];
 	if((codefirstLetter>=65) && (codefirstLetter<=90)) { // Latin
 		return codeLetter = [65,90];
-	}
-	if((codefirstLetter>=1488) && (codefirstLetter<=1514)) { //Hebrew א -> ת
-		return codeLetter = [1488,1514];
-	}
-	if((codefirstLetter>=913) && (codefirstLetter<=937))	{ //Greek Α -> Ω
-		return codeLetter = [913,929]; //930 is blank
-	}
-	if((codefirstLetter>=1040) && (codefirstLetter<=1071))	{ //Cyrillic А -> Я
-		return codeLetter = [1040,1071]; //930 is blank
-	}
-	if((codefirstLetter>=1569) && (codefirstLetter<=1610))	{ //Arab
-		return codeLetter = [1569,1594]; //Between 1595 and 1600, no letter
-	}
-	if((codefirstLetter>=19969) && (codefirstLetter<=40891))	{ //Chinese
-		return codeLetter = [19969,40891];
-	}
-	if((codefirstLetter>=12354) && (codefirstLetter<=12436))	{ //Japan Hiragana
-		return codeLetter = [12388,12418]; //Only no small letter
 	}
 	console.log("Letter not detected : "+firstLetter+":"+codefirstLetter);
 	return codeLetter;

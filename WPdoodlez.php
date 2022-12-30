@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.80
-Stable tag: 9.1.1.80
+Version: 9.1.1.90
+Stable tag: 9.1.1.90
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -1582,13 +1582,14 @@ function xwordquiz() {
       while ($my_query->have_posts()) : $my_query->the_post(); 
 		$answers = get_post_custom_values('quizz_answer');
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
-		$crossant = preg_replace("/[^A-Za-zäöüÄÖÜß]/", '', esc_html($answers[0]) );
-		$crossfrag = get_the_content();
-		if ($crossohneleer &&
-			strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
-			strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
-				$element = array( "word" => $crossant, "clue" => $crossfrag );
-				$rows[] = $element;
+		if ($crossohneleer) {
+				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
+				$crossfrag = get_the_content();
+				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
+				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
+					$element = array( "word" => $crossant, "clue" => $crossfrag );
+					$rows[] = $element;
+				}	
 		}	
       endwhile;
     }
@@ -1649,6 +1650,11 @@ function xwordquiz() {
 
 // ------------------------------- Shortcode für wordsearch puzzle ----------------------------------
 
+function umlauteumwandeln($str){
+	$tempstr = Array("Ä" => "AE", "Ö" => "OE", "Ü" => "UE", "ä" => "ae", "ö" => "oe", "ü" => "ue", "ß" => "ss"); 
+	return strtr($str, $tempstr);
+}
+
 function xwordpuzzle() {
     $args=array(
       'orderby'=> 'rand',
@@ -1664,12 +1670,14 @@ function xwordpuzzle() {
       while ($my_query->have_posts()) : $my_query->the_post(); 
 		$answers = get_post_custom_values('quizz_answer');
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
-		$crossant = preg_replace("/[^A-Za-z]/", '', esc_html($answers[0]) );
-		$crossfrag = get_the_content();
-		if ($crossohneleer &&
-			strlen($crossant) <= 12 && strlen($crossant) >= 5 ) {
-				$element = array( "word" => $crossant );
-				$rows[] = $element;
+		if ($crossohneleer) {
+				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
+				$crossfrag = get_the_content();
+				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
+				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
+					$element = array( "word" => $crossant, "clue" => $crossfrag );
+					$rows[] = $element;
+				}	
 		}	
       endwhile;
     }
@@ -1677,24 +1685,27 @@ function xwordpuzzle() {
     $html = '';
     if ($rows) {
 		$i = 1;
-		$wdstring='[';
+		$wdstring='[';$wcstring='[';
         foreach ($rows as $row) {
 			if ($i == 8){ break; }
 			$wdstring .= "'".strtoupper($row['word'])."',";
+			$wcstring .= "'".strtoupper($row['clue'])."',";
 			$i++;
 		}
 		$wdstring=rtrim($wdstring,',').']';
+		$wcstring=rtrim($wcstring,',').']';
 		$html .= '<p>'.__('please mark words with pressed mousekey','WPdoodlez');
 		$html .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('start new game','WPdoodlez').'</a>';
 		$html .= '</p><div class="wrap"><section id="ws-area"></section>';
 		$html .= '<ul class="ws-words"></ul></div>';
 		$html .= '<!-- noformat on --><script>';
-		$html .= " var inwords=$wdstring;
-			  var longest = inwords.sort( function (a, b) { return b.length - a.length; })[0];
+		$html .= " var inwords=$wdstring; var insortlongest=$wdstring; var inclues=$wcstring;
+			  var longest = insortlongest.reduce(function (a, b) {return a.length > b.length ? a : b;});
 			  var gameAreaEl = document.getElementById('ws-area');
 			  var gameobj = gameAreaEl.wordSearch({
 			  'directions': ['W', 'N', 'WN', 'EN'],
 			  'words': inwords,
+			  'clues': inclues,
 			  'gridSize': longest.length,
 			  'wordsList' : [],
 			  'debug': false,}
