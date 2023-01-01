@@ -1147,7 +1147,7 @@ function quiz_show_form( $content ) {
 				} else { $error = "";$showqform = ''; }
 			}
 			$accentcolor = get_theme_mod( 'link-color', '#888' );
-			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:inline-block;width:100%;padding:8px;border-radius:3px;cursor:pointer;background:'.$accentcolor.'}';
+			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:block;padding:8px;border-radius:3px;cursor:pointer;background:'.$accentcolor.'}';
 			$formstyle .= '.qiz input[type=radio] + label:hover{box-shadow:inset 0 0 100px 100px rgba(255,255,255,.15)} .qiz input[type=radio] + label a {color:#fff} ';
 			if ( empty($_POST) ) {
 				$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
