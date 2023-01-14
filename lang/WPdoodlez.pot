@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Doodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-29 16:39+0000\n"
+"POT-Creation-Date: 2023-01-14 13:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,15 +15,15 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.6; wp-5.5.3"
 
-#: WPdoodlez.php:1089 WPdoodlez.php:1619
+#: WPdoodlez.php:1121 WPdoodlez.php:1652
 msgid " characters long. "
 msgstr ""
 
-#: WPdoodlez.php:1139
+#: WPdoodlez.php:1171
 msgid " is the wrong answer. Correct is"
 msgstr ""
 
-#: WPdoodlez.php:1208
+#: WPdoodlez.php:1240
 msgid " no answer (timeout occured)"
 msgstr ""
 
@@ -51,15 +51,15 @@ msgstr ""
 msgid "All WPdoodlez"
 msgstr ""
 
-#: WPdoodlez.php:1088
+#: WPdoodlez.php:1120
 msgid "answer mask"
 msgstr ""
 
-#: WPdoodlez.php:765
+#: WPdoodlez.php:797
 msgid "answer with hangman"
 msgstr ""
 
-#: WPdoodlez.php:1257
+#: WPdoodlez.php:1289
 msgid "Answers &amp; more"
 msgstr ""
 
@@ -67,15 +67,15 @@ msgstr ""
 msgid "appointment planner, polls, quizzes"
 msgstr ""
 
-#: WPdoodlez.php:1091
+#: WPdoodlez.php:1123
 msgid "case sensitive"
 msgstr ""
 
-#: WPdoodlez.php:1185
+#: WPdoodlez.php:1217
 msgid "certificate"
 msgstr ""
 
-#: WPdoodlez.php:1213
+#: WPdoodlez.php:1245
 msgid "check answer"
 msgstr ""
 
@@ -83,19 +83,19 @@ msgstr ""
 msgid "Choose from the most used categories"
 msgstr ""
 
-#: WPdoodlez.php:1638
+#: WPdoodlez.php:1671
 msgid "Congratulations! You solved the crossword game."
 msgstr ""
 
-#: WPdoodlez.php:1281
+#: WPdoodlez.php:1313
 msgid "correct answer"
 msgstr ""
 
-#: WPdoodlez.php:1124
+#: WPdoodlez.php:1156
 msgid "correct answer: "
 msgstr ""
 
-#: WPdoodlez.php:766 WPdoodlez.php:1181
+#: WPdoodlez.php:798 WPdoodlez.php:1213
 msgid "crossword"
 msgstr ""
 
@@ -123,7 +123,7 @@ msgstr ""
 msgid "Edit WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:1284
+#: WPdoodlez.php:1316
 msgid "exact match (also enforces case)"
 msgstr ""
 
@@ -131,7 +131,7 @@ msgstr ""
 msgid "Go!"
 msgstr ""
 
-#: WPdoodlez.php:765 WPdoodlez.php:1180
+#: WPdoodlez.php:797 WPdoodlez.php:1212
 msgid "Hangman"
 msgstr ""
 
@@ -143,15 +143,19 @@ msgstr ""
 msgid "https://github.com/svenbolte/WPdoodlez"
 msgstr ""
 
-#: WPdoodlez.php:1379
+#: WPdoodlez.php:1411
 msgid "Import from CSV"
 msgstr ""
 
-#: WPdoodlez.php:1173
+#: WPdoodlez.php:739
+msgid "land of origin"
+msgstr ""
+
+#: WPdoodlez.php:1205
 msgid "last question"
 msgstr ""
 
-#: WPdoodlez.php:1311
+#: WPdoodlez.php:1343
 msgid "last question?"
 msgstr ""
 
@@ -159,7 +163,7 @@ msgstr ""
 msgid "Manage vote"
 msgstr ""
 
-#: WPdoodlez.php:1293
+#: WPdoodlez.php:1325
 msgid "moreinfo"
 msgstr ""
 
@@ -175,7 +179,7 @@ msgstr ""
 msgid "New WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:1046 WPdoodlez.php:1175 WPdoodlez.php:1179
+#: WPdoodlez.php:1078 WPdoodlez.php:1207 WPdoodlez.php:1211
 msgid "next random question"
 msgstr ""
 
@@ -187,7 +191,7 @@ msgstr ""
 msgid "No Questions found in Trash"
 msgstr ""
 
-#: WPdoodlez.php:1091
+#: WPdoodlez.php:1123
 msgid "not case sensitive"
 msgstr ""
 
@@ -199,15 +203,15 @@ msgstr ""
 msgid "Not found in trash"
 msgstr ""
 
-#: WPdoodlez.php:1277
+#: WPdoodlez.php:1309
 msgid "origin country"
 msgstr ""
 
-#: WPdoodlez.php:1279
+#: WPdoodlez.php:1311
 msgid "origin ISO"
 msgstr ""
 
-#: WPdoodlez.php:1170
+#: WPdoodlez.php:1202
 msgid "overview"
 msgstr ""
 
@@ -225,19 +229,19 @@ msgid ""
 "game on your wordpress site (with csv import for questions)"
 msgstr ""
 
-#: WPdoodlez.php:766
+#: WPdoodlez.php:798 WPdoodlez.php:1636
 msgid "play crossword"
 msgstr ""
 
-#: WPdoodlez.php:767 WPdoodlez.php:1688
+#: WPdoodlez.php:799 WPdoodlez.php:1730
 msgid "play word puzzle"
 msgstr ""
 
-#: WPdoodlez.php:1200
+#: WPdoodlez.php:1232
 msgid "please enter a value"
 msgstr ""
 
-#: WPdoodlez.php:1687
+#: WPdoodlez.php:1729
 msgid "please mark words with pressed mousekey"
 msgstr ""
 
@@ -253,7 +257,7 @@ msgstr ""
 msgid "Popular Quiz Categories"
 msgstr ""
 
-#: WPdoodlez.php:1298
+#: WPdoodlez.php:1330
 msgid "previous question"
 msgstr ""
 
@@ -261,7 +265,7 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: WPdoodlez.php:1388
+#: WPdoodlez.php:1420
 msgid "question/answer"
 msgstr ""
 
@@ -281,7 +285,7 @@ msgstr ""
 msgid "Quiz Category"
 msgstr ""
 
-#: WPdoodlez.php:1389
+#: WPdoodlez.php:1421
 msgid "quiz category"
 msgstr ""
 
@@ -313,19 +317,19 @@ msgstr ""
 msgid "Show WPdoodle"
 msgstr ""
 
-#: WPdoodlez.php:1688
+#: WPdoodlez.php:1636 WPdoodlez.php:1730
 msgid "start new game"
 msgstr ""
 
-#: WPdoodlez.php:1326
+#: WPdoodlez.php:1358
 msgid "stats right wrong answers"
 msgstr ""
 
-#: WPdoodlez.php:1216
+#: WPdoodlez.php:1248
 msgid "test terminated. thanks."
 msgstr ""
 
-#: WPdoodlez.php:1188
+#: WPdoodlez.php:1220
 msgid "Total scores"
 msgstr ""
 
@@ -365,7 +369,7 @@ msgstr ""
 msgid "Voting"
 msgstr ""
 
-#: WPdoodlez.php:767 WPdoodlez.php:1182
+#: WPdoodlez.php:799 WPdoodlez.php:1214
 msgid "wordsearch"
 msgstr ""
 
@@ -377,11 +381,11 @@ msgstr ""
 msgid "WPdoodlez Documentation"
 msgstr ""
 
-#: WPdoodlez.php:1287 WPdoodlez.php:1289 WPdoodlez.php:1291
+#: WPdoodlez.php:1319 WPdoodlez.php:1321 WPdoodlez.php:1323
 msgid "wrong answer"
 msgstr ""
 
-#: WPdoodlez.php:1217
+#: WPdoodlez.php:1249
 msgid "you have "
 msgstr ""
 
@@ -389,7 +393,7 @@ msgstr ""
 msgid "You have already voted but your vote was deleted. Your name was: "
 msgstr ""
 
-#: WPdoodlez.php:1092
+#: WPdoodlez.php:1124
 msgid "your answer"
 msgstr ""
 
@@ -401,6 +405,6 @@ msgstr ""
 msgid "Your name"
 msgstr ""
 
-#: WPdoodlez.php:1191
+#: WPdoodlez.php:1223
 msgid "Your session"
 msgstr ""

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WPdoodlez\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 16:48+0000\n"
-"PO-Revision-Date: 2022-12-29 16:40+0000\n"
+"PO-Revision-Date: 2023-01-14 13:38+0000\n"
 "Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch (Sie)\n"
 "Language: de_DE_formal\n"
@@ -20,15 +20,15 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: lang\n"
 "X-Loco-Version: 2.6.3; wp-6.1.1"
 
-#: WPdoodlez.php:1089 WPdoodlez.php:1619
+#: WPdoodlez.php:1121 WPdoodlez.php:1652
 msgid " characters long. "
 msgstr " Zeichen lang. "
 
-#: WPdoodlez.php:1139
+#: WPdoodlez.php:1171
 msgid " is the wrong answer. Correct is"
 msgstr "ist leider falsch. Die richtige Antwort lautet:"
 
-#: WPdoodlez.php:1208
+#: WPdoodlez.php:1240
 msgid " no answer (timeout occured)"
 msgstr "keine Antwort (da die Zeit abgelaufen ist)"
 
@@ -56,15 +56,15 @@ msgstr "Alle Quiz Kategorien"
 msgid "All WPdoodlez"
 msgstr "Alle WPdoodlez"
 
-#: WPdoodlez.php:1088
+#: WPdoodlez.php:1120
 msgid "answer mask"
 msgstr "Antwort-Maske"
 
-#: WPdoodlez.php:765
+#: WPdoodlez.php:797
 msgid "answer with hangman"
 msgstr "mit Hangman beantworten"
 
-#: WPdoodlez.php:1257
+#: WPdoodlez.php:1289
 msgid "Answers &amp; more"
 msgstr "Antworten und mehr..."
 
@@ -72,16 +72,16 @@ msgstr "Antworten und mehr..."
 msgid "appointment planner, polls, quizzes"
 msgstr "Terminabstimmungen, Umfragen"
 
-#: WPdoodlez.php:1091
+#: WPdoodlez.php:1123
 msgid "case sensitive"
 msgstr "Bitte Groß/Kleinschreibung beachten!"
 
-#: WPdoodlez.php:1185
+#: WPdoodlez.php:1217
 #| msgid "get certificate"
 msgid "certificate"
 msgstr "Zertifikat"
 
-#: WPdoodlez.php:1213
+#: WPdoodlez.php:1245
 msgid "check answer"
 msgstr "Antwort prüfen"
 
@@ -89,19 +89,19 @@ msgstr "Antwort prüfen"
 msgid "Choose from the most used categories"
 msgstr "Wählen Sie von den meistbenutzten Quiz Kategorien"
 
-#: WPdoodlez.php:1638
+#: WPdoodlez.php:1671
 msgid "Congratulations! You solved the crossword game."
 msgstr "Glückwunsch! Sie haben das Rätsel gelöst."
 
-#: WPdoodlez.php:1281
+#: WPdoodlez.php:1313
 msgid "correct answer"
 msgstr "richtige Antwort"
 
-#: WPdoodlez.php:1124
+#: WPdoodlez.php:1156
 msgid "correct answer: "
 msgstr "Richtige Antwort: "
 
-#: WPdoodlez.php:766 WPdoodlez.php:1181
+#: WPdoodlez.php:798 WPdoodlez.php:1213
 msgid "crossword"
 msgstr "Kreuzwort"
 
@@ -129,7 +129,7 @@ msgstr "Quiz Kategorie bearbeiten"
 msgid "Edit WPdoodle"
 msgstr "WPdoodle bearbeiten"
 
-#: WPdoodlez.php:1284
+#: WPdoodlez.php:1316
 msgid "exact match (also enforces case)"
 msgstr "Exakte Eingabe erwartet (mit Groß/Kleinschreibung)"
 
@@ -137,7 +137,7 @@ msgstr "Exakte Eingabe erwartet (mit Groß/Kleinschreibung)"
 msgid "Go!"
 msgstr "Los!"
 
-#: WPdoodlez.php:765 WPdoodlez.php:1180
+#: WPdoodlez.php:797 WPdoodlez.php:1212
 msgid "Hangman"
 msgstr "Hangman"
 
@@ -149,15 +149,19 @@ msgstr "https://github.com/svenbolte"
 msgid "https://github.com/svenbolte/WPdoodlez"
 msgstr "https://github.com/svenbolte/WPdoodlez"
 
-#: WPdoodlez.php:1379
+#: WPdoodlez.php:1411
 msgid "Import from CSV"
 msgstr "CSV-Import"
 
-#: WPdoodlez.php:1173
+#: WPdoodlez.php:739
+msgid "land of origin"
+msgstr "Herkunftsland"
+
+#: WPdoodlez.php:1205
 msgid "last question"
 msgstr "letzte Frage"
 
-#: WPdoodlez.php:1311
+#: WPdoodlez.php:1343
 msgid "last question?"
 msgstr "ist das die letzte Frage im Quizzz?"
 
@@ -165,7 +169,7 @@ msgstr "ist das die letzte Frage im Quizzz?"
 msgid "Manage vote"
 msgstr "Verwalten"
 
-#: WPdoodlez.php:1293
+#: WPdoodlez.php:1325
 msgid "moreinfo"
 msgstr "Zusatzinformation"
 
@@ -181,7 +185,7 @@ msgstr "Neue Quiz Kategorie"
 msgid "New WPdoodle"
 msgstr "Neuer WPdoodle"
 
-#: WPdoodlez.php:1046 WPdoodlez.php:1175 WPdoodlez.php:1179
+#: WPdoodlez.php:1078 WPdoodlez.php:1207 WPdoodlez.php:1211
 msgid "next random question"
 msgstr "Nächste"
 
@@ -193,7 +197,7 @@ msgstr "keine Fragen gefunden"
 msgid "No Questions found in Trash"
 msgstr "keine Fragen im Papierkorb gefunden"
 
-#: WPdoodlez.php:1091
+#: WPdoodlez.php:1123
 msgid "not case sensitive"
 msgstr ""
 "Groß/Kleinschreibung nicht wichtig.\n"
@@ -206,15 +210,15 @@ msgstr "Nicht gefunden"
 msgid "Not found in trash"
 msgstr "Nicht gefunden im Papierkorb"
 
-#: WPdoodlez.php:1277
+#: WPdoodlez.php:1309
 msgid "origin country"
 msgstr "Herkunftsland"
 
-#: WPdoodlez.php:1279
+#: WPdoodlez.php:1311
 msgid "origin ISO"
 msgstr "Herkunfts ISO"
 
-#: WPdoodlez.php:1170
+#: WPdoodlez.php:1202
 msgid "overview"
 msgstr "Übersicht"
 
@@ -238,19 +242,19 @@ msgstr ""
 "oder Worträtselspiel auf Ihrer WordPress-Seite platzieren (mit CSV-Import "
 "für Fragen)"
 
-#: WPdoodlez.php:766
+#: WPdoodlez.php:798 WPdoodlez.php:1636
 msgid "play crossword"
 msgstr "Kreuzworträtsel lösen"
 
-#: WPdoodlez.php:767 WPdoodlez.php:1688
+#: WPdoodlez.php:799 WPdoodlez.php:1730
 msgid "play word puzzle"
 msgstr "Wortsuche spielen"
 
-#: WPdoodlez.php:1200
+#: WPdoodlez.php:1232
 msgid "please enter a value"
 msgstr "Bitte geben Sie eine Antwort ein"
 
-#: WPdoodlez.php:1687
+#: WPdoodlez.php:1729
 msgid "please mark words with pressed mousekey"
 msgstr "Bitte markieren Sie die Wörter bei gedrückter Maustaste"
 
@@ -266,7 +270,7 @@ msgstr "Abstimm-Ergebnisse"
 msgid "Popular Quiz Categories"
 msgstr "Populäre Quiz Kategorien"
 
-#: WPdoodlez.php:1298
+#: WPdoodlez.php:1330
 msgid "previous question"
 msgstr "vorherige Frage im Quiz"
 
@@ -274,7 +278,7 @@ msgstr "vorherige Frage im Quiz"
 msgid "Question"
 msgstr "Frage"
 
-#: WPdoodlez.php:1388
+#: WPdoodlez.php:1420
 msgid "question/answer"
 msgstr "Frage/Antwort"
 
@@ -294,7 +298,7 @@ msgstr "Quiz Kategorien"
 msgid "Quiz Category"
 msgstr "Quiz Kategorie"
 
-#: WPdoodlez.php:1389
+#: WPdoodlez.php:1421
 msgid "quiz category"
 msgstr "Quiz Kategorie"
 
@@ -326,19 +330,19 @@ msgstr "Shortcode in die Zwischenablage kopiert"
 msgid "Show WPdoodle"
 msgstr "Zeige WPdoodlez"
 
-#: WPdoodlez.php:1688
+#: WPdoodlez.php:1636 WPdoodlez.php:1730
 msgid "start new game"
 msgstr "Neues Spiel starten"
 
-#: WPdoodlez.php:1326
+#: WPdoodlez.php:1358
 msgid "stats right wrong answers"
 msgstr "Statistik richtige/falsche Antworten"
 
-#: WPdoodlez.php:1216
+#: WPdoodlez.php:1248
 msgid "test terminated. thanks."
 msgstr "Test beendet. Vielen Dank."
 
-#: WPdoodlez.php:1188
+#: WPdoodlez.php:1220
 msgid "Total scores"
 msgstr "Allzeit-Ergebnisse"
 
@@ -378,7 +382,7 @@ msgstr "Abstimm-Grafik"
 msgid "Voting"
 msgstr "Abstimmung"
 
-#: WPdoodlez.php:767 WPdoodlez.php:1182
+#: WPdoodlez.php:799 WPdoodlez.php:1214
 msgid "wordsearch"
 msgstr "Wortpuzzle"
 
@@ -390,11 +394,11 @@ msgstr "WP Doodlez"
 msgid "WPdoodlez Documentation"
 msgstr "WPDoodlez Dokumentation"
 
-#: WPdoodlez.php:1287 WPdoodlez.php:1289 WPdoodlez.php:1291
+#: WPdoodlez.php:1319 WPdoodlez.php:1321 WPdoodlez.php:1323
 msgid "wrong answer"
 msgstr "falsche Antwort"
 
-#: WPdoodlez.php:1217
+#: WPdoodlez.php:1249
 msgid "you have "
 msgstr "Sie haben "
 
@@ -404,7 +408,7 @@ msgstr ""
 "Sie haben bereits eine Stimme abgegeben. Sie wurde anscheinend gelöscht. Ihr "
 "Name lautete: "
 
-#: WPdoodlez.php:1092
+#: WPdoodlez.php:1124
 msgid "your answer"
 msgstr "Ihre Antwort"
 
@@ -416,6 +420,6 @@ msgstr "Ihre Auswahl bitte"
 msgid "Your name"
 msgstr "Dein Name"
 
-#: WPdoodlez.php:1191
+#: WPdoodlez.php:1223
 msgid "Your session"
 msgstr "Ihre Sitzung"

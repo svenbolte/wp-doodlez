@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.90
-Stable tag: 9.1.1.90
+Version: 9.1.1.91
+Stable tag: 9.1.1.91
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -729,6 +729,38 @@ function create_quiz_post() {
 	}
 }
 add_action( 'init', 'create_quiz_post' );
+
+// Admin-Spalten ergänzen
+// Tabellenkopf und -fuß um Felder erweitern
+add_filter('manage_edit-question_columns','kb_edit_admin_columns') ;
+function kb_edit_admin_columns($columns) {
+  unset($columns['shortcodes']);
+  unset($columns['tags']);
+  $columns['land'] = __('land of origin','WPdoodlez');
+  return $columns;
+}
+
+// Inhalte aus benutzerdefinierten Feldern holen und den Spalten hinzufügen
+add_action ('manage_question_posts_custom_column','kb_post_custom_columns');
+function kb_post_custom_columns($column) {
+  global $post;
+  $custom = get_post_custom();
+  switch ($column) {
+    case "land":
+		$hkland = get_post_custom_values('quizz_herkunftsland')[0];
+		$hkiso = get_post_custom_values('quizz_iso')[0];
+      echo $hkland.' '.$hkiso;
+    break;
+  }
+}
+
+// Hinzugefügte Spalten sortierbar machen
+add_filter( 'manage_edit-question_sortable_columns', 'kb_post_sortierbare_columns' );
+function kb_post_sortierbare_columns( $columns ) {
+  $columns['land'] = 'kb_termin_beginn';
+  return $columns;
+}
+
 
 // Shortcode Random Question
 function random_quote_func( $atts ){
