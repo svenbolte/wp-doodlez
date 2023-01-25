@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.91
-Stable tag: 9.1.1.91
+Version: 9.1.1.92
+Stable tag: 9.1.1.92
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -1068,7 +1068,7 @@ function quiz_show_form( $content ) {
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-			$content = '<blockquote style="font-size:1.2em">'.do_shortcode('[ipflag iso='.$hkiso[0].']').'<p><strong>Kategorie ' . $term->name . ' &nbsp; eine Frage aus '.$herkunftsland[0]. '</strong></p>' . $content.'</blockquote>'; 
+			$content = '<blockquote class="blockqmark" style="font-size:1.2em">'.do_shortcode('[ipflag iso='.$hkiso[0].']').'<p><strong>Kategorie ' . $term->name . ' &nbsp; eine Frage aus '.$herkunftsland[0]. '</strong></p>' . $content.'</blockquote>'; 
 			}
 		}	
 		// Hangman spielen oder normale Beantwortung
@@ -1153,7 +1153,7 @@ function quiz_show_form( $content ) {
 						$goto = $nextlevel[0];
 						wp_safe_redirect( get_post_permalink($goto) );
 					} else {
-						$error = $ansmixed.'<blockquote style="font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
+						$error = $ansmixed.'<blockquote class="blockbulb" style="font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
 						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
 						$error .= $wikinachschlag.'</div>';
 						$showqform = 'display:none';
@@ -1166,7 +1166,7 @@ function quiz_show_form( $content ) {
 				}
 			} else {
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_GET['ans']) ) {
-					$error = $ansmixed.'<blockquote style="font-size:1.2em;margin-top:1.6em">';
+					$error = $ansmixed.'<blockquote class="blockbulb" style="font-size:1.2em;margin-top:1.6em">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
 					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
 					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
