@@ -40,7 +40,7 @@ get_header();
 			if ( isset($_GET['crossword'])) {
 				if (1 == esc_html($_GET['crossword'])) echo xwordquiz();
 				if (2 == esc_html($_GET['crossword'])) echo xwordpuzzle();
-			} else the_content( penguin_read_more_text() );
+			} else the_content();
 		?>
 		</div><!-- .entry-content -->
 		<footer class="entry-footer">
