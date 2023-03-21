@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.92
-Stable tag: 9.1.1.92
+Version: 9.1.1.93
+Stable tag: 9.1.1.93
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -119,8 +119,11 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
 
+=== 9.1.1.93 ===
+Quizzfragen aktualisiert
+
 === 9.1.1.91 ===
-quizzfragen aktualisiert
+Quizzfragen aktualisiert
 Quizz Adminbereich zeigt Land und Iso an
 Übersetzungen
 
