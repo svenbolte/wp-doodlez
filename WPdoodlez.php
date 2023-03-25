@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.93
-Stable tag: 9.1.1.93
+Version: 9.1.1.94
+Stable tag: 9.1.1.94
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -125,7 +125,7 @@ function wpdoodlez_stats_func($atts) {
 				foreach ( $votes as $name => $vote ) {
 					$cct += 1;
 					foreach ( $suggestions as $key => $value ) {
-						if ($key != "post_views_count" && $key != "likes") {
+						if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes") {
 							if ( !empty($vote[ $key ]) ) {	$votes_cout[ $key ] ++; }
 						}	
 					}
@@ -139,7 +139,7 @@ function wpdoodlez_stats_func($atts) {
 				}	
 				$xsum = 0;
 				foreach ( $votes_cout as $key => $value ) {
-					if ($key != "post_views_count" && $key != "likes" && $value > 0 ) {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" && $value > 0 ) {
 						$xsum += $value;
 					}
 				}
@@ -150,7 +150,7 @@ function wpdoodlez_stats_func($atts) {
 				$xperc = 0;
 				$votecounter = 0;
 				foreach ( $suggestions as $key => $value ) {
-					 if ($key != "post_views_count" && $key != "likes" ) {
+					 if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
 							$votecounter += 1;
 							if ($xsum>0) $xperc = round(($votes_cout[ $key ]/$xsum) * 100,1);
 							$output .= '<tr><td style="text-align:center">';
@@ -462,7 +462,7 @@ function get_doodlez_content($chartan) {
 			foreach ( $votes as $name => $vote ) {
 				$cct += 1;
 				foreach ( $suggestions as $key => $value ) {
-					if ($key != "post_views_count" && $key != "likes") {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes") {
 						if ( !empty($vote[ $key ]) ) {	$votes_cout[ $key ] ++; }
 					}	
 				}
@@ -477,7 +477,7 @@ function get_doodlez_content($chartan) {
 			$xsum = 0;
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
-				if ($key != "post_views_count" && $key != "likes" && $value > 0 ) {
+				if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" && $value > 0 ) {
 					$xsum += $value;
 					$pielabel.=str_replace(',','',$suggestions[$key][0]).','; $piesum .= $value.','; 
 				}
@@ -486,7 +486,7 @@ function get_doodlez_content($chartan) {
 			$xperc = 0;
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
-				 if ($key != "post_views_count" && $key != "likes" ) {
+				 if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
 						$votecounter += 1;
 						if ($xsum>0) $xperc = round(($votes_cout[ $key ]/$xsum) * 100,1);
 						$htmlout .= '<tr><td  style="text-align:center"><label><input type="checkbox" name="'.$key.'" id="'.$key.'" onclick="selectOnlyThis(this.id)" class="wpdoodlez-input"></td><td>';
@@ -520,12 +520,12 @@ function get_doodlez_content($chartan) {
 				$outputed_values = array();
 				$xevents = array();
 				foreach ( $suggestions as $key => $value ) {
-					if ($key != "post_views_count" && $key != "likes" ) {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
 						array_push($xevents, $key);
 					}
 				}
 				foreach ( $suggestions as $key => $value ) {
-					if ($key != "post_views_count" && $key != "likes" ) {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
 						$workername = substr($key,6,4) . substr($key,3,2);
 						if (!in_array($workername, $outputed_values)){
 							$htmlout .= '<div style="font-size:0.9em;overflow:hidden;vertical-align:top;display:inline-block;max-width:32%;width:32%;margin-right:5px">'.timeline_calendar(substr($key,3,2),substr($key,6,4),$xevents).'</div>';
@@ -536,7 +536,7 @@ function get_doodlez_content($chartan) {
 			}	
 			$htmlout .= '<table><thead><tr><th>' . __( 'User name', 'WPdoodlez'  ) . '</th><th><i class="fa fa-clock-o"></i></th>';
 			foreach ( $suggestions as $key => $value ) {
-				if ($key != "post_views_count" && $key != "likes" ) {
+				if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
 					$htmlout .= '<th style="word-break:break-all;overflow-wrap:anywhere">';
 					// ICS Download zum Termin anbieten
 					if( function_exists('export_ics') && is_singular() ) {
@@ -557,7 +557,7 @@ function get_doodlez_content($chartan) {
 			$htmlout .= ' class="wpdoodlez-input" id="wpdoodlez-name" size="12"></td><td></td>';			
 			$votecounter = 0;
 			foreach ( $suggestions as $key => $value ) {
-				if ($key != "post_views_count" && $key != "likes"  ) {
+				if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes"  ) {
 					$votecounter += 1;
 					$htmlout .= '<td><label> <input type="checkbox" name="'. $key.'" id="doodsel'.$votecounter.'" class="wpdoodlez-input">';
 					$htmlout .= $value[ 0 ].'</label></td>';
@@ -590,7 +590,7 @@ function get_doodlez_content($chartan) {
 				}	
 				$htmlout .= ' ' . $votezeit.'</abbr></td>';
 				foreach ( $suggestions as $key => $value ) {
-					if ($key != "post_views_count" && $key != "likes") {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes") {
 						$htmlout .= '<td>';
 						if ( !empty($vote[ $key ]) ) {
 							$votes_cout[ $key ] ++;
@@ -616,7 +616,7 @@ function get_doodlez_content($chartan) {
 			$htmlout .= '<tr><td>' . __( 'total votes', 'WPdoodlez' ).':</td><td></td>';
 			$pielabel = ''; $piesum = '';
 			foreach ( $votes_cout as $key => $value ) {
-				if ($key != "post_views_count" && $key != "likes" ) {
+				if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
 					$htmlout .= '<td id="total-'. $key .'">'. $value.'</td>';
 					$pielabel .=  strtoupper($key) . ',';
 					$piesum .= $value . ',';
