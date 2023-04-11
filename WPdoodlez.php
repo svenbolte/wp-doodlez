@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.94
-Stable tag: 9.1.1.94
+Version: 9.1.1.100
+Stable tag: 9.1.1.100
 Requires at least: 5.1
 Tested up to: 6.2
 Requires PHP: 8.0
@@ -798,7 +798,7 @@ function random_quote_func( $atts ){
 		$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
 		$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
-		$listyle='text-align:center;border-radius:3px;padding:6px;display:block;margin-bottom:5px';
+		$listyle='text-align:center;padding:6px;display:block;margin-bottom:5px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
@@ -809,7 +809,7 @@ function random_quote_func( $atts ){
 			unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= $xlink.'"><span style="border-radius:3px;color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
+			$antwortmaske .= $xlink.'"><span style="color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
 		}	
 		$message .= '<div>';
 		// Wenn eine Quizkategorie da, Katbild anzeigen
@@ -824,11 +824,11 @@ function random_quote_func( $atts ){
 			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
 			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:60px"></div>';	
 		}			
-		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a> &nbsp; ';
+		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
 		$message .= $quizkat;
-		$message .= '</div><div style="font-size:18px;margin-top:5px"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title().'</a>';
-		$message .= ' &nbsp; '.do_shortcode('[ipflag iso='.$hkiso[0].']').' '. $herkunftsland[0];
-		$message .= ' &nbsp; '.get_the_content().'</div>'.$antwortmaske.'</div>';
+		$message .= '</div><h2 class="entry-title"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title();
+		$message .= '&nbsp; '.do_shortcode('[ipflag iso='.$hkiso[0].']').' '. $herkunftsland[0].'</a></h2>';
+		$message .= '<div class="entry-content">'.get_the_content().'</div>'.$antwortmaske;
       endwhile;
     }
     wp_reset_query();  
@@ -1117,7 +1117,7 @@ function quiz_show_form( $content ) {
 			} else {	
 				// ansonsten freie Antwort anfordern von Antwort 1
 				if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
-				$ansmixed .= __('answer mask','WPdoodlez'). '<span style="border-radius:3px;background-color:#eee;margin:8px 5px;font-weight:700;font-size:1.2em;padding:3px 0 3px 9px;letter-spacing:.5em;font-family:monospace">';
+				$ansmixed .= __('answer mask','WPdoodlez'). '<span style="background-color:#eee;margin:8px 5px;font-weight:700;font-size:1.2em;padding:3px 0 3px 9px;letter-spacing:.5em;font-family:monospace">';
 				$ansmixed .= preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span>' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 				if ( empty($_POST) ) {
 					if ($exact[0]!="exact") { $ansmixed .= __('not case sensitive','WPdoodlez'); } else { $ansmixed .= __('case sensitive','WPdoodlez'); }
@@ -1179,7 +1179,7 @@ function quiz_show_form( $content ) {
 				} else { $error = "";$showqform = ''; }
 			}
 			$accentcolor = get_theme_mod( 'link-color', '#888' );
-			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:block;padding:8px;border-radius:3px;cursor:pointer;background:'.$accentcolor.'}';
+			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:block;padding:8px;cursor:pointer;background:'.$accentcolor.'}';
 			$formstyle .= '.qiz input[type=radio] + label:hover{box-shadow:inset 0 0 100px 100px rgba(255,255,255,.15)} .qiz input[type=radio] + label a {color:#fff} ';
 			if ( empty($_POST) ) {
 				$formstyle .= '.qiz input[type=radio]:checked + label { background-image:none;background:'.$accentcolor.';border:2px solid #000} .qiz input[type=radio]:checked + label a {color:#fff}';
@@ -1245,7 +1245,7 @@ function quiz_show_form( $content ) {
 				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></div>'. $letztefrage;
 			} else {    // Zertifikat ausgeben
 				$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
-				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'/quizkatbilder/lightbulb-1000-250.jpg" style="width:100%;border-radius:3px"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
+				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'/quizkatbilder/lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
 				$theForm .= '<br><br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
 				$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
 				if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
@@ -1568,9 +1568,9 @@ function play_hangman($rein) {
 		$lettersguessed = $lettersguessed . $letter;
 		$guesstemplate = matchLetters($word, $lettersguessed);
 		if (!strstr($guesstemplate, "_")) {
-			return '<div style="margin-top:15px;font-size:1.2em;color:white;background-color:#1bab1b;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Gewonnen - Gratulation. Sie haben <i>'.$word.'</i> erraten.</div>';
+			return '<div style="margin-top:15px;font-size:1.2em;color:white;background-color:#1bab1b;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;margin-bottom:15px">Gewonnen - Gratulation. Sie haben <i>'.$word.'</i> erraten.</div>';
 		} else if ($wrong >= 6) {
-			return '<div style="margin-top:15px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;border-radius:3px;margin-bottom:15px">Verloren - <i>'.$word.'</i> war die Lösung.</div>';
+			return '<div style="margin-top:15px;font-size:1.2em;color:white;background-color:tomato;display:inline-block; width:100%; padding:5px; border:1px solid #ddd;margin-bottom:15px">Verloren - <i>'.$word.'</i> war die Lösung.</div>';
 		} else {
 			return printPage($hang[$wrong], $guesstemplate, $which, $lettersguessed, $wrong);
 		}
@@ -1649,7 +1649,7 @@ function xwordquiz() {
 				} else {
 					$adminsolves = '';
 				}
-				$ansmixed = '&nbsp; <a '.$adminsolves.' style="border-radius:3px;background-color:#eee;font-weight:700;padding:0 3px 0 6px;letter-spacing:.5em;font-family:monospace" title="'.strlen(esc_html($row['word'])).__(' characters long. ','WPdoodlez').'">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html(strtoupper($row['word']))).'</a>';
+				$ansmixed = '&nbsp; <a '.$adminsolves.' style="background-color:#eee;font-weight:700;padding:0 3px 0 6px;letter-spacing:.5em;font-family:monospace" title="'.strlen(esc_html($row['word'])).__(' characters long. ','WPdoodlez').'">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html(strtoupper($row['word']))).'</a>';
 				$html .= '<div class="cwd-line">';
 				$html .= '<input autocomplete="offi" class="cwd-word" data-counter="' . $i . '" type="hidden" value="' . $row['word'] . '">';
 				$html .= '<div class="cwd-clue" data-counter="' . $i . '">' . $i . '. ' . $row['clue'] . ' ' .$ansmixed;
