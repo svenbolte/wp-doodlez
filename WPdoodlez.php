@@ -798,7 +798,7 @@ function random_quote_func( $atts ){
 		$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
 		$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
-		$listyle='text-align:center;padding:6px;display:block;margin-bottom:5px';
+		$listyle='text-align:center;padding:6px;display:block;margin-top:3px';
 		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
 		if (!empty($answersb) && strlen($answersb[0])>1 ) {
 			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
@@ -811,7 +811,7 @@ function random_quote_func( $atts ){
 			// ansonsten freie Antwort anfordern von Antwort 1
 			$antwortmaske .= $xlink.'"><span style="color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
 		}	
-		$message .= '<div>';
+		$message .= '<header class="entry-header" style="margin:0 -4px">';
 		// Wenn eine Quizkategorie da, Katbild anzeigen
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
@@ -821,12 +821,13 @@ function random_quote_func( $atts ){
 		}	
 		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 			$cbild = z_taxonomy_image_url($category[0]->term_id);
-			$message .= '<div class="post-thumbnail" style="display:inline"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
-			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:60px"></div>';	
+			$message .= '<div class="post-thumbnail"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
+			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:120px"></div>';	
 		}			
 		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
 		$message .= $quizkat;
-		$message .= '</div><h2 class="entry-title"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title();
+		$message .= '</div></header>';
+		$message .= '<h2 class="entry-title"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title();
 		$message .= '&nbsp; '.do_shortcode('[ipflag iso='.$hkiso[0].']').' '. $herkunftsland[0].'</a></h2>';
 		$message .= '<div class="entry-content">'.get_the_content().'</div>'.$antwortmaske;
       endwhile;
