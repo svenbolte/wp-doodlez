@@ -1156,7 +1156,7 @@ function quiz_show_form( $content ) {
 					} else {
 						$error = $ansmixed.'<blockquote class="blockbulb" style="font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
 						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-						$error .= $wikinachschlag.'</div>';
+						$error .= $wikinachschlag.'</blockquote>';
 						$showqform = 'display:none';
 					}
 				} else {

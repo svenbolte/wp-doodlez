@@ -20,7 +20,8 @@ get_header();
 <div id="content-area">
 <div id="primary" style="margin:1em auto;float:none">
 	<?php
-	while ( have_posts() ) : the_post(); // Start the loop.	?>
+	while ( have_posts() ) {
+		the_post(); // Start the loop.	?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<?php
 		echo '<header class="entry-header">';
@@ -36,11 +37,11 @@ get_header();
 		?>
 		<div class="entry-content">
 		<?php
-			// lieber Kreuzworträtsel spielen
-			if ( isset($_GET['crossword'])) {
-				if (1 == esc_html($_GET['crossword'])) echo xwordquiz();
-				if (2 == esc_html($_GET['crossword'])) echo xwordpuzzle();
-			} else the_content();
+		// lieber Kreuzworträtsel spielen
+		if ( isset($_GET['crossword'])) {
+			if (1 == esc_html($_GET['crossword'])) echo xwordquiz();
+			if (2 == esc_html($_GET['crossword'])) echo xwordpuzzle();
+		} else the_content();
 		?>
 		</div><!-- .entry-content -->
 		<footer class="entry-footer">
@@ -48,8 +49,9 @@ get_header();
 	  </article>
 	  <?php
 		if ( !isset($_GET['hangman'])) setPostViews(get_the_ID());
-	  // End the loop.
-	endwhile; ?>
+		penguin_post_navigation();
+	}		// End the loop.
+	?>
 </div><!-- #primary -->
 </div><!-- #content-area -->
 <?php get_footer(); ?>
