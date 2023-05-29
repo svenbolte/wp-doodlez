@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.100
-Stable tag: 9.1.1.100
+Version: 9.1.1.101
+Stable tag: 9.1.1.101
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -86,12 +86,12 @@ The answer conditions can be either 'exact match & case-sensitive', or can be ph
 
 Create a csv file with the following structure:
 	// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie
-name the file "public_histereignisse.csv" asnd upload it into your wordpress upload directory like: /wp-content/uploads
+name the file "public_hist_quizfrage.csv" asnd upload it into your wordpress upload directory like: /wp-content/uploads
 	Goto admin areas, open questions list and press the CSV Import Button on top
 	present questions WILL BE DELETED and csv content imported as custom post type question
 	You may assign a categories images category image if using the plugin. It will show the cpt category image
 	Sample images are in the plugin subfolder quizkatbilder
-If you name the file "public_histereignisse-update.csv"	 questions in file will be added
+If you name the file "public_hist_quizfrage_update.csv"	 questions in file will be added
 Use the shortcode or link to custom post type "question" do display questions
 
 The plugin also raises the following hooks:

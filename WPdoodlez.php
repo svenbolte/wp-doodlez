@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.100
-Stable tag: 9.1.1.100
+Version: 9.1.1.101
+Stable tag: 9.1.1.101
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -861,8 +861,8 @@ function importposts() {
 	set_time_limit(800);
 	$edat= array();
 	$upload_dir = wp_upload_dir();
-	$upload_basedir = $upload_dir['basedir'] . '/public_histereignisse.csv';
-	$uploaddiff_basedir = $upload_dir['basedir'] . '/public_histereignisse-update.csv';
+	$upload_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage.csv';
+	$uploaddiff_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage_update.csv';
 	$row = 1;
 	if ( file_exists( $upload_basedir ) ) {
 		// Alle Fragen löschen
