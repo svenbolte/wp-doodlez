@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.101
-Stable tag: 9.1.1.101
+Version: 9.1.1.102
+Stable tag: 9.1.1.102
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -118,6 +118,10 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+
+=== 9.1.1.102 ===
+WP 6.2.2 compatibility and PHP 8.2.x
+Added quizfragen Export function in admin area to export Quizfragen and import on another site (without using csv template)
 
 === 9.1.1.94 ===
 post_views_timestamp exception handeled

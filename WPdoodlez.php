@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.101
-Stable tag: 9.1.1.101
+Version: 9.1.1.102
+Stable tag: 9.1.1.102
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -727,6 +727,13 @@ function create_quiz_post() {
 		importposts();
 		echo '<script>window.location.href="'.get_home_url().'/wp-admin/edit.php?post_type=question"</script>';
 	}
+	// CSV Export starten	
+	if( isset($_REQUEST['quizzzcsvexport']) && ( $_REQUEST['quizzzcsvexport'] == true ) && isset( $_REQUEST['nonce'] ) ) {
+		$nonce  = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_SPECIAL_CHARS );
+		if ( ! wp_verify_nonce( $nonce, 'dnonce' ) ) wp_die('Invalid nonce..!!');
+		exportposts();
+		echo '<script>window.location.href="'.get_home_url().'/wp-admin/edit.php?post_type=question"</script>';
+	}
 }
 add_action( 'init', 'create_quiz_post' );
 
@@ -773,7 +780,6 @@ function random_quote_func( $atts ){
       'posts_per_page' => $attrs['items'],
 	  'showposts' => $attrs['items'],
     );
-	$my_query = null;
     $my_query = new WP_Query($args);
 	$accentcolor = get_theme_mod( 'link-color', '#888' );
     $message = '';
@@ -913,6 +919,56 @@ function importposts() {
     fclose($handle);
 	//	echo ($row-1) . ' Datensätze importiert';
 	}		
+}
+
+// Fragen exportieren als CSV
+function exportposts() {
+	global $wp;
+    $args=array(
+      'orderby'=> 'title',
+      'order'=> 'asc',
+      'post_type' => 'question',
+      'post_status' => 'publish',
+      'posts_per_page' => -1,
+    );
+	$query = new WP_Query($args);
+	if ($query->have_posts()): 
+		$filename = 'public_hist_quizfrage';
+		$output = fopen('php://output', 'w');
+		ob_clean();
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+		header('Content-Type: text/csv; charset=utf-8');
+		header("Content-Disposition: attachment; filename=\"" . $filename . ".csv\";" );
+		header("Content-Transfer-Encoding: binary");	
+		fputcsv( $output, array('id','datum','charakter','land','titel','seitjahr','bemerkungen','antwortb','antwortc','antwortd','zusatzinfo','quizkat','ISO'), ';');
+		while ($query->have_posts()): $query->the_post();
+			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+			$hkiso = get_post_custom_values('quizz_iso');
+			$answers = get_post_custom_values('quizz_answer');
+			$answersb = get_post_custom_values('quizz_answerb');
+			$answersc = get_post_custom_values('quizz_answerc');
+			$answersd = get_post_custom_values('quizz_answerd');
+			$zusatzinfo = get_post_custom_values('quizz_zusatzinfo');
+			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+			if ( $terms && !is_wp_error( $terms ) ) {
+				$category = $terms;
+			} else {
+				$category = get_the_category(); 
+			}	
+			$xid = get_the_ID();
+			$xdatum = get_the_date('d.m.Y');
+			$xjahr = get_the_date('Y');
+			$frage = get_the_content();
+			$titel = get_the_title();
+			$exportrow = $xid.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$hkiso[0];
+			fputs( $output, $exportrow . "\n" );
+		endwhile;
+		wp_reset_postdata();
+		exit;
+	endif;
 }
 
 
@@ -1407,10 +1463,13 @@ add_action( 'manage_posts_extra_tablenav', 'admin_order_list_top_bar_button', 20
 function admin_order_list_top_bar_button( $which ) {
     global $current_screen;
     if ('question' == $current_screen->post_type) {
-     $nonce = wp_create_nonce( 'dnonce' );
-     echo " <a title=\"place public_histereignisse.csv in upload folder to DELETE and replace all questions &#10;or place public_histereignisse-update.csv in upload folder\" href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button'>";
-        _e( 'Import from CSV', 'WPdoodlez' );
-        echo '</a> ';
+		$nonce = wp_create_nonce( 'dnonce' );
+		echo "&nbsp; <a title=\"place public_histereignisse.csv in upload folder to DELETE and replace all questions &#10;or place public_histereignisse-update.csv in upload folder\" href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button button-primary'>";
+		_e( 'Import from CSV', 'WPdoodlez' );
+		echo '</a> &nbsp; ';
+		echo " <a title=\"export questions as csv semicolon separated\" href='".$_SERVER['REQUEST_URI']."&quizzzcsvexport=true&nonce=".$nonce."' class='button'>";
+		_e( 'Export to CSV', 'WPdoodlez' );
+		echo '</a> ';
     }
 }
 
