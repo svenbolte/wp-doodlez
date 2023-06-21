@@ -958,12 +958,12 @@ function exportposts() {
 			} else {
 				$category = get_the_category(); 
 			}	
-			$xid = get_the_ID();
 			$xdatum = get_the_date('d.m.Y');
 			$xjahr = get_the_date('Y');
 			$frage = get_the_content();
 			$titel = get_the_title();
-			$exportrow = $xid.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$hkiso[0];
+			$fragenr = substr($titel, strpos($titel, " ") + 1);
+			$exportrow = $fragenr.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$hkiso[0];
 			fputs( $output, $exportrow . "\n" );
 		endwhile;
 		wp_reset_postdata();
