@@ -200,7 +200,7 @@ id;datum;charakter;land;titel;seitjahr;bemerkungen;antwortb;antwortc;antwortd;zu
 2817;29.12.2020;Quizfrage;Deutschland;Wie werden die Nachkommen einer Kreuzung aus Tigern und Löwen genannt?;2020;Liger;Töwe;Eledil;Krokofant;;Biologie;DE
 2818;30.12.2020;Quizfrage;Deutschland;Woraus besteht ein Diamant?;2020;Aus Kohlenstoff;Aus Wasserstoff;Aus Wasserstoffsuperoxid;Aus Basaltgestein;;Chemie;DE
 2819;31.12.2020;Quizfrage;Deutschland;Wer hat die Guillotine erfunden?;2020;Joseph-Ignace Guillotin;Joshua Guilette;Francois Guillotine;Jaques Robespierre;;Historische Personen;DE
-2896;18.11.2020;Quizfrage;Deutschland;Was ist die Lieblingsbeschäftigung von Bits?;;Bus fahren;LKW fahren;Auto fahren;Fahrrad fahren;Scherzfrage, gemeint ist der Datenbus, wo die Bits lang jagen;Kurioses;DE
+2896;18.11.2020;Quizfrage;Deutschland;Was ist die Lieblingsbeschäftigung von Bits?;2022;Bus fahren;LKW fahren;Auto fahren;Fahrrad fahren;Scherzfrage, gemeint ist der Datenbus, wo die Bits lang jagen;Kurioses;DE
 2939;02.01.2021;Quizfrage;Deutschland;Wer erfand: Den Druck mit beweglichen Lettern?;2020;Johannes Gutenberg;Max von Gutenberg;Theo von Guttenberg;Martin Luther;In Wordpress heisst ab Version 5 der Editor auch Gutenberg;Historische Personen;DE
 2940;03.01.2021;Quizfrage;Deutschland;Wer entdeckte: Das Diphtherie-Serum?;2020;Emil von Behring;Robert Koch;Marie Curie;Devon Miller;Emil Adolf Behring, ab 1901 von Behring war ein deutscher Mediziner, Immunologe, Serologe und Unternehmer.;Erfinder;DE
 2941;04.01.2021;Quizfrage;Deutschland;Wer entdeckte: Das Dynamit?;2020;Alfred Nobel;Max Dynamit;Karl Knall;Theodor Neu Trevo;Dynamit-Nobel hiess eine seiner Firmen lange Zeit;Erfinder;DE
@@ -1561,74 +1561,74 @@ id;datum;charakter;land;titel;seitjahr;bemerkungen;antwortb;antwortc;antwortd;zu
 4460;11.03.2023;Quizfrage;Schweiz;Wie lautet das Flughafenkürzel von: Zürich / Schweiz;2023;ZRH;VAR;SZG;TFN;Europa und Türkei;Geografie;CH
 4461;11.03.2023;Quizfrage;Bulgarien;Wie lautet das Flughafenkürzel von: Varna / Bulgarien;2023;VAR;ZTH;SMI;SKG;Europa und Türkei;Geografie;BG
 4462;11.03.2023;Quizfrage;Griechenland;Wie lautet das Flughafenkürzel von: Zakynthos / Griechenland;2023;ZTH;SZG;JTR;TLS;Europa und Türkei;Geografie;GR
-4463;11.03.2023;Quizfrage;Vereinigte Arabische Emirate;Wie lautet das Flughafenkürzel von: Abu Dhabi / Vereinigte Arabische Emirate;;AUH;BKK;CMB;DXB;Asien;Geografie;AE
-4464;11.03.2023;Quizfrage;Thailand;Wie lautet das Flughafenkürzel von: Bangkok / Thailand;;BKK;CMB;DEL;HAN;Asien;Geografie;TH
-4465;11.03.2023;Quizfrage;Sri Lanka;Wie lautet das Flughafenkürzel von: Colombo / Sri Lanka;;CMB;DEL;DXB;SGN;Asien;Geografie;LK
-4466;11.03.2023;Quizfrage;Indien;Wie lautet das Flughafenkürzel von: Delhi / Indien;;DEL;DXB;HAN;HKG;Asien;Geografie;IN
-4467;11.03.2023;Quizfrage;Vereinigte Arabische Emirate;Wie lautet das Flughafenkürzel von: Dubai / Verein. Arab. Emirate;;DXB;HAN;SGN;CGK;Asien;Geografie;AE
-4468;11.03.2023;Quizfrage;Vietnam;Wie lautet das Flughafenkürzel von: Hanoi / Vietnam;;HAN;SGN;HKG;URT;Asien;Geografie;VN
-4469;11.03.2023;Quizfrage;Vietnam;Wie lautet das Flughafenkürzel von: Ho Shi Min (Saigon) / Vietnam;;SGN;HKG;CGK;KUL;Asien;Geografie;VN
-4470;11.03.2023;Quizfrage;China;Wie lautet das Flughafenkürzel von: Hongkong / China;;HKG;CGK;URT;MLE;Asien;Geografie;CN
-4471;11.03.2023;Quizfrage;Indonesien;Wie lautet das Flughafenkürzel von: Jakarta / Indonesien;;CGK;URT;KUL;MNL;Asien;Geografie;ID
-4472;11.03.2023;Quizfrage;Thailand;Wie lautet das Flughafenkürzel von: Koh Samui / Thailand;;URT;KUL;MLE;PEK;Asien;Geografie;TH
-4473;11.03.2023;Quizfrage;Malaysia;Wie lautet das Flughafenkürzel von: Kuala Lumpur / Malaysia;;KUL;MLE;MNL;HKT;Asien;Geografie;MY
-4474;11.03.2023;Quizfrage;Malediven;Wie lautet das Flughafenkürzel von: Male / Malediven;;MLE;MNL;PEK;SEL;Asien;Geografie;MV
-4475;11.03.2023;Quizfrage;Philippinen;Wie lautet das Flughafenkürzel von: Manila / Philippinen;;MNL;PEK;HKT;SHA;Asien;Geografie;PH
-4476;11.03.2023;Quizfrage;China;Wie lautet das Flughafenkürzel von: Peking / China;;PEK;HKT;SEL;SHJ;Asien;Geografie;CN
-4477;11.03.2023;Quizfrage;Thailand;Wie lautet das Flughafenkürzel von: Phuket / Thailand;;HKT;SEL;SHA;SIN;Asien;Geografie;TH
-4478;11.03.2023;Quizfrage;Südkorea;Wie lautet das Flughafenkürzel von: Seoul / Südkorea;;SEL;SHA;SHJ;TLV;Asien;Geografie;ZZ
-4479;11.03.2023;Quizfrage;China;Wie lautet das Flughafenkürzel von: Shanghai / China;;SHA;SHJ;SIN;NRT;Asien;Geografie;CN
-4480;11.03.2023;Quizfrage;Vereinigte Arabische Emirate;Wie lautet das Flughafenkürzel von: Sharjah / Verein. Arab. Emirate;;SHJ;SIN;TLV;ACA;Asien;Geografie;AE
-4481;11.03.2023;Quizfrage;Singapur;Wie lautet das Flughafenkürzel von: Singapur /Singapur;;SIN;TLV;NRT;ANC;Asien;Geografie;SG
-4482;11.03.2023;Quizfrage;Israel;Wie lautet das Flughafenkürzel von: Tel Aviv / Israel;;TLV;NRT;ACA;ANU;Asien;Geografie;IL
-4483;11.03.2023;Quizfrage;Japan;Wie lautet das Flughafenkürzel von: Tokio - Narita / Japan;;NRT;ACA;ANC;BGI;Asien;Geografie;JP
-4484;11.03.2023;Quizfrage;Mexiko;Wie lautet das Flughafenkürzel von: Acapulco / Mexiko;;ACA;ANC;ANU;BOS;Amerika und Karibik;Geografie;MX
-4485;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Anchorage / Vereinigte Staaten von Amerika;;ANC;ANU;BGI;EZE;Amerika und Karibik;Geografie;US
-4486;11.03.2023;Quizfrage;Antigua;Wie lautet das Flughafenkürzel von: Antigua / Antigua;;ANU;BGI;BOS;YYC;Amerika und Karibik;Geografie;AG
-4487;11.03.2023;Quizfrage;Barbados;Wie lautet das Flughafenkürzel von: Barbados / Barbados;;BGI;BOS;EZE;CUN;Amerika und Karibik;Geografie;BB
-4488;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Boston / Vereinigte Staaten von Amerika;;BOS;EZE;YYC;CCC;Amerika und Karibik;Geografie;US
+4463;11.03.2023;Quizfrage;Vereinigte Arabische Emirate;Wie lautet das Flughafenkürzel von: Abu Dhabi / Vereinigte Arabische Emirate;2022;AUH;BKK;CMB;DXB;Asien;Geografie;AE
+4464;11.03.2023;Quizfrage;Thailand;Wie lautet das Flughafenkürzel von: Bangkok / Thailand;2022;BKK;CMB;DEL;HAN;Asien;Geografie;TH
+4465;11.03.2023;Quizfrage;Sri Lanka;Wie lautet das Flughafenkürzel von: Colombo / Sri Lanka;2022;CMB;DEL;DXB;SGN;Asien;Geografie;LK
+4466;11.03.2023;Quizfrage;Indien;Wie lautet das Flughafenkürzel von: Delhi / Indien;2022;DEL;DXB;HAN;HKG;Asien;Geografie;IN
+4467;11.03.2023;Quizfrage;Vereinigte Arabische Emirate;Wie lautet das Flughafenkürzel von: Dubai / Verein. Arab. Emirate;2022;DXB;HAN;SGN;CGK;Asien;Geografie;AE
+4468;11.03.2023;Quizfrage;Vietnam;Wie lautet das Flughafenkürzel von: Hanoi / Vietnam;2022;HAN;SGN;HKG;URT;Asien;Geografie;VN
+4469;11.03.2023;Quizfrage;Vietnam;Wie lautet das Flughafenkürzel von: Ho Shi Min (Saigon) / Vietnam;2022;SGN;HKG;CGK;KUL;Asien;Geografie;VN
+4470;11.03.2023;Quizfrage;China;Wie lautet das Flughafenkürzel von: Hongkong / China;2022;HKG;CGK;URT;MLE;Asien;Geografie;CN
+4471;11.03.2023;Quizfrage;Indonesien;Wie lautet das Flughafenkürzel von: Jakarta / Indonesien;2022;CGK;URT;KUL;MNL;Asien;Geografie;ID
+4472;11.03.2023;Quizfrage;Thailand;Wie lautet das Flughafenkürzel von: Koh Samui / Thailand;2022;URT;KUL;MLE;PEK;Asien;Geografie;TH
+4473;11.03.2023;Quizfrage;Malaysia;Wie lautet das Flughafenkürzel von: Kuala Lumpur / Malaysia;2022;KUL;MLE;MNL;HKT;Asien;Geografie;MY
+4474;11.03.2023;Quizfrage;Malediven;Wie lautet das Flughafenkürzel von: Male / Malediven;2022;MLE;MNL;PEK;SEL;Asien;Geografie;MV
+4475;11.03.2023;Quizfrage;Philippinen;Wie lautet das Flughafenkürzel von: Manila / Philippinen;2022;MNL;PEK;HKT;SHA;Asien;Geografie;PH
+4476;11.03.2023;Quizfrage;China;Wie lautet das Flughafenkürzel von: Peking / China;2022;PEK;HKT;SEL;SHJ;Asien;Geografie;CN
+4477;11.03.2023;Quizfrage;Thailand;Wie lautet das Flughafenkürzel von: Phuket / Thailand;2022;HKT;SEL;SHA;SIN;Asien;Geografie;TH
+4478;11.03.2023;Quizfrage;Südkorea;Wie lautet das Flughafenkürzel von: Seoul / Südkorea;2022;SEL;SHA;SHJ;TLV;Asien;Geografie;ZZ
+4479;11.03.2023;Quizfrage;China;Wie lautet das Flughafenkürzel von: Shanghai / China;2022;SHA;SHJ;SIN;NRT;Asien;Geografie;CN
+4480;11.03.2023;Quizfrage;Vereinigte Arabische Emirate;Wie lautet das Flughafenkürzel von: Sharjah / Verein. Arab. Emirate;2022;SHJ;SIN;TLV;ACA;Asien;Geografie;AE
+4481;11.03.2023;Quizfrage;Singapur;Wie lautet das Flughafenkürzel von: Singapur /Singapur;2022;SIN;TLV;NRT;ANC;Asien;Geografie;SG
+4482;11.03.2023;Quizfrage;Israel;Wie lautet das Flughafenkürzel von: Tel Aviv / Israel;2022;TLV;NRT;ACA;ANU;Asien;Geografie;IL
+4483;11.03.2023;Quizfrage;Japan;Wie lautet das Flughafenkürzel von: Tokio - Narita / Japan;2022;NRT;ACA;ANC;BGI;Asien;Geografie;JP
+4484;11.03.2023;Quizfrage;Mexiko;Wie lautet das Flughafenkürzel von: Acapulco / Mexiko;2022;ACA;ANC;ANU;BOS;Amerika und Karibik;Geografie;MX
+4485;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Anchorage / Vereinigte Staaten von Amerika;2022;ANC;ANU;BGI;EZE;Amerika und Karibik;Geografie;US
+4486;11.03.2023;Quizfrage;Antigua;Wie lautet das Flughafenkürzel von: Antigua / Antigua;2022;ANU;BGI;BOS;YYC;Amerika und Karibik;Geografie;AG
+4487;11.03.2023;Quizfrage;Barbados;Wie lautet das Flughafenkürzel von: Barbados / Barbados;2022;BGI;BOS;EZE;CUN;Amerika und Karibik;Geografie;BB
+4488;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Boston / Vereinigte Staaten von Amerika;2022;BOS;EZE;YYC;CCC;Amerika und Karibik;Geografie;US
 4489;11.03.2023;Quizfrage;Argentinien;Wie lautet das Flughafenkürzel von: Buenos Aires / Argentinien;2020;EZE;YYC;CUN;ORD;Amerika und Karibik - Flughafen Buenos Aires steht für: Flughafen Buenos Aires-Ezeiza;Geografie;AR
-4490;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Calgary / Kanada;;YYC;CUN;CCC;DTW;Amerika und Karibik;Geografie;CA
-4491;11.03.2023;Quizfrage;Mexiko;Wie lautet das Flughafenkürzel von: Cancun / Mexiko;;CUN;CCC;ORD;FAI;Amerika und Karibik;Geografie;MX
-4492;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Cayo Coco / Kuba;;CCC;ORD;DTW;FLL;Amerika und Karibik;Geografie;CU
-4493;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Chicago / Vereinigte Staaten von Amerika;;ORD;DTW;FAI;RSW;Amerika und Karibik;Geografie;US
-4494;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Detroit / Vereinigte Staaten von Amerika;;DTW;FAI;FLL;GND;Amerika und Karibik;Geografie;US
-4495;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Fairbanks / Vereinigte Staaten von Amerika;;FAI;FLL;RSW;YHZ;Amerika und Karibik;Geografie;US
-4496;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Fort Lauderdale / Vereinigte Staaten von Amerika;;FLL;RSW;GND;HAV;Amerika und Karibik;Geografie;US
-4497;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Fort Myers / Vereinigte Staaten von Amerika;;RSW;GND;YHZ;HOG;Amerika und Karibik;Geografie;US
-4498;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Grenada;;GND;YHZ;HAV;LAS;Amerika und Karibik;Geografie;US
-4499;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Halifax / Kanada;;YHZ;HAV;HOG;LAX;Amerika und Karibik;Geografie;CA
-4500;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Havanna / Kuba;;HAV;HOG;LAS;MEX;Amerika und Karibik;Geografie;CU
-4501;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Holguin / Kuba;;HOG;LAS;LAX;MIA;Amerika und Karibik;Geografie;CU
-4502;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Las Vegas / Vereinigte Staaten von Amerika;;LAS;LAX;MEX;YQM;Amerika und Karibik;Geografie;US
-4503;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Los Angeles / Vereinigte Staaten von Amerika;;LAX;MEX;MIA;MBJ;Amerika und Karibik;Geografie;US
-4504;11.03.2023;Quizfrage;Mexiko;Wie lautet das Flughafenkürzel von: Mexico City / Mexiko;;MEX;MIA;YQM;NYC;Amerika und Karibik;Geografie;MX
-4505;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Miami / Vereinigte Staaten von Amerika;;MIA;YQM;MBJ;MCO;Amerika und Karibik;Geografie;US
-4506;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Moncton / Kanada;;YQM;MBJ;NYC;PMV;Amerika und Karibik;Geografie;CA
+4490;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Calgary / Kanada;2022;YYC;CUN;CCC;DTW;Amerika und Karibik;Geografie;CA
+4491;11.03.2023;Quizfrage;Mexiko;Wie lautet das Flughafenkürzel von: Cancun / Mexiko;2022;CUN;CCC;ORD;FAI;Amerika und Karibik;Geografie;MX
+4492;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Cayo Coco / Kuba;2022;CCC;ORD;DTW;FLL;Amerika und Karibik;Geografie;CU
+4493;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Chicago / Vereinigte Staaten von Amerika;2022;ORD;DTW;FAI;RSW;Amerika und Karibik;Geografie;US
+4494;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Detroit / Vereinigte Staaten von Amerika;2022;DTW;FAI;FLL;GND;Amerika und Karibik;Geografie;US
+4495;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Fairbanks / Vereinigte Staaten von Amerika;2022;FAI;FLL;RSW;YHZ;Amerika und Karibik;Geografie;US
+4496;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Fort Lauderdale / Vereinigte Staaten von Amerika;2022;FLL;RSW;GND;HAV;Amerika und Karibik;Geografie;US
+4497;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Fort Myers / Vereinigte Staaten von Amerika;2022;RSW;GND;YHZ;HOG;Amerika und Karibik;Geografie;US
+4498;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Grenada;2022;GND;YHZ;HAV;LAS;Amerika und Karibik;Geografie;US
+4499;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Halifax / Kanada;2022;YHZ;HAV;HOG;LAX;Amerika und Karibik;Geografie;CA
+4500;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Havanna / Kuba;2022;HAV;HOG;LAS;MEX;Amerika und Karibik;Geografie;CU
+4501;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Holguin / Kuba;2022;HOG;LAS;LAX;MIA;Amerika und Karibik;Geografie;CU
+4502;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Las Vegas / Vereinigte Staaten von Amerika;2022;LAS;LAX;MEX;YQM;Amerika und Karibik;Geografie;US
+4503;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Los Angeles / Vereinigte Staaten von Amerika;2022;LAX;MEX;MIA;MBJ;Amerika und Karibik;Geografie;US
+4504;11.03.2023;Quizfrage;Mexiko;Wie lautet das Flughafenkürzel von: Mexico City / Mexiko;2022;MEX;MIA;YQM;NYC;Amerika und Karibik;Geografie;MX
+4505;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Miami / Vereinigte Staaten von Amerika;2022;MIA;YQM;MBJ;MCO;Amerika und Karibik;Geografie;US
+4506;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Moncton / Kanada;2022;YQM;MBJ;NYC;PMV;Amerika und Karibik;Geografie;CA
 4507;11.03.2023;Quizfrage;Jamaika;Wie lautet das Flughafenkürzel von: Montego Bay / Jamaica;2020;MBJ;NYC;MCO;POP;Amerika und Karibik;Geografie;JM
-4508;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: New York / Vereinigte Staaten von Amerika;;NYC;MCO;PMV;PUJ;Amerika und Karibik;Geografie;US
-4509;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Orlando / Vereinigte Staaten von Amerika;;MCO;PMV;POP;RNO;Amerika und Karibik;Geografie;US
-4510;11.03.2023;Quizfrage;Venezuela;Wie lautet das Flughafenkürzel von: Porlamar / Venezuela;;PMV;POP;PUJ;GIG;Amerika und Karibik;Geografie;VE
-4511;11.03.2023;Quizfrage;Dominikanische Republik;Wie lautet das Flughafenkürzel von: Puerto Plata / Dominikanische Rep.;;POP;PUJ;RNO;UVF;Amerika und Karibik;Geografie;DO
-4512;11.03.2023;Quizfrage;Dominikanische Republik;Wie lautet das Flughafenkürzel von: Punta Cana / Dominikanische Rep.;;PUJ;RNO;GIG;SFO;Amerika und Karibik;Geografie;DO
-4513;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Reno / Vereinigte Staaten von Amerika;;RNO;GIG;UVF;SJU;Amerika und Karibik;Geografie;US
-4514;11.03.2023;Quizfrage;Brasilien;Wie lautet das Flughafenkürzel von: Rio de Janeiro / Brasilien;;GIG;UVF;SFO;SCL;Amerika und Karibik;Geografie;BR
-4515;11.03.2023;Quizfrage;Karibik;Wie lautet das Flughafenkürzel von: Saint Lucia / Karibik;;UVF;SFO;SJU;GRU;Amerika und Karibik;Geografie;ZZ
-4516;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: San Francisco / Vereinigte Staaten von Amerika;;SFO;SJU;SCL;SEA;Amerika und Karibik;Geografie;US
-4517;11.03.2023;Quizfrage;Puerto Rico;Wie lautet das Flughafenkürzel von: San Juan / Puerto Rico;;SJU;SCL;GRU;TAB;Amerika und Karibik;Geografie;PR
-4518;11.03.2023;Quizfrage;Chile;Wie lautet das Flughafenkürzel von: Santiago de Chile / Chile;;SCL;GRU;SEA;YYZ;Amerika und Karibik;Geografie;CL
-4519;11.03.2023;Quizfrage;Brasilien;Wie lautet das Flughafenkürzel von: Sao Paulo / Brasilien;;GRU;SEA;TAB;YVR;Amerika und Karibik;Geografie;BR
-4520;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Seattle / Vereinigte Staaten von Amerika;;SEA;TAB;YYZ;VRA;Amerika und Karibik;Geografie;US
-4521;11.03.2023;Quizfrage;Karibik;Wie lautet das Flughafenkürzel von: Tobago / Karibik;;TAB;YYZ;YVR;IAD;Amerika und Karibik;Geografie;ZZ
-4522;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Toronto / Kanada;;YYZ;YVR;VRA;YXY;Amerika und Karibik;Geografie;CA
-4523;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Vancouver / Kanada;;YVR;VRA;IAD;ANC;Amerika und Karibik;Geografie;CA
-4524;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Varadero / Kuba;;VRA;IAD;YXY;ANU;Amerika und Karibik;Geografie;CU
-4525;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Washington / Vereinigte Staaten von Amerika;;IAD;HAV;NYC;BGI;Amerika und Karibik;Geografie;US
+4508;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: New York / Vereinigte Staaten von Amerika;2022;NYC;MCO;PMV;PUJ;Amerika und Karibik;Geografie;US
+4509;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Orlando / Vereinigte Staaten von Amerika;2022;MCO;PMV;POP;RNO;Amerika und Karibik;Geografie;US
+4510;11.03.2023;Quizfrage;Venezuela;Wie lautet das Flughafenkürzel von: Porlamar / Venezuela;2022;PMV;POP;PUJ;GIG;Amerika und Karibik;Geografie;VE
+4511;11.03.2023;Quizfrage;Dominikanische Republik;Wie lautet das Flughafenkürzel von: Puerto Plata / Dominikanische Rep.;2022;POP;PUJ;RNO;UVF;Amerika und Karibik;Geografie;DO
+4512;11.03.2023;Quizfrage;Dominikanische Republik;Wie lautet das Flughafenkürzel von: Punta Cana / Dominikanische Rep.;2022;PUJ;RNO;GIG;SFO;Amerika und Karibik;Geografie;DO
+4513;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Reno / Vereinigte Staaten von Amerika;2022;RNO;GIG;UVF;SJU;Amerika und Karibik;Geografie;US
+4514;11.03.2023;Quizfrage;Brasilien;Wie lautet das Flughafenkürzel von: Rio de Janeiro / Brasilien;2022;GIG;UVF;SFO;SCL;Amerika und Karibik;Geografie;BR
+4515;11.03.2023;Quizfrage;Saint Lucia;Wie lautet das Flughafenkürzel von: Saint Lucia / Karibik;2022;UVF;SFO;SJU;GRU;Amerika und Karibik;Geografie;LC
+4516;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: San Francisco / Vereinigte Staaten von Amerika;2022;SFO;SJU;SCL;SEA;Amerika und Karibik;Geografie;US
+4517;11.03.2023;Quizfrage;Puerto Rico;Wie lautet das Flughafenkürzel von: San Juan / Puerto Rico;2022;SJU;SCL;GRU;TAB;Amerika und Karibik;Geografie;PR
+4518;11.03.2023;Quizfrage;Chile;Wie lautet das Flughafenkürzel von: Santiago de Chile / Chile;2022;SCL;GRU;SEA;YYZ;Amerika und Karibik;Geografie;CL
+4519;11.03.2023;Quizfrage;Brasilien;Wie lautet das Flughafenkürzel von: Sao Paulo / Brasilien;2022;GRU;SEA;TAB;YVR;Amerika und Karibik;Geografie;BR
+4520;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Seattle / Vereinigte Staaten von Amerika;2022;SEA;TAB;YYZ;VRA;Amerika und Karibik;Geografie;US
+4521;11.03.2023;Quizfrage;Tobago;Wie lautet das Flughafenkürzel von: Tobago / Karibik;2022;TAB;YYZ;YVR;IAD;Amerika und Karibik;Geografie;TT
+4522;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Toronto / Kanada;2022;YYZ;YVR;VRA;YXY;Amerika und Karibik;Geografie;CA
+4523;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Vancouver / Kanada;2022;YVR;VRA;IAD;ANC;Amerika und Karibik;Geografie;CA
+4524;11.03.2023;Quizfrage;Kuba;Wie lautet das Flughafenkürzel von: Varadero / Kuba;2022;VRA;IAD;YXY;ANU;Amerika und Karibik;Geografie;CU
+4525;11.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Wie lautet das Flughafenkürzel von: Washington / Vereinigte Staaten von Amerika;2022;IAD;HAV;NYC;BGI;Amerika und Karibik;Geografie;US
 4526;11.03.2023;Quizfrage;Kanada;Wie lautet das Flughafenkürzel von: Whitehorse / Kanada;2020;YXY;HOG;MCO;BOS;Amerika und Karibik;Geografie;CA
-4527;11.03.2023;Quizfrage;Neuseeland;Wie lautet das Flughafenkürzel von: Aukland / Neuseeland;;AKL;MEL;PER;POP;Ozeanien;Geografie;NZ
-4528;11.03.2023;Quizfrage;Australien;Wie lautet das Flughafenkürzel von: Melbourne / Australien;;MEL;PER;SYD;PUJ;Ozeanien;Geografie;AU
-4529;11.03.2023;Quizfrage;Australien;Wie lautet das Flughafenkürzel von: Perth / Australien;;PER;SYD;YQM;RNO;Ozeanien;Geografie;AU
-4530;11.03.2023;Quizfrage;Australien;Wie lautet das Flughafenkürzel von: Sydney / Australien;;SYD;POP;MBJ;GIG;Ozeanien;Geografie;AU
+4527;11.03.2023;Quizfrage;Neuseeland;Wie lautet das Flughafenkürzel von: Aukland / Neuseeland;2022;AKL;MEL;PER;POP;Ozeanien;Geografie;NZ
+4528;11.03.2023;Quizfrage;Australien;Wie lautet das Flughafenkürzel von: Melbourne / Australien;2022;MEL;PER;SYD;PUJ;Ozeanien;Geografie;AU
+4529;11.03.2023;Quizfrage;Australien;Wie lautet das Flughafenkürzel von: Perth / Australien;2022;PER;SYD;YQM;RNO;Ozeanien;Geografie;AU
+4530;11.03.2023;Quizfrage;Australien;Wie lautet das Flughafenkürzel von: Sydney / Australien;2022;SYD;POP;MBJ;GIG;Ozeanien;Geografie;AU
 4531;13.03.2023;Quizfrage;Vereinigte Staaten von Amerika;Was bekommt man unter der Rufnummer 844-NEED-SCI?;2023;Antworten auf wissenschaftliche Fragen von Filmemachern;Tornadowarnungen;anionisches Tensid für Flüssigseifen;eine freiwillige Ehrenamtstätigkeit;producers of the Marvel comic book film Thor wanted to incorporate a scientific element into the story. They dialed 1-844-NEED-SCI and got a direct line to the Science Entertainment Exchange;Kurioses;US
 4532;20.03.2023;Quizfrage;Sierra Leone;Welcher genannte Begriff umschließt buchstäblich einen anderen afrikanischen Staat?;2023;Somalia;Senegal;Sambia;Simbabwe;Mali kommt buchstäblich im Wort So MALI A vor und wird onv SO und A umschlossen;Geografie;SL
 4535;24.03.2023;Quizfrage;Deutschland;Vervollständigen Sie das Wort mit nur zwei weiteren Buchstaben Br _ _ _ _ ss _ lt _ _;2023;N und E;A und R;I und F;O und U;Auf die Antwort Brennesseltee kommen nur etwa 1% der Befragten;Allgemeinwissen;DE
@@ -1655,3 +1655,11 @@ id;datum;charakter;land;titel;seitjahr;bemerkungen;antwortb;antwortc;antwortd;zu
 4573;29.05.2023;Quizfrage;Deutschland;Wo begegnet uns der -Schuppungsgrad- im Einzelhandel?;2023;bei den Zeitschriften;an der Fischtheke;im Ktz-Einzelhandel beim Faltdach ;im Baumarkt;Um die Regalfläche im Handel optimal auszunutzen, werden die Zeitschriften überlappend nebeneinander gelegt. Der Schuppungsgrad ist die rechnerische Maßgröße der Präsentationsfläche je Objekt und gibt an, wie viel von jedem Titelblatt sichtbar ist. ;Allgemeinwissen;DE
 4574;29.05.2023;Quizfrage;Deutschland;Warum stehen die wichtigen Überschriften in der Yellow Press immer im linken Viertel der Seite?;2023;wegen der Schuppung;weil rechts die Bilder sind;weil wir von links nach rechts schreiben;da im rechten Bereich Werbeflächen sind;Zeitschriften überlappen im Regal. Der Schuppungsgrad gibt an, wie viel von jedem Titelblatt sichtbar ist. Damit die Zeitschrift gekauft wird, müssen die Eyecatcher links stehen, damit man sie sieht;Allgemeinwissen;DE
 4575;29.05.2023;Quizfrage;Europäische Union;Welcher See ist nach einer ca. 4.000 Einwohner Gemeinde benannt?;2023;Gardasee nach Garda;Wolfgangsee nach Wolfgang;Bodensee nach Boden;Alfsee nach Alf;Alfsee nach Alfhausen, Bodensee nach Bodman, Wolfgangsee nach dem Heiligen Wolfgang, der Gardasee nach der Gemeinde Garda bei Verona;Geografie;EU
+4576;29.05.2023;Quizfrage;Deutschland;In welchem Land liegen Kilimandscharo und Serengeti;2023;Tansania;Kenia;Namibia;Ruanda; ;Geografie;DE
+4577;29.05.2023;Quizfrage;Deutschland;In welchem Land liegt der Gipfel des Montblanc ;2023;Frankreich;Italien;Schweiz;Andorra; ;Geografie;DE
+4578;10.06.2023;Quizfrage;Deutschland;Ein Apfel und eine Birne kosten zusammen 1.10EUR. Wieviel kostet die Birne, wenn der Apfel 1 EUR mehr kostet?;2023;5 Cent;10 Cent;2.5 Cent;4 Cent;Ein Euro MEHR kostet der Apfel nur, wenn die Birne 5ct kostet, nämlich 1.05 EUR;Mathematik;DE
+4579;10.06.2023;Quizfrage;Deutschland;10 MA bauen ein Auto in 10 Minuten, wie lange brauchen 100 MA für 100 Autos?;2023;10 Minuten;100 Minuten;50 Minuten;25 Minuten;natürlich auch 10 Minuten. sind ja 10 mal soviele MA und Autos.;Mathematik;DE
+4580;10.06.2023;Quizfrage;Deutschland;Seerosen auf einem See verdoppeln sich jeden Tag. Nach 48 Tg ist der See voll. Wie lange braucht es bis der halbe See voll ist?;2023;47 Tage;24 Tage;12 Tage;14 Tage;rückwärts gerechnet halbiert sich die Zahl auch täglich. Also am 47.Tag ist die Hälfte auf dem See;Mathematik;DE
+4581;13.06.2023;Quizfrage;Italien;Konvolent bedeutet nach Wortherkunft;2023;zusammenrollen;zusammentragen;zusammenfliegen;zusammengehen;lateinisch - kommt von volvere = drehen und con für mit/zusammen;Literatur;IT
+4582;13.06.2023;Quizfrage;Australien;Welche Inselgruppe liegt in allen 4 Hemisphären (auf Äquator und Datumsgrenze);2023;Kiribati;Tonga;West Samoa;Fidschi;spricht sich Kiribas aus, ist seit 1979 unabhängig von GB und gezahlt wird mit AUD und Kiribati$;Geografie;AU
+4583;17.06.2023;Quizfrage;Großbritannien (UK);Wo kommt der Songname -Seven Nations Army- her?;2023;Jack White hatte das statt Salvation Army als Kind gehört;die Nato hatte zu dem Zeitpunkt sieben Mitglieder;die Armee, die den G7-Gipfel bewacht heißt so;so heißt die Armee der Konföderierten in Star Wars;Als der Produzent und Songwriter Jack white als Kind Salvation Army gehört hat, hat er immer SevenNations Army verstanden. Für White Stripes schrieb er diesen markanten Song.;Musik;GB

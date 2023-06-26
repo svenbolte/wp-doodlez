@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.102
-Stable tag: 9.1.1.102
+Version: 9.1.1.111
+Stable tag: 9.1.1.111
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -716,7 +716,7 @@ function create_quiz_post() {
 		'can_export'          => true,
 		'rewrite'             => true,
 		'capability_type'     => 'post',
-		'supports'            => array(	'title', 'editor', 'thumbnail', 'comments' )
+		'supports'            => array(	'title', 'editor', 'thumbnail' )
 	);
 	register_post_type( 'Question', $args );
 
@@ -1363,23 +1363,280 @@ function quizz_inner_custom_box( $post ) {
 	$valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
 	$valued = get_post_meta( $post->ID, 'quizz_answerd', true );
 	$zusatzinfo = get_post_meta( $post->ID, 'quizz_zusatzinfo', true );
-	echo '<label for="quizz_herkunftsland"><b>' . _e( "origin country", 'WPdoodlez' ) . ' </b></label> ';
-	echo ' <input type="text" id="quizz_herkunftsland" name="quizz_herkunftsland" value="' . esc_attr( $herkunftsland ) . '" size="45"> &nbsp; ';
-	echo '<label for="quizz_iso"><b>' . _e( "origin ISO", 'WPdoodlez' ) . ' </b></label> ';
-	echo ' <input type="text" id="quizz_iso" name="quizz_iso" value="' . esc_attr( $hkiso ) . '" size="3"><br>';
-	echo '<label for="quizz_answer">' . _e( "correct answer", 'WPdoodlez' ) . ' <strong>A</strong> </label> ';
-	echo ' <input type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
+	
+	echo '<style>label{width:120px;display:inline-block}</style>';
+	echo '<p><label for="quizz_herkunftsland"><strong>' . __( 'origin country', 'WPdoodlez' ) . '</strong></label>';
+	echo '<input type="text" id="quizz_herkunftsland" name="quizz_herkunftsland" value="' . esc_attr( $herkunftsland ) . '" size="40"> ';
+	echo '<label for="quizz_iso">' . __( "origin ISO", 'WPdoodlez' ) . '</label>';
+	echo '<input type="text" id="quizz_iso" name="quizz_iso" value="' . esc_attr( $hkiso ) . '" size="2">';
+	// Länder Selectbox und Code
+	  if (empty ($countries)) $countries = array (
+		'AF' => 'Afghanistan',
+		'AL' => 'Albanien',
+		'DZ' => 'Algerien',
+		'AS' => 'Amerikanisch Samoa',
+		'AD' => 'Andorra',
+		'AO' => 'Angola',
+		'AI' => 'Anguilla',
+		'AQ' => 'Antarktis',
+		'AG' => 'Antigua und Barbuda',
+		'AR' => 'Argentinien',
+		'AM' => 'Armenien',
+		'AW' => 'Aruba',
+		'AT' => 'Österreich',
+		'AU' => 'Australien',
+		'AZ' => 'Aserbaidschan',
+		'BS' => 'Bahamas',
+		'BH' => 'Bahrain',
+		'BD' => 'Bangladesh',
+		'BB' => 'Barbados',
+		'BY' => 'Weißrussland',
+		'BE' => 'Belgien',
+		'BZ' => 'Belize',
+		'BJ' => 'Benin',
+		'BM' => 'Bermuda',
+		'BT' => 'Bhutan',
+		'BO' => 'Bolivien',
+		'BA' => 'Bosnien Herzegowina',
+		'BW' => 'Botswana',
+		'BV' => 'Bouvet Island',
+		'BR' => 'Brasilien',
+		'IO' => 'Britisch-Indischer Ozean',
+		'BN' => 'Brunei Darussalam',
+		'BG' => 'Bulgarien',
+		'BF' => 'Burkina Faso',
+		'BI' => 'Burundi',
+		'KH' => 'Kambodscha',
+		'CM' => 'Kamerun',
+		'CA' => 'Kanada',
+		'CV' => 'Kap Verde',
+		'KY' => 'Cayman Inseln',
+		'CF' => 'Zentralafrikanische Republik',
+		'TD' => 'Tschad',
+		'CL' => 'Chile',
+		'CN' => 'China',
+		'CC' => 'Christmas Inseln',
+		'CO' => 'Kokosinseln',
+		'CO' => 'Kolumbien',
+		'KM' => 'Comoros',
+		'CG' => 'Kongo',
+		'CD' => 'Demokratische Republik Kongo',
+		'CK' => 'Cook Inseln',
+		'CR' => 'Costa Rica',
+		'CI' => 'Elfenbeinküste',
+		'HR' => 'Kroatien',
+		'CU' => 'Kuba',
+		'CZ' => 'Tschechien',
+		'CS' => 'Tschechoslowakei (ehemals)',
+		'DK' => 'Dänemark',
+		'DJ' => 'Djibouti',
+		'DM' => 'Dominica',
+		'DO' => 'Dominikanische Republik',
+		'TP' => 'Osttimor',
+		'EC' => 'Ecuador',
+		'EG' => 'Ägypten',
+		'SV' => 'El Salvador',
+		'GQ' => 'Äquatorial Guinea',
+		'ER' => 'Eritrea',
+		'EE' => 'Estland',
+		'ET' => 'Äthiopien',
+		'EU' => 'Europäische Union',
+		'FK' => 'Falkland Inseln',
+		'FO' => 'Faroe Inseln',
+		'FJ' => 'Fiji',
+		'FI' => 'Finland',
+		'FR' => 'Frankreich',
+		'FX' => 'Frankreich (nur in Europa)',
+		'GF' => 'Französisch Guiana',
+		'PF' => 'Französisch Polynesien',
+		'GA' => 'Gabon',
+		'GM' => 'Gambia',
+		'GE' => 'Georgien',
+		'DE' => 'Deutschland',
+		'DD' => 'DDR (ehemals)',
+		'GH' => 'Ghana',
+		'GI' => 'Gibraltar',
+		'GR' => 'Griechenland',
+		'GS' => 'South Georgia und South Sandwich Inseln',
+		'GL' => 'Grönland',
+		'GD' => 'Grenada',
+		'GP' => 'Guadeloupe',
+		'GU' => 'Guam',
+		'GT' => 'Guatemala',
+		'GN' => 'Guinea',
+		'GY' => 'Guinea Bissau',
+		'GY' => 'Guyana',
+		'HT' => 'Haiti',
+		'VA' => 'Vatikan',
+		'HK' => 'Hong Kong',
+		'HM' => 'Heard und McDonald Inseln',
+		'HN' => 'Honduras',
+		'HU' => 'Ungarn',
+		'IS' => 'Island',
+		'IN' => 'Indien',
+		'ID' => 'Indonesien',
+		'IR' => 'Iran',
+		'IQ' => 'Irak',
+		'IE' => 'Irland',
+		'IL' => 'Israel',
+		'IT' => 'Italien',
+		'JM' => 'Jamaika',
+		'JP' => 'Japan',
+		'JO' => 'Jordanien',
+		'KZ' => 'Kasachstan',
+		'KE' => 'Kenia',
+		'KI' => 'Kiribati',
+		'KW' => 'Kuwait',
+		'KG' => 'Kirgistan',
+		'LA' => 'Laos',
+		'LV' => 'Lettland',
+		'LB' => 'Libanon',
+		'LC' => 'Saint Lucia',
+		'LS' => 'Lesotho',
+		'LI' => 'Liechtenstein',
+		'LT' => 'Litauen',
+		'LU' => 'Luxemburg',
+		'MP' => 'Marianen',
+		'MQ' => 'Martinique',
+		'ME' => 'Montenegro',
+		'MO' => 'Macau',
+		'MK' => 'Mazedonien',
+		'NM' => 'Nord-Mazedonien',
+		'MG' => 'Madagaskar',
+		'MW' => 'Malawi',
+		'MY' => 'Malaysia',
+		'MV' => 'Malediven',
+		'MH' => 'Marshall Inseln',
+		'ML' => 'Mali',
+		'MT' => 'Malta',
+		'MR' => 'Mauretanien',
+		'MU' => 'Mauritius',
+		'YT' => 'Mayotte',
+		'MX' => 'Mexiko',
+		'FM' => 'Mikronesien',
+		'MD' => 'Moldavien',
+		'MC' => 'Monaco',
+		'MN' => 'Mongolei',
+		'MS' => 'Montserrat',
+		'MA' => 'Marokko',
+		'MZ' => 'Mosambik',
+		'MM' => 'Myanmar',
+		'NA' => 'Namibia',
+		'NR' => 'Nauru',
+		'NP' => 'Nepal',
+		'NL' => 'Niederlande',
+		'NZ' => 'Neuseeland',
+		'NC' => 'Neu Kaledonien',
+		'NI' => 'Nicaragua',
+		'NE' => 'Niger',
+		'NG' => 'Nigeria',
+		'NU' => 'Niue',
+		'NF' => 'Norfolk Inseln',
+		'KP' => 'Nord Korea',
+		'NO' => 'Norwegen',
+		'OM' => 'Oman',
+		'PK' => 'Pakistan',
+		'PW' => 'Palau',
+		'PA' => 'Panama',
+		'PG' => 'Papua Neu Guinea',
+		'PY' => 'Paraguay',
+		'PE' => 'Peru',
+		'PH' => 'Philippinen',
+		'PL' => 'Polen',
+		'PM' => 'St. Pierre und Miquelon',
+		'PN' => 'Pitcairn',
+		'PT' => 'Portugal',
+		'PR' => 'Puerto Rico',
+		'RO' => 'Rumänien',
+		'RU' => 'Russland',
+		'RW' => 'Ruanda',
+		'QA' => 'Qatar',
+		'RE' => 'Reunion',
+		'RS' => 'Serbien',
+		'WS' => 'Samoa',
+		'SH' => 'Saint Helena Ascension und Tristan da Cunha',
+		'SM' => 'San Marino',
+		'SA' => 'Saudi-Arabien',
+		'SN' => 'Senegal',
+		'SC' => 'Seychellen',
+		'SJ' => 'Svalbard und Jan Mayen Inseln',
+		'SL' => 'Sierra Leone',
+		'SS' => 'Süd-Sudan',
+		'SU' => 'Sowiet-Union (obsolet)',
+		'ST' => 'Sao Tome and Principe',
+		'SG' => 'Singapur',
+		'SK' => 'Slowakei',
+		'SI' => 'Slowenien',
+		'SB' => 'Solomon Inseln',
+		'SO' => 'Somalia',
+		'KN' => 'St. Kitts Nevis Anguilla',
+		'ZA' => 'Südafrika',
+		'KR' => 'Südkorea',
+		'ES' => 'Spanien',
+		'LK' => 'Sri Lanka',
+		'SD' => 'Sudan',
+		'SR' => 'Suriname',
+		'SZ' => 'Swasiland',
+		'SE' => 'Schweden',
+		'CH' => 'Schweiz',
+		'SY' => 'Syrien',
+		'TW' => 'Taiwan',
+		'TJ' => 'Tadschikistan',
+		'TL' => 'Osttimor',
+		'TZ' => 'Tansania',
+		'TH' => 'Thailand',
+		'TF' => 'French Southern Territories',
+		'TG' => 'Togo',
+		'TK' => 'Tokelau',
+		'TO' => 'Tonga',
+		'TT' => 'Trinidad und Tobago',
+		'TN' => 'Tunesien',
+		'TR' => 'Türkei',
+		'TM' => 'Turkmenistan',
+		'TV' => 'Tuvalu',
+		'UG' => 'Uganda',
+		'UK' => 'Großbritannien (UK)',
+		'UA' => 'Ukraine',
+		'AE' => 'Vereinigte Arabische Emirate',
+		'UN' => 'Vereinte Nationen',
+		'GB' => 'Vereinigtes Königreich',
+		'US' => 'Vereinigte Staaten von Amerika',
+		'UM' => 'US - kleinere Inseln außerhalb',
+		'UY' => 'Uruguay',
+		'UZ' => 'Usbekistan',
+		'VU' => 'Vanuatu',
+		'VE' => 'Venezuela',
+		'VN' => 'Vietnam',
+		'VI' => 'Virgin Island (USA)',
+		'VG' => 'Virgin Island (Brit.)',
+		'WF' => 'Wallis et Futuna',
+		'EH' => 'Westsahara',
+		'YE' => 'Jemen',
+		'YU' => 'Jugoslawien (ehemals)',
+		'ZR' => 'Zaire',
+		'ZM' => 'Sambia',
+		'ZW' => 'Simbabwe',
+		'ZZ' => 'weltweit',
+	);
+	echo '<label for="quizz_cselect">' . __( "or select from list", 'WPdoodlez' ) . '</label> ';
+	echo '<select onchange="document.getElementById(\'quizz_herkunftsland\').value = document.getElementById(\'quizz_cselect\').value.substring(3,40);document.getElementById(\'quizz_iso\').value = document.getElementById(\'quizz_cselect\').value.substring(0,2);" name="quizz_cselect" id="quizz_cselect">';
+	foreach ($countries as $cid => $country) {
+	   echo '<option value="' . $cid.'|'.$country . '" ' . ($cid == $hkiso ? 'selected="selected"' : null) . '>' . $cid.' | '.$country . '</option>';
+	} 
+	echo '</select></p>';
+	echo '<label for="quizz_answer">' . __( 'correct answer', 'WPdoodlez' ) . ' [A]</label> ';
+	echo ' <input required="required" placeholder="'.__( 'required', 'WPdoodlez' ).'" type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
 	$value1 = get_post_meta( $post->ID, 'quizz_exact', true);
 	echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
-	echo '<br />';
+	echo '<br>';
 	// Distraktoren, im Quiz werden die Antworten gemischt
-	echo '<label for="quizz_answerb">' . _e( "wrong answer", 'WPdoodlez' ) . ' <strong>B</strong> </label> ';
+	echo '<label for="quizz_answerb">' . __( "wrong answer", 'WPdoodlez' ) . ' [B]</label>';
 	echo ' <input type="text" id="quizz_answerb" name="quizz_answerb" value="' . esc_attr( $valueb ) . '" size="75" style="max-width:80%"> optional<br>';
-	echo '<label for="quizz_answerc">' . _e( "wrong answer", 'WPdoodlez' ) . ' <strong>C</strong></label> ';
+	echo '<label for="quizz_answerc">' . __( "wrong answer", 'WPdoodlez' ) . ' [C]</label>';
 	echo ' <input type="text" id="quizz_answerc" name="quizz_answerc" value="' . esc_attr( $valuec ) . '" size="75" style="max-width:80%"> optional<br>';
-	echo '<label for="quizz_answerd">' . _e( "wrong answer", 'WPdoodlez' ) . ' <strong>D</strong></label> ';
+	echo '<label for="quizz_answerd">' . __( "wrong answer", 'WPdoodlez' ) . ' [D]</label>';
 	echo ' <input type="text" id="quizz_answerd" name="quizz_answerd" value="' . esc_attr( $valued ) . '" size="75" style="max-width:80%"> optional<br>';
-	echo '<label for="quizz_zusatzinfo">' . _e( "moreinfo", 'WPdoodlez' ) . ' </label> ';
+	echo '<label for="quizz_zusatzinfo">' . __( "moreinfo", 'WPdoodlez' ) . ' </label>';
 	echo ' <input type="text" id="quizz_zusatzinfo" name="quizz_zusatzinfo" value="' . esc_attr( $zusatzinfo ) . '" size="220" style="max-width:80%"> optional<br>';
 	global $wpdb;
 	$query = "SELECT `post_id` FROM $wpdb->postmeta WHERE `meta_value`='%s'";
@@ -1414,6 +1671,34 @@ function quizz_inner_custom_box( $post ) {
 	$wrongstat = get_post_meta( $post->ID, 'quizz_wrongstat', true);
 	if (!empty($rightstat) || !empty($wrongstat)) echo '<p>'. __('stats right wrong answers','WPdoodlez').': '.@$rightstat[0].' / '.@$wrongstat[0].'</p>';
 }
+
+add_filter('enter_title_here', 'my_title_place_holder' , 20 , 2 );
+function my_title_place_holder($title , $post){
+	if( $post->post_type == 'question' ){
+		$my_title = __('Enter Quiz Title and number','WPdoodlez');
+		return $my_title;
+	}
+	return $title;
+}
+
+function my_default_title_filter() {
+    global $post_type, $post;
+    if ('question' == $post_type) {
+		$post_args = array(
+			'post_type' => 'question', 'post_status' => 'publish',
+			'orderby' => 'title', 'posts_per_page' => 1, 'order'   => 'DESC',
+		);
+		$fragentitel = get_posts($post_args);   
+		if(!empty($fragentitel)) {
+			foreach($fragentitel as $single_post){
+				$titelnum = (int) substr($single_post->post_title,9,5);
+			}
+		}
+        return 'Quizfrage '.$titelnum + 1;
+    }
+}
+add_filter('default_title', 'my_default_title_filter');
+
 
 function quizz_save_postdata( $post_id ) {
   // Check if our nonce is set.We need to verify this came from the our screen and with proper authorization

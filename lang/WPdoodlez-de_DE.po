@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WPdoodlez\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 16:48+0000\n"
-"PO-Revision-Date: 2023-06-20 11:45+0000\n"
+"PO-Revision-Date: 2023-06-23 13:45+0000\n"
 "Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: lang\n"
 "X-Loco-Version: 2.6.4; wp-6.2.2"
 
-#: WPdoodlez.php:1178 WPdoodlez.php:1712
+#: WPdoodlez.php:1178 WPdoodlez.php:1750
 msgid " characters long. "
 msgstr " Zeichen lang. "
 
@@ -89,11 +89,11 @@ msgstr "Antwort prüfen"
 msgid "Choose from the most used categories"
 msgstr "Wählen Sie von den meistbenutzten Quiz Kategorien"
 
-#: WPdoodlez.php:1731
+#: WPdoodlez.php:1769
 msgid "Congratulations! You solved the crossword game."
 msgstr "Glückwunsch! Sie haben das Rätsel gelöst."
 
-#: WPdoodlez.php:1370
+#: WPdoodlez.php:1380
 msgid "correct answer"
 msgstr "richtige Antwort"
 
@@ -129,11 +129,15 @@ msgstr "Quiz Kategorie bearbeiten"
 msgid "Edit WPdoodle"
 msgstr "WPdoodle bearbeiten"
 
-#: WPdoodlez.php:1373
+#: WPdoodlez.php:1431
+msgid "Enter Quiz Title and number"
+msgstr "Titelvorgabe Quizfrage xxxx"
+
+#: WPdoodlez.php:1383
 msgid "exact match (also enforces case)"
 msgstr "Exakte Eingabe erwartet (mit Groß/Kleinschreibung)"
 
-#: WPdoodlez.php:1471
+#: WPdoodlez.php:1509
 msgid "Export to CSV"
 msgstr "CSV-Export"
 
@@ -153,7 +157,7 @@ msgstr "https://github.com/svenbolte"
 msgid "https://github.com/svenbolte/WPdoodlez"
 msgstr "https://github.com/svenbolte/WPdoodlez"
 
-#: WPdoodlez.php:1468
+#: WPdoodlez.php:1506
 msgid "Import from CSV"
 msgstr "CSV-Import"
 
@@ -165,7 +169,7 @@ msgstr "Herkunftsland"
 msgid "last question"
 msgstr "letzte Frage"
 
-#: WPdoodlez.php:1400
+#: WPdoodlez.php:1410
 msgid "last question?"
 msgstr "ist das die letzte Frage im Quizzz?"
 
@@ -173,7 +177,7 @@ msgstr "ist das die letzte Frage im Quizzz?"
 msgid "Manage vote"
 msgstr "Verwalten"
 
-#: WPdoodlez.php:1382
+#: WPdoodlez.php:1392
 msgid "moreinfo"
 msgstr "Zusatzinformation"
 
@@ -214,11 +218,15 @@ msgstr "Nicht gefunden"
 msgid "Not found in trash"
 msgstr "Nicht gefunden im Papierkorb"
 
-#: WPdoodlez.php:1366
+#: WPdoodlez.php:1374
+msgid "or select from list"
+msgstr "oder auswählen"
+
+#: WPdoodlez.php:1368
 msgid "origin country"
 msgstr "Herkunftsland"
 
-#: WPdoodlez.php:1368
+#: WPdoodlez.php:1370
 msgid "origin ISO"
 msgstr "Herkunfts ISO"
 
@@ -246,11 +254,11 @@ msgstr ""
 "oder Worträtselspiel auf Ihrer WordPress-Seite platzieren (mit CSV-Import "
 "für Fragen)"
 
-#: WPdoodlez.php:804 WPdoodlez.php:1696
+#: WPdoodlez.php:804 WPdoodlez.php:1734
 msgid "play crossword"
 msgstr "Kreuzworträtsel lösen"
 
-#: WPdoodlez.php:805 WPdoodlez.php:1790
+#: WPdoodlez.php:805 WPdoodlez.php:1828
 msgid "play word puzzle"
 msgstr "Wortsuche spielen"
 
@@ -258,7 +266,7 @@ msgstr "Wortsuche spielen"
 msgid "please enter a value"
 msgstr "Bitte geben Sie eine Antwort ein"
 
-#: WPdoodlez.php:1789
+#: WPdoodlez.php:1827
 msgid "please mark words with pressed mousekey"
 msgstr "Bitte markieren Sie die Wörter bei gedrückter Maustaste"
 
@@ -274,7 +282,7 @@ msgstr "Abstimm-Ergebnisse"
 msgid "Popular Quiz Categories"
 msgstr "Populäre Quiz Kategorien"
 
-#: WPdoodlez.php:1387
+#: WPdoodlez.php:1397
 msgid "previous question"
 msgstr "vorherige Frage im Quiz"
 
@@ -282,7 +290,7 @@ msgstr "vorherige Frage im Quiz"
 msgid "Question"
 msgstr "Frage"
 
-#: WPdoodlez.php:1480
+#: WPdoodlez.php:1518
 msgid "question/answer"
 msgstr "Frage/Antwort"
 
@@ -302,13 +310,17 @@ msgstr "Quiz Kategorien"
 msgid "Quiz Category"
 msgstr "Quiz Kategorie"
 
-#: WPdoodlez.php:1481
+#: WPdoodlez.php:1519
 msgid "quiz category"
 msgstr "Quiz Kategorie"
 
 #: WPdoodlez.php:674
 msgid "Quiz-categories"
 msgstr "Quiz-Kategorien"
+
+#: WPdoodlez.php:1381
+msgid "required"
+msgstr "erforderlich"
 
 #: WPdoodlez.php:694
 msgid "Search Questions"
@@ -334,11 +346,11 @@ msgstr "Shortcode in die Zwischenablage kopiert"
 msgid "Show WPdoodle"
 msgstr "Zeige WPdoodlez"
 
-#: WPdoodlez.php:1696 WPdoodlez.php:1790
+#: WPdoodlez.php:1734 WPdoodlez.php:1828
 msgid "start new game"
 msgstr "Neues Spiel starten"
 
-#: WPdoodlez.php:1415
+#: WPdoodlez.php:1425
 msgid "stats right wrong answers"
 msgstr "Statistik richtige/falsche Antworten"
 
@@ -398,7 +410,7 @@ msgstr "WP Doodlez"
 msgid "WPdoodlez Documentation"
 msgstr "WPDoodlez Dokumentation"
 
-#: WPdoodlez.php:1376 WPdoodlez.php:1378 WPdoodlez.php:1380
+#: WPdoodlez.php:1386 WPdoodlez.php:1388 WPdoodlez.php:1390
 msgid "wrong answer"
 msgstr "falsche Antwort"
 
