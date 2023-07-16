@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.111
-Stable tag: 9.1.1.111
+Version: 9.1.1.112
+Stable tag: 9.1.1.112
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
