@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.112
-Stable tag: 9.1.1.112
+Version: 9.1.1.113
+Stable tag: 9.1.1.113
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -118,6 +118,9 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+
+=== 9.1.1.113 ===
+changed quizzertifikat banner by KI-Banner "Quizzertifikat"
 
 === 9.1.1.110 ===
 quizz: Country and iso select box at new and edit field
