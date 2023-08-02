@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.113
-Stable tag: 9.1.1.113
+Version: 9.1.1.114
+Stable tag: 9.1.1.114
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -28,6 +28,7 @@ Shortcode: ```[wpdoodlez_stats]``` show stats of all polls in a list
 Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 Quizzz supports categories images and integrates them in single and header if used in theme.
 It adds a custom post type "question". See readme.txt for more details.
+If you place pictures in upload/quizbilder folder and enter the filename of the picture you can make questions displaying the picture
 
 Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
 
@@ -118,6 +119,10 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+=== 9.1.1.114 ===
+Import and export of picturelink added
+Editor picturename e.g. ki-bild0001.jpg added too
+place pictures in folder uploads/quizbilder and name them how you put in list
 
 === 9.1.1.113 ===
 changed quizzertifikat banner by KI-Banner "Quizzertifikat"

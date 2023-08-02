@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.1132
-Stable tag: 9.1.1.113
+Version: 9.1.1.114
+Stable tag: 9.1.1.114
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -392,7 +392,7 @@ function wpdoodle_doku() {
 	### Quizzz<br>
 	Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
 	Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
-	see readme.txt for more details.
+	see readme.txt for more details. Put pictures in folder uploads/quizbilder do display quizfragen with a picture
 	Add Shortcode [random-question] to any post, page or html-widget<br>
 	#### Crossword<br>
 	display a crossword game built on the quizzz words
@@ -864,7 +864,7 @@ function __wp_insert_or_get_term_id($name, $taxonomy, $parent = 0) {
 
 // Fragen importieren
 function importposts() {
-	set_time_limit(800);
+	set_time_limit(900);
 	$edat= array();
 	$upload_dir = wp_upload_dir();
 	$upload_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage.csv';
@@ -884,7 +884,7 @@ function importposts() {
 	if ( $handle !== FALSE ) {
 		while (($data = fgetcsv($handle, 2000, ";")) !== FALSE) {
 			if ( $row > 1 && !empty($data[1]) ) {
-				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie
+				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie;iso;bild
 				$num = count($data);
 				$edat = explode('.',$data[1]);
 				$mydatum = $edat[2].'-'.$edat[1].'-'.$edat[0];
@@ -904,6 +904,7 @@ function importposts() {
 				   // insert post meta
 				  add_post_meta( $post_id, 'quizz_herkunftsland', esc_html($data[3]) );
 				  add_post_meta( $post_id, 'quizz_iso', esc_html($data[12]) );
+				  add_post_meta( $post_id, 'quizz_bild', esc_html($data[13]) );
 				  add_post_meta( $post_id, 'quizz_answer', esc_html($data[6]) );
 				  add_post_meta( $post_id, 'quizz_answerb', esc_html($data[7]) );
 				  add_post_meta( $post_id, 'quizz_answerc', esc_html($data[8]) );
@@ -952,6 +953,7 @@ function exportposts() {
 			$answersc = get_post_custom_values('quizz_answerc');
 			$answersd = get_post_custom_values('quizz_answerd');
 			$zusatzinfo = get_post_custom_values('quizz_zusatzinfo');
+			$quizbild = get_post_custom_values('quizz_bild');
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			if ( $terms && !is_wp_error( $terms ) ) {
 				$category = $terms;
@@ -963,7 +965,7 @@ function exportposts() {
 			$frage = get_the_content();
 			$titel = get_the_title();
 			$fragenr = substr($titel, strpos($titel, " ") + 1);
-			$exportrow = $fragenr.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$hkiso[0];
+			$exportrow = $fragenr.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$quizbild[0];
 			fputs( $output, $exportrow . "\n" );
 		endwhile;
 		wp_reset_postdata();
@@ -1113,6 +1115,7 @@ function quiz_show_form( $content ) {
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
 		$zusatzinfo = get_post_custom_values('quizz_zusatzinfo');
+		$quizbild = get_post_custom_values('quizz_bild');
 		$nextlevel = get_post_custom_values('quizz_nextlevel');
 		$exact = get_post_custom_values('quizz_exact');
 		$last_bool = get_post_custom_values('quizz_last');
@@ -1123,9 +1126,19 @@ function quiz_show_form( $content ) {
 		$lsubmittedanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answer)));
 		$lactualanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answers[0])));
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
+		// Bild einfügen, wenn vorhanden
+		if (!empty($quizbild[0])) {
+			$upload_dir = wp_upload_dir();
+			$upload_basedir = $upload_dir['basedir'];
+			$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
+			if ( file_exists( $file ) ) {
+				$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
+				$bildshow = '<div style="border:2px none;float:right;text-align:right"><a href="'.$bildlink.'"><img style="width:300px" class="post-image" title="'.$quizbild[0].'" src="'.$bildlink.'"></a></div>';
+			} else $bildshow='';
+		}
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-			$content = '<blockquote class="blockqmark" style="font-size:1.2em">'.do_shortcode('[ipflag iso='.$hkiso[0].']').'<p><strong>Kategorie ' . $term->name . ' &nbsp; eine Frage aus '.$herkunftsland[0]. '</strong></p>' . $content.'</blockquote>'; 
+			$content = '<blockquote class="blockqmark" style="font-size:1.2em">'.$bildshow.do_shortcode('[ipflag iso='.$hkiso[0].']').'<p><strong>Kategorie ' . $term->name . ' &nbsp; eine Frage aus '.$herkunftsland[0]. '</strong></p>' . $content.'</blockquote>'; 
 			}
 		}	
 		// Hangman spielen oder normale Beantwortung
@@ -1363,6 +1376,7 @@ function quizz_inner_custom_box( $post ) {
 	$valuec = get_post_meta( $post->ID, 'quizz_answerc', true );
 	$valued = get_post_meta( $post->ID, 'quizz_answerd', true );
 	$zusatzinfo = get_post_meta( $post->ID, 'quizz_zusatzinfo', true );
+	$quizbild = get_post_meta( $post->ID, 'quizz_bild', true );
 	
 	echo '<style>label{width:120px;display:inline-block}</style>';
 	echo '<p><label for="quizz_herkunftsland"><strong>' . __( 'origin country', 'WPdoodlez' ) . '</strong></label>';
@@ -1624,7 +1638,11 @@ function quizz_inner_custom_box( $post ) {
 	   echo '<option value="' . $cid.'|'.$country . '" ' . ($cid == $hkiso ? 'selected="selected"' : null) . '>' . $cid.' | '.$country . '</option>';
 	} 
 	echo '</select></p>';
-	echo '<label for="quizz_answer">' . __( 'correct answer', 'WPdoodlez' ) . ' [A]</label> ';
+
+	echo '<p><label for="quizz_bild">' . __( "picture in path uploads/quizbilder", 'WPdoodlez' ) . '</label>';
+	echo ' <input type="text" id="quizz_bild" name="quizz_bild" value="' . esc_attr( $quizbild ) . '" size="40" style="max-width:40%"> optional<br>';
+
+	echo '</p><p><label for="quizz_answer">' . __( 'correct answer', 'WPdoodlez' ) . ' [A]</label> ';
 	echo ' <input required="required" placeholder="'.__( 'required', 'WPdoodlez' ).'" type="text" id="quizz_answer" name="quizz_answer" value="' . esc_attr( $value ) . '" size="75">';
 	$value1 = get_post_meta( $post->ID, 'quizz_exact', true);
 	echo ' <input type="checkbox" name="quizz_exact" id="quizz_exact" value="exact" ' . (($value1=="exact") ? " checked" : "") . '>'. __('exact match (also enforces case)','WPdoodlez');
@@ -1725,6 +1743,7 @@ function quizz_save_postdata( $post_id ) {
   $myanswerc = sanitize_text_field( $_POST['quizz_answerc'] );
   $myanswerd = sanitize_text_field( $_POST['quizz_answerd'] );
   $zusatzinfo = sanitize_text_field( $_POST['quizz_zusatzinfo'] );
+  $quizbild = sanitize_text_field( $_POST['quizz_bild'] );
   $fromlevel = $_POST['quizz_prevlevel'];
   $exact = $_POST['quizz_exact'];
   $lastlevel_bool = $_POST['quizz_last'];
@@ -1737,6 +1756,7 @@ function quizz_save_postdata( $post_id ) {
   update_post_meta( $post_id, 'quizz_answerc', $myanswerc );
   update_post_meta( $post_id, 'quizz_answerd', $myanswerd );
   update_post_meta( $post_id, 'quizz_zusatzinfo', $zusatzinfo );
+  update_post_meta( $post_id, 'quizz_bild', strtolower($quizbild) );
   update_post_meta( $fromlevel, 'quizz_nextlevel', $post_id );
   update_post_meta( $post_id, 'quizz_exact', $exact );
   update_post_meta( $post_id, 'quizz_last', $lastlevel_bool );
@@ -1792,6 +1812,7 @@ function custom_question_column( $column, $post_id ) {
 						echo $term->name; 
 				}
 			}	
+			echo '<br><i>'.get_post_meta( $post_id , 'quizz_bild' , true ).'</i>'; 
 			break;
     }
 }
