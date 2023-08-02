@@ -944,7 +944,7 @@ function exportposts() {
 		header('Content-Type: text/csv; charset=utf-8');
 		header("Content-Disposition: attachment; filename=\"" . $filename . ".csv\";" );
 		header("Content-Transfer-Encoding: binary");	
-		fputcsv( $output, array('id','datum','charakter','land','titel','seitjahr','bemerkungen','antwortb','antwortc','antwortd','zusatzinfo','quizkat','ISO'), ';');
+		fputcsv( $output, array('id','datum','charakter','land','titel','seitjahr','bemerkungen','antwortb','antwortc','antwortd','zusatzinfo','quizkat','ISO','Bild'), ';');
 		while ($query->have_posts()): $query->the_post();
 			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
 			$hkiso = get_post_custom_values('quizz_iso');
@@ -965,7 +965,7 @@ function exportposts() {
 			$frage = get_the_content();
 			$titel = get_the_title();
 			$fragenr = substr($titel, strpos($titel, " ") + 1);
-			$exportrow = $fragenr.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$quizbild[0];
+			$exportrow = $fragenr.';'.$xdatum.';'.'Quizfrage'.';'.$herkunftsland[0].';'.$frage.';'.$xjahr.';'.$answers[0].';'.$answersb[0].';'.$answersc[0].';'.$answersd[0].';'.$zusatzinfo[0].';'.$category[0]->name.';'.$hkiso[0].';'.$quizbild[0];
 			fputs( $output, $exportrow . "\n" );
 		endwhile;
 		wp_reset_postdata();
