@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.114
-Stable tag: 9.1.1.114
+Version: 9.1.1.115
+Stable tag: 9.1.1.115
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -869,6 +869,7 @@ function importposts() {
 	$upload_dir = wp_upload_dir();
 	$upload_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage.csv';
 	$uploaddiff_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage_update.csv';
+	$handle = false;	
 	$row = 1;
 	if ( file_exists( $upload_basedir ) ) {
 		// Alle Fragen löschen
@@ -881,7 +882,7 @@ function importposts() {
 		$handle = fopen($uploaddiff_basedir , "r");
 		$fullimport = 0;
 	}
-	if ( $handle !== FALSE ) {
+	if ( false !== $handle ) {
 		while (($data = fgetcsv($handle, 2000, ";")) !== FALSE) {
 			if ( $row > 1 && !empty($data[1]) ) {
 				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie;iso;bild
@@ -1772,6 +1773,13 @@ function admin_order_list_top_bar_button( $which ) {
 		echo "&nbsp; <a title=\"place public_histereignisse.csv in upload folder to DELETE and replace all questions &#10;or place public_histereignisse-update.csv in upload folder\" href='".$_SERVER['REQUEST_URI']."&quizzzcsv=true&nonce=".$nonce."' class='button button-primary'>";
 		_e( 'Import from CSV', 'WPdoodlez' );
 		echo '</a> &nbsp; ';
+		$upload_dir = wp_upload_dir();
+		$upload_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage.csv';
+		$uploaddiff_basedir = $upload_dir['basedir'] . '/public_hist_quizfrage_update.csv';
+		$importmodus='<span style="color:red">keine Datei in /uploads</span>';
+		if ( file_exists( $upload_basedir ) ) $importmodus='<span style="color:orange">Löschen und Vollimport</span>';
+		if ( file_exists( $uploaddiff_basedir ) ) $importmodus='<span style="color:green">Update Differenz</span>';
+		echo '<b>'.$importmodus.'</b> &nbsp; ';
 		echo " <a title=\"export questions as csv semicolon separated\" href='".$_SERVER['REQUEST_URI']."&quizzzcsvexport=true&nonce=".$nonce."' class='button'>";
 		_e( 'Export to CSV', 'WPdoodlez' );
 		echo '</a> ';
