@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.115
-Stable tag: 9.1.1.115
+Version: 9.1.1.116
+Stable tag: 9.1.1.116
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -118,6 +118,10 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
+
+=== 9.1.1.116 ===
+csv import fix on empty file
+new quizkatbilder created by bing AI with Dall-E and Clipcrop and paint.net
 
 === 9.1.1.114 ===
 Import and export of picturelink added
