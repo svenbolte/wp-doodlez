@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.117
-Stable tag: 9.1.1.117
+Version: 9.1.1.118
+Stable tag: 9.1.1.118
 Requires at least: 5.1
 Tested up to: 6.3
 Requires PHP: 8.0
@@ -790,7 +790,7 @@ function random_quote_func( $atts ){
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
-					$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
+				$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
 			}
 		}	
 		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
@@ -799,6 +799,7 @@ function random_quote_func( $atts ){
 		$answersb = get_post_custom_values('quizz_answerb');
 		$answersc = get_post_custom_values('quizz_answerc');
 		$answersd = get_post_custom_values('quizz_answerd');
+		$quizbild = get_post_custom_values('quizz_bild');
 		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="'.__('answer with hangman','WPdoodlez').'" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
 		$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
@@ -828,9 +829,20 @@ function random_quote_func( $atts ){
 		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 			$cbild = z_taxonomy_image_url($category[0]->term_id);
 			$message .= '<div class="post-thumbnail"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
-			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:120px"></div>';	
+			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:120px">';	
+			// Bild einfügen, wenn vorhanden
+			if (!empty($quizbild[0])) {
+				$upload_dir = wp_upload_dir();
+				$upload_basedir = $upload_dir['basedir'];
+				$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
+				if ( file_exists( $file ) ) {
+					$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
+					$bildshow = '<div class="middle" style="opacity:.8;top:3px"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:3px;top:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></div>';
+				} 
+				$message .= $bildshow;
+			} else { $bildshow=''; $bildlink='';}
 		}			
-		$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
+		$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
 		$message .= $quizkat;
 		$message .= '</div></header>';
 		$message .= '<h2 class="entry-title"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title();
@@ -1134,7 +1146,7 @@ function quiz_show_form( $content ) {
 			$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
 			if ( file_exists( $file ) ) {
 				$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
-				$bildshow = '<div style="border:2px none;float:right;text-align:right"><a href="'.$bildlink.'"><img style="width:300px" class="post-image" title="'.$quizbild[0].'" src="'.$bildlink.'"></a></div>';
+				$bildshow = '<div style="border:2px none;float:right;text-align:right"><a href="'.$bildlink.'"><img style="width:300px" title="'.$quizbild[0].'" src="'.$bildlink.'"></a></div>';
 			} else $bildshow='';
 		}
 		if ( $terms && !is_wp_error( $terms ) ) {

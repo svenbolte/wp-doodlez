@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.117
-Stable tag: 9.1.1.117
+Version: 9.1.1.118
+Stable tag: 9.1.1.118
 Requires at least: 5.1
 Tested up to: 6.3
 Requires PHP: 8.0
@@ -118,6 +118,11 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
+
+
+=== 9.1.1.118 ===
+more quizkat-images and quizfragen with images improved
+image thumbnail now shown on random-question shortcode banner
 
 === 9.1.1.116 ===
 csv import fix on empty file
