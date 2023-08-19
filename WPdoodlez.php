@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.118
-Stable tag: 9.1.1.118
+Version: 9.1.1.119
+Stable tag: 9.1.1.119
 Requires at least: 5.1
 Tested up to: 6.3
 Requires PHP: 8.0
@@ -1147,7 +1147,7 @@ function quiz_show_form( $content ) {
 			if ( file_exists( $file ) ) {
 				$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
 				$bildshow = '<div style="border:2px none;float:right;text-align:right"><a href="'.$bildlink.'"><img style="width:300px" title="'.$quizbild[0].'" src="'.$bildlink.'"></a></div>';
-			} else $bildshow='';
+			} else { $bildshow='';$bildlink=''; }
 		}
 		if ( $terms && !is_wp_error( $terms ) ) {
 			foreach ( $terms as $term ) {
