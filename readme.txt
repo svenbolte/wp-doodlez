@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.123
-Stable tag: 9.1.1.123
+Version: 9.1.1.124
+Stable tag: 9.1.1.124
 Requires at least: 6.0
 Tested up to: 6.3.2
 Requires PHP: 8.1
@@ -30,7 +30,7 @@ Quizzz supports categories images and integrates them in single and header if us
 It adds a custom post type "question". See readme.txt for more details.
 If you place pictures in upload/quizbilder folder and enter the filename of the picture you can make questions displaying the picture
 
-Add Shortcode ´´´[random-question]´´´ to any post, page or html-widget
+Add Shortcode ´´´[random-question]´´´ to an html widget (only on front page)
 
 #### -  Crossword
 add crossword=1 to any quizfrage post commandline 
@@ -119,6 +119,10 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+
+=== 9.1.1.124 ===
+random-question optimized, many functions removed. it is intentionally for use on homepage as an html-widget and displays cat image, origin, number, 
+ image, other games links and a random question. click on the question title or image to answer question
 
 === 9.1.1.118 ===
 more quizkat-images and quizfragen with images improved

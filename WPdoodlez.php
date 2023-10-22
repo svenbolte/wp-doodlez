@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.123
-Stable tag: 9.1.1.123
+Version: 9.1.1.124
+Stable tag: 9.1.1.124
 Requires at least: 6.0
 Tested up to: 6.3.2
 Requires PHP: 8.0
@@ -769,89 +769,71 @@ function kb_post_sortierbare_columns( $columns ) {
 }
 
 
-// Shortcode Random Question
-function random_quote_func( $atts ){
-	$attrs = shortcode_atts( array( 'orderby' => 'rand', 'order' => 'rand', 'items' => 1, ), $atts ); 
-    $args=array(
-      'orderby'=> $attrs['orderby'],
-      'order'=> $attrs['order'],
-      'post_type' => 'question',
-      'post_status' => 'publish',
-      'posts_per_page' => $attrs['items'],
-	  'showposts' => $attrs['items'],
-    );
-    $my_query = new WP_Query($args);
-	$accentcolor = get_theme_mod( 'link-color', '#888' );
-    $message = '';
-    if( $my_query->have_posts() ) {
-      while ($my_query->have_posts()) : $my_query->the_post(); 
-		$antwortmaske='';
-		$quizkat='';
-		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
-		if ( $terms && !is_wp_error( $terms ) ) {
-			foreach ( $terms as $term ) {
-				$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
-			}
-		}	
-		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
-		$hkiso = get_post_custom_values('quizz_iso');
-		$answers = get_post_custom_values('quizz_answer');
-		$answersb = get_post_custom_values('quizz_answerb');
-		$answersc = get_post_custom_values('quizz_answerc');
-		$answersd = get_post_custom_values('quizz_answerd');
-		$quizbild = get_post_custom_values('quizz_bild');
-		$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
-		if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="'.__('answer with hangman','WPdoodlez').'" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
-		$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
-		$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
-		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
-		$listyle='text-align:center;padding:6px;display:block;margin-top:3px';
-		$xlink='<div class="nav-links"><a class="page-numbers" title="Frage aufrufen und spielen" style="'.$listyle.'" href="'.get_post_permalink().$timerurl;
-		if (!empty($answersb) && strlen($answersb[0])>1 ) {
-			$ans=array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
-			shuffle($ans);
-			foreach ($ans as $choice) {
-				$antwortmaske .= $xlink.'&ans='.esc_html($choice) . '">' . $choice . '</a></div>';
-			}
-			unset($choice);
-		} else {	
-			// ansonsten freie Antwort anfordern von Antwort 1
-			$antwortmaske .= $xlink.'"><span style="color:#fff;border:1px solid #ccc;font-weight:700;font-size:1.2em;padding:1px 0 1px 9px;letter-spacing:.5em;font-family:monospace">'.preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span></a></div>';
-		}	
-		$message .= '<header class="entry-header" style="margin:0 -4px">';
-		// Wenn eine Quizkategorie da, Katbild anzeigen
-		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
-		if ( $terms && !is_wp_error( $terms ) ) {
-			$category = $terms;
-		} else {
-			$category = get_the_category(); 
-		}	
-		if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
-			$cbild = z_taxonomy_image_url($category[0]->term_id);
-			$message .= '<div class="post-thumbnail"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
-			$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:120px">';	
-			// Bild einfügen, wenn vorhanden
-			if (!empty($quizbild[0])) {
-				$upload_dir = wp_upload_dir();
-				$upload_basedir = $upload_dir['basedir'];
-				$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
-				if ( file_exists( $file ) ) {
-					$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
-					$bildshow = '<div class="middle" style="opacity:.8;top:3px"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:3px;top:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></div>';
-				} 
-				$message .= $bildshow;
-			} else { $bildshow=''; $bildlink='';}
-		}			
-		$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
-		$message .= $quizkat;
-		$message .= '</div></header>';
-		$message .= '<h2 class="entry-title"><a title="Frage aufrufen und spielen" href="'.get_post_permalink().'">'.get_the_title();
-		$message .= '&nbsp; '.do_shortcode('[ipflag iso='.$hkiso[0].']').' '. $herkunftsland[0].'</a></h2>';
-		$message .= '<div class="entry-content">'.get_the_content().'</div>'.$antwortmaske;
-      endwhile;
-    }
-    wp_reset_query();  
-    return $message;
+// Shortcode Random Question (als Widget auf der Homepage)
+function random_quote_func() {
+	if ( is_home() || is_front_page() ) {
+		$args=array(
+		  'orderby'=>'rand','order'=>'rand','post_type'=>'question',
+		  'post_status' => 'publish','posts_per_page' => 1,'showposts' => 1
+		);
+		$my_query = new WP_Query($args);
+		$accentcolor = get_theme_mod( 'link-color', '#888' );
+		$message = '';
+		// Ausgabeschleife
+		if( $my_query->have_posts() ) {
+		  while ($my_query->have_posts()) {
+			$my_query->the_post(); 
+			$quizkat='';
+			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+			if ( $terms && !is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
+				}
+			}	
+			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+			$quizbild = get_post_custom_values('quizz_bild');
+			$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
+			if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="'.__('answer with hangman','WPdoodlez').'" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
+			$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
+			$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
+			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
+			$message .= '<header class="entry-header" style="margin:0 -4px">';
+			// Wenn eine Quizkategorie da, Katbild anzeigen
+			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+			if ( $terms && !is_wp_error( $terms ) ) {
+				$category = $terms;
+			} else {
+				$category = get_the_category(); 
+			}	
+			if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+				$cbild = z_taxonomy_image_url($category[0]->term_id);
+				$message .= '<div class="post-thumbnail"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">';
+				$message .= '<img alt="Quiz-Kategoriebild" src="' . $cbild . '" class="wp-post-image" style="height:120px">';	
+				$readmore = '<div class="middle">' . __('answer question', 'WPdoodlez') . ' &nbsp;<i class="fa fa-forward"></i></div>';
+				$message .= $readmore;
+				// Bild zur Quizfrage einfügen, wenn vorhanden
+				if (!empty($quizbild[0])) {
+					$upload_dir = wp_upload_dir();
+					$upload_basedir = $upload_dir['basedir'];
+					$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
+					if ( file_exists( $file ) ) {
+						$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
+						$bildshow = '<div class="middle" style="opacity:.8;top:3px"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:3px;top:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></div>';
+					} 
+					$message .= $bildshow;
+				} else { $bildshow=''; $bildlink='';}
+			}			
+			$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
+			$message .= $quizkat;
+			$message .= '</div></header>';
+			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
+			$message .= '&nbsp; ' . $herkunftsland[0].'</a></h2>';
+			$message .= '<div class="entry-content">'.get_the_content().'</div>'.$antwortmaske;
+		  } // while Schleife Ende
+		}
+		wp_reset_query();  
+		return $message;
+	} else return '<span style="color:red">only use on frontpage as widget!</span>';
 }
 add_shortcode( 'random-question', 'random_quote_func' );
 
