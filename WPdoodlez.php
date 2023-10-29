@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.124
-Stable tag: 9.1.1.124
+Version: 9.1.1.126
+Stable tag: 9.1.1.126
 Requires at least: 6.0
 Tested up to: 6.3.2
 Requires PHP: 8.0
@@ -773,8 +773,7 @@ function kb_post_sortierbare_columns( $columns ) {
 function random_quote_func() {
 	if ( is_home() || is_front_page() ) {
 		$args=array(
-		  'orderby'=>'rand','order'=>'rand','post_type'=>'question',
-		  'post_status' => 'publish','posts_per_page' => 1,'showposts' => 1
+		  'orderby'=>'rand','order'=>'rand','post_type'=>'question','post_status'=>'publish','posts_per_page'=>1,'showposts'=>1
 		);
 		$my_query = new WP_Query($args);
 		$accentcolor = get_theme_mod( 'link-color', '#888' );
@@ -791,6 +790,7 @@ function random_quote_func() {
 				}
 			}	
 			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+			$answers = get_post_custom_values('quizz_answer');
 			$quizbild = get_post_custom_values('quizz_bild');
 			$hangrein = preg_replace("/[^A-Za-z0-9]/", '', $answers[0]);
 			if (strlen($hangrein) <= 15 && strlen($hangrein) >= 5) $quizkat .= '<a title="'.__('answer with hangman','WPdoodlez').'" href="'.add_query_arg( array('hangman'=>1), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('Hangman','WPdoodlez').'</a>';
@@ -828,7 +828,7 @@ function random_quote_func() {
 			$message .= '</div></header>';
 			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
 			$message .= '&nbsp; ' . $herkunftsland[0].'</a></h2>';
-			$message .= '<div class="entry-content">'.get_the_content().'</div>'.$antwortmaske;
+			$message .= '<div class="entry-content">'.get_the_content().'</div>';
 		  } // while Schleife Ende
 		}
 		wp_reset_query();  
