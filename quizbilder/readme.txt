@@ -1,1 +1,0 @@
-Diesen Ordner per SFTP Nach wp-content/uploads kopieren. Sie werden geladen, wenn in der DB der Dateiname steht.
