@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.126
-Stable tag: 9.1.1.126
+Version: 9.1.1.127
+Stable tag: 9.1.1.127
 Requires at least: 6.0
 Tested up to: 6.3.2
 Requires PHP: 8.1
@@ -119,6 +119,10 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+
+=== 9.1.1.127 ===
+quizkatbilder moved to categories images plugin
+lightbulb banner moved to root dir and removed quitkatbilder folder
 
 === 9.1.1.124 ===
 random-question optimized, many functions removed. it is intentionally for use on homepage as an html-widget and displays cat image, origin, number, 

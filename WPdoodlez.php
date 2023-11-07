@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.126
-Stable tag: 9.1.1.126
+Version: 9.1.1.127
+Stable tag: 9.1.1.127
 Requires at least: 6.0
 Tested up to: 6.3.2
 Requires PHP: 8.0
@@ -336,6 +336,22 @@ function wpdoo_post_custom_columns($column) {
 function wpdoodlez_rewrite_flush() {
     wpdoodlez_cookie();
     flush_rewrite_rules();
+	// Dateien ins uploads/quizbilder kopieren
+	require_once(ABSPATH . "wp-includes/pluggable.php"); 
+	require_once(ABSPATH . 'wp-admin/includes/media.php');
+	require_once(ABSPATH . 'wp-admin/includes/file.php');
+	require_once(ABSPATH . 'wp-admin/includes/image.php');
+	$folder = plugin_dir_path( __FILE__ ) . "quizbilder";
+	$files = array();
+	$handler = opendir($folder);
+	while ($file = readdir($handler)) {
+		if ($file != '.' && $file != '..') $files[] = $file;
+	}
+	closedir($handler);
+	wp_mkdir_p(wp_upload_dir()['basedir'].'/quizbilder');
+	foreach ( $files as $file ) {
+		copy ($folder.'/'.$file, wp_upload_dir()['basedir'].'/quizbilder/'.$file);
+	}
 }
 
 register_activation_hook( __FILE__, 'wpdoodlez_rewrite_flush' );
@@ -719,6 +735,7 @@ function create_quiz_post() {
 		'supports'            => array(	'title', 'editor', 'thumbnail' )
 	);
 	register_post_type( 'Question', $args );
+    flush_rewrite_rules();
 
 	// CSV Import starten, wenn Dateiname im upload dir public_histereignisse.csv ist	
 	if( isset($_REQUEST['quizzzcsv']) && ( $_REQUEST['quizzzcsv'] == true ) && isset( $_REQUEST['nonce'] ) ) {
@@ -1304,7 +1321,7 @@ function quiz_show_form( $content ) {
 				$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></div>'. $letztefrage;
 			} else {    // Zertifikat ausgeben
 				$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
-				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'/quizkatbilder/lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
+				$theForm .= '<img src="'.plugin_dir_url(__FILE__).'/lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
 				$theForm .= '<br><br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
 				$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
 				if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
