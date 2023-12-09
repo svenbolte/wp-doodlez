@@ -831,8 +831,9 @@ function random_quote_func() {
 					} 
 					$message .= $bildshow;
 				} else { $bildshow=''; $bildlink='';}
+				$message .= '</div>';
 			}			
-			$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
+			$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
 			$message .= $quizkat;
 			$message .= '</div></header>';
 			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
