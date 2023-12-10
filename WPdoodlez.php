@@ -1219,7 +1219,7 @@ function quiz_show_form( $content ) {
 		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<p><i class="fa fa-wikipedia-w"></i> &nbsp; <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a></p>'; } else { $wikinachschlag='';}
 			if ( $correct == "yes" ) {
 				ob_start();
-				if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
+				if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', @intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
 				ob_flush();
 				update_post_meta( get_the_ID(), 'quizz_rightstat', ($rightstat[0] + 1) ?? 0 );
 				if ($last_bool[0] != "last") {
@@ -1249,7 +1249,7 @@ function quiz_show_form( $content ) {
 					$error .= $wikinachschlag.'</blockquote>';
 					$showqform = 'display:none';
 					ob_start();
-					if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']== 2 ) setcookie('wrongscore', (intval($_COOKIE['wrongscore']) + 1), time()+60*60*24*30, '/');
+					if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']== 2 ) setcookie('wrongscore', (@intval($_COOKIE['wrongscore']) + 1), time()+60*60*24*30, '/');
 					ob_flush();
 					update_post_meta( get_the_ID(), 'quizz_wrongstat', ($wrongstat[0] + 1) ?? 0 );
 				} else { $error = "";$showqform = ''; }
