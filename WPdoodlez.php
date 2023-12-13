@@ -1276,6 +1276,14 @@ function quiz_show_form( $content ) {
 			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
 			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
+			// wenn current theme penguin, dann link zu umfragen
+			$wpxtheme = wp_get_theme(); 
+			if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
+			if ( current_user_can('administrator') && $xpenguin ) {
+				$liveumfrage = wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).' '.$copytags.' eine Frage aus '. $herkunftsland[0] .' '. preg_replace("/[?,:()]/", '',get_the_content() ).','.preg_replace("/[?:()]/", '.',$pollyans ));
+				if (strlen($liveumfrage)<450) $letztefrage .= '</li><li><a title="admin create live-umfrage" href="'.get_home_url().'/live-umfragen?frage='.$liveumfrage.'"><i class="fa fa-check-square-o"></i> Umfrage</a>';
+			}	
+			// Nächste und letzte Frage Link, ggf. hangman oder Kreuzwort oder Wortsucherätsel
 			if (isset($nextlevel) || isset($last_bool[0]) ) {
 				if ($last_bool[0] == "last") {
 					$letztefrage .= '</li>'.$listyle.__('last question','WPdoodlez').'</li>';
