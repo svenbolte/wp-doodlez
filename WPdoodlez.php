@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.128
-Stable tag: 9.1.1.128
+Version: 9.1.1.129
+Stable tag: 9.1.1.129
 Requires at least: 6.0
 Tested up to: 6.4.2
 Requires PHP: 8.0
@@ -1127,6 +1127,10 @@ function quiz_show_form( $content ) {
 		$lastpage = get_post_custom_values('quizz_lastpage');
 		$rightstat = get_post_custom_values('quizz_rightstat');
 		$wrongstat = get_post_custom_values('quizz_wrongstat');
+		$answerstatsa = get_post_custom_values('quizz_answerstatsa') ?? array(0);
+		$answerstatsb = get_post_custom_values('quizz_answerstatsb') ?? array(0);
+		$answerstatsc = get_post_custom_values('quizz_answerstatsc') ?? array(0);
+		$answerstatsd = get_post_custom_values('quizz_answerstatsd') ?? array(0);
 		$error = "<p class='quiz_error quiz_message'>ERROR</p>";
 		$lsubmittedanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answer)));
 		$lactualanswer = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($answers[0])));
@@ -1201,6 +1205,7 @@ function quiz_show_form( $content ) {
 				}
 				$pollyans = esc_html(preg_replace( '/[^( |aeiouAEIOU.)$]/', '*', esc_html($answers[0])));
 			}	
+			// Frage beantwortet, richtig oder falsch ermitteln
 			if ($exact[0]=="exact") {
 				//exact, strict match
 				if ($answer == $answers[0]) {
@@ -1216,7 +1221,28 @@ function quiz_show_form( $content ) {
 					$correct = "no";
 				}
 			}
-		if ( strlen($answers[0])>5 ) { $wikinachschlag = '<p><i class="fa fa-wikipedia-w"></i> &nbsp; <a title="Wiki more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'">Wiki-Artikel</a></p>'; } else { $wikinachschlag='';}
+			// Stats hochzählen welche antwort gegeben wurde (ungemischt)
+			if (!empty($_POST) ) {
+				if ($answer == $answers[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsa', ($answerstatsa[0] + 1) ?? 0 );
+				else if ($answer == $answersb[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsb', ($answerstatsb[0] + 1) ?? 0 );
+				else if ($answer == $answersc[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsc', ($answerstatsc[0] + 1) ?? 0 );
+				else if ($answer == $answersd[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsd', ($answerstatsd[0] + 1) ?? 0 );
+				$wikinachschlag = '<ul class="footer-menu">';
+				$wikinachschlag .= 'Spielergebnisse: <li style="display:inline"><a title="Wikipedia more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'"><i class="fa fa-wikipedia-w"></i> Wiki-Artikel</a></li>'; 
+				$wikinachschlag .= '<li style="display:inline"><a title="Fireball search for question" target="_blank" href="https://fireball.de/de/search?q='.esc_html(get_the_content()).'"><i class="fa fa-fire"></i> Fireball-Suche</a></li></ul>'; 
+				// Statistik der bisherrigen Antworten anzeigen
+				if  (is_array($answerstatsa)) $astatsa = $answerstatsa[0]; else $astatsa = 0;
+				if  (is_array($answerstatsb)) $astatsb = $answerstatsb[0]; else $astatsb = 0;
+				if  (is_array($answerstatsc)) $astatsc = $answerstatsc[0]; else $astatsc = 0;
+				if  (is_array($answerstatsd)) $astatsd = $answerstatsd[0]; else $astatsd = 0;
+				$statsbishersum = $astatsa + $astatsb + $astatsc + $astatsd;
+				if ($statsbishersum > 0) {
+					$statsbisher = '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsa / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsa).' '. $answers[0].'</div>';
+					$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsb / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsb).' '. $answersb[0].'</div>';
+					$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsc / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsc).' '. $answersc[0].'</div>';
+					$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsd / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsd).' '. $answersd[0].'</div>';
+				} else $statsbisher = '';
+			}	
 			if ( $correct == "yes" ) {
 				ob_start();
 				if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', @intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
@@ -1231,7 +1257,7 @@ function quiz_show_form( $content ) {
 					} else {
 						$error = $ansmixed.'<blockquote class="blockbulb" style="font-size:1.2em;margin-top:30px"><i class="fa fa-lg fa-thumbs-o-up"></i> &nbsp; ' . __('correct answer: ','WPdoodlez') . ' '. $answers[0];
 						if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-						$error .= $wikinachschlag.'</blockquote>';
+						$error .= $wikinachschlag.$statsbisher.'</blockquote>';
 						$showqform = 'display:none';
 					}
 				} else {
@@ -1246,7 +1272,7 @@ function quiz_show_form( $content ) {
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
 					$error .= '<br>'. __(' is the wrong answer. Correct is','WPdoodlez').'<br><i class="fa fa-lg fa-thumbs-up"></i> &nbsp; '.esc_html($answers[0]);
 					if ( !empty($zusatzinfo) && strlen($zusatzinfo[0])>1 ) $error .= '<p style="margin-top:15px"><i class="fa fa-newspaper-o"></i> &nbsp; '.$zusatzinfo[0].'</p>';
-					$error .= $wikinachschlag.'</blockquote>';
+					$error .= $wikinachschlag.$statsbisher.'</blockquote>';
 					$showqform = 'display:none';
 					ob_start();
 					if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']== 2 ) setcookie('wrongscore', (@intval($_COOKIE['wrongscore']) + 1), time()+60*60*24*30, '/');
@@ -1254,6 +1280,8 @@ function quiz_show_form( $content ) {
 					update_post_meta( get_the_ID(), 'quizz_wrongstat', ($wrongstat[0] + 1) ?? 0 );
 				} else { $error = "";$showqform = ''; }
 			}
+
+			// Menü unten anzeigen
 			$accentcolor = get_theme_mod( 'link-color', '#888' );
 			$formstyle = '<style>.qiz input[type=radio] {display:none;} .qiz input[type=radio] + label {display:block;padding:8px;cursor:pointer;background:'.$accentcolor.'}';
 			$formstyle .= '.qiz input[type=radio] + label:hover{box-shadow:inset 0 0 100px 100px rgba(255,255,255,.15)} .qiz input[type=radio] + label a {color:#fff} ';
@@ -1733,7 +1761,7 @@ add_filter('default_title', 'my_default_title_filter');
 
 
 function quizz_save_postdata( $post_id ) {
-  // Check if our nonce is set.We need to verify this came from the our screen and with proper authorization
+  // Check if our nonce is set. We need to verify this came from the our screen and with proper authorization
   if ( ! isset( $_POST['quizz_inner_custom_box_nonce'] ) )
     return $post_id;
   $nonce = $_POST['quizz_inner_custom_box_nonce'];

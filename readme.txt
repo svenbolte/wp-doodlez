@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.128
-Stable tag: 9.1.1.128
+Version: 9.1.1.129
+Stable tag: 9.1.1.129
 Requires at least: 6.0
 Tested up to: 6.4.2
 Requires PHP: 8.1
@@ -119,6 +119,9 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+=== 9.1.1.129 ===
+add statistics to be displayed after answer how many people gave what answer (total and percent bar)
+works without cookies, just stores the selected answer anonymously in options.
 
 === 9.1.1.127 ===
 quizkatbilder moved to categories images plugin
