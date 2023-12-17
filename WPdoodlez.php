@@ -979,12 +979,16 @@ function exportposts() {
 }
 
 
-function quiz_adminstats() {
+function quiz_adminstats($statsbisher) {
 	// wenn admin eingeloggt, Admin stats anzeigen
 	if( current_user_can('administrator') &&  ( is_singular() ) ) {
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 		global $wpdb;
 		$message = '<h6>Admin-Statistik</h6>';
+		if (empty($_POST) ) {
+			$message .='<i class="fa fa-plus-square" title="mouseover zum Einblenden, klicken zum Ausblenden" onmouseover="document.getElementById(\'showonhover\').style.display = \'block\'" onclick="document.getElementById(\'showonhover\').style.display = \'none\'"></i><br>';
+			$message .= '<div id="showonhover" style="position:relative;display:none;margin-bottom:8px">'.$statsbisher.'</div>';
+		}	
 		// Top5 Right
 		$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => 5, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
 		if ( $the_query->have_posts() ) {
@@ -992,7 +996,8 @@ function quiz_adminstats() {
 				$the_query->the_post();
 				$rite = (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
 				$wrg = (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
-				if ( $wrg == 0) { $rpct = 100; } else { $rpct = round($rite / $wrg * 100); }
+				$rwsum = (float) ($rite + $wrg);
+				if ( $rwsum > 0) { $rpct = number_format_i18n($rite / $rwsum * 100); } else { $rpct = 0; }
 				$message .= '<span style="color:#1bab1b;display:inline-block;width:55px">';
 				$message .= 'R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true ) ?? 0).'</span><span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true ) ?? 0).'</span>';
 				$message .= ' <progress id="rfs" value="'.$rpct.'" max="100" style="width:80px"></progress> <a href="'.get_the_permalink().'">'.substr(get_the_content(),0,80).'</a><br>';
@@ -1006,7 +1011,8 @@ function quiz_adminstats() {
 				$the_query->the_post();
 				$rite = (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
 				$wrg = (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
-				if ( $rite == 0) { $rpct = 100; } else { $rpct = round($wrg / $rite * 100); }
+				$rwsum = (float) ($rite + $wrg);
+				if ( $rwsum > 0) { $rpct = number_format_i18n($wrg / $rwsum * 100); } else { $rpct = 0; }
 				$message .= '<span style="color:tomato;display:inline-block;width:55px">F:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_wrongstat', true ) ?? 0).'</span><span style="color:#1bab1b;display:inline-block;width:55px">R:'.wpdoo_number_format_short( (float) get_post_meta( get_the_ID(), 'quizz_rightstat', true ) ?? 0).'</span>';
 				$message .= ' <progress id="rfs" value="'.$rpct.'" max="100" style="width:80px"></progress> <a href="'.get_the_permalink().'">'.substr(get_the_content(),0,80).'</a><br>';
 			}
@@ -1230,19 +1236,20 @@ function quiz_show_form( $content ) {
 				$wikinachschlag = '<ul class="footer-menu">';
 				$wikinachschlag .= 'Spielergebnisse: <li style="display:inline"><a title="Wikipedia more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'"><i class="fa fa-wikipedia-w"></i> Wiki-Artikel</a></li>'; 
 				$wikinachschlag .= '<li style="display:inline"><a title="Fireball search for question" target="_blank" href="https://fireball.de/de/search?q='.esc_html(get_the_content()).'"><i class="fa fa-fire"></i> Fireball-Suche</a></li></ul>'; 
-				// Statistik der bisherrigen Antworten anzeigen
-				if  (is_array($answerstatsa)) $astatsa = $answerstatsa[0]; else $astatsa = 0;
-				if  (is_array($answerstatsb)) $astatsb = $answerstatsb[0]; else $astatsb = 0;
-				if  (is_array($answerstatsc)) $astatsc = $answerstatsc[0]; else $astatsc = 0;
-				if  (is_array($answerstatsd)) $astatsd = $answerstatsd[0]; else $astatsd = 0;
-				$statsbishersum = $astatsa + $astatsb + $astatsc + $astatsd;
-				if ($statsbishersum > 0) {
-					$statsbisher = '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsa / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsa).' '. $answers[0].'</div>';
-					$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsb / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsb).' '. $answersb[0].'</div>';
-					$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsc / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsc).' '. $answersc[0].'</div>';
-					$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsd / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsd).' '. $answersd[0].'</div>';
-				} else $statsbisher = '';
 			}	
+			// Statistik der bisherrigen Antworten anzeigen
+			if  (is_array($answerstatsa)) $astatsa = $answerstatsa[0]; else $astatsa = 0;
+			if  (is_array($answerstatsb)) $astatsb = $answerstatsb[0]; else $astatsb = 0;
+			if  (is_array($answerstatsc)) $astatsc = $answerstatsc[0]; else $astatsc = 0;
+			if  (is_array($answerstatsd)) $astatsd = $answerstatsd[0]; else $astatsd = 0;
+			$statsbishersum = $astatsa + $astatsb + $astatsc + $astatsd;
+			if ($statsbishersum > 0) {
+				$statsbisher = '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsa / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsa).' '. $answers[0].'</div>';
+				$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsb / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsb).' '. $answersb[0].'</div>';
+				$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsc / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsc).' '. $answersc[0].'</div>';
+				$statsbisher .= '<div style="display:block;font-size:.9rem"><progress value="'.round($astatsd / $statsbishersum * 100 , 1).'" max="100" style="width:140px"></progress> '.number_format_i18n($astatsd).' '. $answersd[0].'</div>';
+			} else $statsbisher = '';
+			// Wenn richtige Antwort
 			if ( $correct == "yes" ) {
 				ob_start();
 				if (isset($_COOKIE['hidecookiebannerx']) && $_COOKIE['hidecookiebannerx']==2 ) setcookie('rightscore', @intval($_COOKIE['rightscore']) + 1, time()+60*60*24*30, '/');
@@ -1266,7 +1273,7 @@ function quiz_show_form( $content ) {
 					$goto = $lastpage[0];
 					wp_safe_redirect( add_query_arg( array('ende'=>1), home_url($wp->request) ) );
 				}
-			} else {
+			} else {   			// Wenn falsche Antwort
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_GET['ans']) ) {
 					$error = $ansmixed.'<blockquote class="blockbulb" style="font-size:1.2em;margin-top:1.6em">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
@@ -1336,7 +1343,7 @@ function quiz_show_form( $content ) {
 				$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . number_format_i18n(@$_COOKIE['rightscore'] ?? 0). ' / F: '.number_format_i18n(@$_COOKIE['wrongscore'] ?? 0).'</li>';
 			}	
 			$letztefrage .= '</ul></div>';
-			$letztefrage .= quiz_adminstats();
+			$letztefrage .= quiz_adminstats($statsbisher);
 			if (!$ende) {
 				$antwortmaske = $content . '<div class="qiz">';
 				$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form" style="'.$showqform.'">';
