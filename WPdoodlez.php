@@ -985,8 +985,8 @@ function quiz_adminstats($statsbisher) {
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 		global $wpdb;
 		$message = '<h6>Admin-Statistik</h6>';
-		if (empty($_POST) ) {
-			$message .='<i class="fa fa-plus-square" title="mouseover zum Einblenden, klicken zum Ausblenden" onmouseover="document.getElementById(\'showonhover\').style.display = \'block\'" onclick="document.getElementById(\'showonhover\').style.display = \'none\'"></i><br>';
+		if ( empty($_POST) && !empty($statsbisher) ) {
+			$message .='<a style="cursor:pointer" title="mouseover zum Einblenden, klicken zum Ausblenden" onmouseover="document.getElementById(\'showonhover\').style.display = \'block\'" onclick="document.getElementById(\'showonhover\').style.display = \'none\'"><i class="fa fa-plus-square"></i> Ergebnisse</a><br>';
 			$message .= '<div id="showonhover" style="position:relative;display:none;margin-bottom:8px">'.$statsbisher.'</div>';
 		}	
 		// Top5 Right
@@ -1096,7 +1096,7 @@ function wpdoo_number_format_short( $n ) {
 function quiz_show_form( $content ) {
 	global $wp;
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
-	if (get_post_type()=='question'):
+	if (get_post_type()=='question') {
 		global $answer;
 		if (isset($_POST['answer'])) $answer = esc_html($_POST['answer']);	// user submitted answer
 		if (isset($_POST['ans'])) $answer = esc_html($_POST['ans']);   // Answer is radio button selection 1 of 4
@@ -1233,9 +1233,9 @@ function quiz_show_form( $content ) {
 				else if ($answer == $answersb[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsb', ($answerstatsb[0] + 1) ?? 0 );
 				else if ($answer == $answersc[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsc', ($answerstatsc[0] + 1) ?? 0 );
 				else if ($answer == $answersd[0]) update_post_meta( get_the_ID(), 'quizz_answerstatsd', ($answerstatsd[0] + 1) ?? 0 );
-				$wikinachschlag = '<ul class="footer-menu">';
-				$wikinachschlag .= 'Spielergebnisse: <li style="display:inline"><a title="Wikipedia more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'"><i class="fa fa-wikipedia-w"></i> Wiki-Artikel</a></li>'; 
-				$wikinachschlag .= '<li style="display:inline"><a title="Fireball search for question" target="_blank" href="https://fireball.de/de/search?q='.esc_html(get_the_content()).'"><i class="fa fa-fire"></i> Fireball-Suche</a></li></ul>'; 
+				$wikinachschlag = '<ul class="footer-menu" style="font-size:.9em">';
+				$wikinachschlag .= 'Spielergebnisse: <li><a title="Wikipedia more info" target="_blank" href="https://de.wikipedia.org/wiki/'.$answers[0].'"><i class="fa fa-wikipedia-w"></i> Wiki-Artikel</a></li>'; 
+				$wikinachschlag .= '<li><a title="Fireball search for question" target="_blank" href="https://fireball.de/de/search?q='.esc_html(get_the_content()).'"><i class="fa fa-fire"></i> Fireball-Suche</a></li></ul>'; 
 			}	
 			// Statistik der bisherrigen Antworten anzeigen
 			if  (is_array($answerstatsa)) $astatsa = $answerstatsa[0]; else $astatsa = 0;
@@ -1273,7 +1273,7 @@ function quiz_show_form( $content ) {
 					$goto = $lastpage[0];
 					wp_safe_redirect( add_query_arg( array('ende'=>1), home_url($wp->request) ) );
 				}
-			} else {   			// Wenn falsche Antwort
+			} else {   	// Wenn falsche Antwort
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_GET['ans']) ) {
 					$error = $ansmixed.'<blockquote class="blockbulb" style="font-size:1.2em;margin-top:1.6em">';
 					$error .= '<i class="fa fa-lg fa-thumbs-o-down"></i> &nbsp; '. $answer;
@@ -1300,6 +1300,7 @@ function quiz_show_form( $content ) {
 			$formstyle .='</style>';
 			$listyle = '<li style="padding:6px 0 6px 0;display:inline">';
 			$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
+			// für die Zwischenablage 
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			$copytags = '';
 			if ( $terms && !is_wp_error( $terms ) ) {
@@ -1307,9 +1308,8 @@ function quiz_show_form( $content ) {
 						$copytags .= ' Kategorie: ' . $term->name . ' - '; 
 				}
 			}	
-			// für die Zwischenablage 
 			$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
-			$letztefrage.= $listyle.'<input title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
+			$letztefrage.= $listyle.'<input name="clippy" title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 			$letztefrage .= '</li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
 			// wenn current theme penguin, dann link zu umfragen
 			$wpxtheme = wp_get_theme(); 
@@ -1394,9 +1394,7 @@ function quiz_show_form( $content ) {
 			}
 		}		
 		return $theForm;
-	else :
-		return $content;
-	endif;
+	} else return $content;
 }
 add_filter( 'the_content', 'quiz_show_form' );
 
