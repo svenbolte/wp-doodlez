@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.130
-Stable tag: 9.1.1.130
+Version: 9.1.1.131
+Stable tag: 9.1.1.131
 Requires at least: 6.0
 Tested up to: 6.4.2
 Requires PHP: 8.1
@@ -25,7 +25,7 @@ create classic polls to let visitors vote about a question
 Shortcode: ```[wpdoodlez_stats]``` show stats of all polls in a list
 
 ### Quizzz
-Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
+Play a quiz game with one or four answers
 Quizzz supports categories images and integrates them in single and header if used in theme.
 It adds a custom post type "question". See readme.txt for more details.
 If you place pictures in upload/quizbilder folder and enter the filename of the picture you can make questions displaying the picture
@@ -118,6 +118,9 @@ Add Shortcode ```[xwordquiz]``` to any page or post
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
+
+=== 9.1.1.131 ===
+hangman game option removed - as it was played rarely
 
 === 9.1.1.129 ===
 add statistics to be displayed after answer how many people gave what answer (total and percent bar)

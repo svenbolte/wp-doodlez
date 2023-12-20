@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying all single question, xword and hangman - penguin theme required
+ * The template for displaying all single question, xword - penguin theme required
  *
  */
 add_action('wp_enqueue_scripts', 'cpz_setup_wdscript');
@@ -48,7 +48,7 @@ get_header();
 		</footer><!-- .entry-footer -->
 	  </article>
 	  <?php
-		if ( !isset($_GET['hangman'])) setPostViews(get_the_ID());
+		setPostViews(get_the_ID());
 		penguin_post_navigation();
 	}		// End the loop.
 	?>
