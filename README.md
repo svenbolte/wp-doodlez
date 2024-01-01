@@ -17,9 +17,14 @@ Quizzz supports categories images and integrates them in single and header if us
 see readme.txt for more details.
 Add Shortcode ```[random-question]``` to any post, page or html-widget
 
-### Crossword
+### Crossword (Keuzwort)
 display a crossword game built on the quizzz words
-Add Shortcode ```[xwordquiz]``` to any page or post
+can be invoked from the menu in each quizfrage post or in the random question widget shortcode
+
+### word puzzle (Wortpuzzle)
+display a word puzzle from selected answers from quiz. On dragging over the correct words the question will be displayed
+can be invoked from the menu in each quizfrage post or in the random question widget shortcode
+
 
 ## Why this fork?
 the main project was not updated for years now. I needed some features and added them to the project.
