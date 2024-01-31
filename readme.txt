@@ -6,7 +6,7 @@ Domain Path: /lang/
 Version: 9.1.1.132
 Stable tag: 9.1.1.132
 Requires at least: 6.0
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 8.1
 
 ## Description ##
