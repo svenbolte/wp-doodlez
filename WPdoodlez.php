@@ -1641,7 +1641,7 @@ function quizz_inner_custom_box( $post ) {
 	'TR' => 'Türkei',
 	'TT' => 'Trinidad und Tobago',
 	'TV' => 'Tuvalu',
-	'TW' => 'China  Republik',
+	'TW' => 'Taiwan',
 	'TZ' => 'Tansania',
 	'UA' => 'Ukraine',
 	'UG' => 'Uganda',
