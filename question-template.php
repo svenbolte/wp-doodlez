@@ -40,6 +40,7 @@ get_header();
 			if ( isset($_GET['crossword'])) {
 				if (1 == esc_html($_GET['crossword'])) echo xwordquiz();
 				if (2 == esc_html($_GET['crossword'])) echo xwordpuzzle();
+				if (3 == esc_html($_GET['crossword'])) echo xwordhangman();
 			} else the_content( );
 		?>
 		</div><!-- .entry-content -->
