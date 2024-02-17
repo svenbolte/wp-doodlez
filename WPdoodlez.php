@@ -803,6 +803,7 @@ function random_quote_func() {
 			$quizbild = get_post_custom_values('quizz_bild');
 			$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
 			$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
+			$quizkat .= ' &nbsp; <a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a>';
 			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 			$message .= '<header class="entry-header" style="margin:0 -4px">';
 			// Wenn eine Quizkategorie da, Katbild anzeigen
@@ -1309,7 +1310,7 @@ function quiz_show_form( $content ) {
 			$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
 			$letztefrage.= $listyle.'<a title="Kreuzworträtsel spielen" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a></li>';
 			$letztefrage.= $listyle.'<a title="Wortsuche spielen" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a></li>';
-
+			$letztefrage.= $listyle.'<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
 		}
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('certificate','WPdoodlez').'</a></li>';
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
@@ -1945,7 +1946,7 @@ function xwordquiz() {
 }
 //   ----------------------------- Kreuzwort module ended -------------------------------------
 
-// ------------------------------- Shortcode für wordsearch puzzle ----------------------------------
+// ------------------------------- wordsearch puzzle ----------------------------------
 
 function umlauteumwandeln($str){
 	$tempstr = Array("Ä" => "AE", "Ö" => "OE", "Ü" => "UE", "ä" => "ae", "ö" => "oe", "ü" => "ue", "ß" => "ss"); 
@@ -2021,4 +2022,70 @@ function xwordpuzzle() {
 	}
 }
 //   ----------------------------- wortpuzzle module ended -------------------------------------
+
+//   ----------------------------- hangman begins -------------------------------------
+function xwordhangman() {
+	  // Get random word from all answers and the question as hint
+	  $args=array(
+      'orderby'=> 'rand',
+      'order'=> 'rand',
+      'post_type' => 'question',
+      'post_status' => 'publish',
+      'posts_per_page' => -1,
+	  'showposts' => -1,
+    );
+    $my_query = new WP_Query($args);
+	$rows=array();
+    if( $my_query->have_posts() ) {
+      while ($my_query->have_posts()) : $my_query->the_post(); 
+		$answers = get_post_custom_values('quizz_answer');
+		$crossohneleer =  (strpos($answers[0], ' ') == false);
+		if ($crossohneleer) {
+				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
+				$crossfrag = get_the_content();
+				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
+				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
+					$element = array( "word" => $crossant, "clue" => $crossfrag );
+					$rows[] = $element;
+				}	
+		}	
+      endwhile;
+    }
+    wp_reset_query();  
+    $html = '';
+    if ($rows) {
+		$i = 1;
+		$wdstring='';$wcstring='';
+        foreach ($rows as $row) {
+			if ($i == 2){ break; }
+			$wdstring .= strtoupper($row['word']).",";
+			$wcstring .= strtoupper($row['clue']).",";
+			$i++;
+		}
+		$wdstring=rtrim($wdstring,',');
+		$wcstring=rtrim($wcstring,',');
+	}
+	
+	// Extract the date attribute from the shortcode
+	$atts = array(
+		'answer' => $wdstring, // word 
+		'hint' => $wcstring, // hint 
+	);
+	$suffix = ( defined( 'STYLE_DEBUG' ) && STYLE_DEBUG ) ? '' : '.min';
+	// Enqueue the JavaScript file
+	wp_enqueue_script('hangman-app-script', plugins_url('/hangapp'.$suffix.'.js', __FILE__), array(), '1.0', true);
+	wp_register_style( 'wp-hangman-styles', plugin_dir_url( __FILE__ ) . '/hangstyle'.$suffix.'.css', null );
+	// script laden und lokalisieren
+	$ratewort = base64_encode($atts['answer']); // hier Shortcode param 'answer=' einsetzen
+	wp_localize_script( 'hangman-app-script', 'hangman_app_script_data', Array ( 'answer' => $ratewort ) );
+	wp_enqueue_style('wp-hangman-styles');
+	return 'Erraten Sie das Wort, das aus '.strlen($atts['answer']).' Buchstaben besteht. <strong>Hinweis zur Antwort:</strong> '.$atts['hint'].'<div id="hangman-game">
+			<div id="hangman-available-characters"><!-- the hangman game begins -->
+			<ul id="hangman-available-characters-list"></ul></div>
+			<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
+			<div id="hangman-figure"><canvas id="hangman-canvas"></canvas></div></div><!-- the hangman game ends -->
+	';
+}
+//   ----------------------------- hangman ended -------------------------------------
+
 ?>
