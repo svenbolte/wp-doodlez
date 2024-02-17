@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.134
-Stable tag: 9.1.1.134
+Version: 9.1.1.135
+Stable tag: 9.1.1.135
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
@@ -2059,7 +2059,7 @@ function xwordhangman() {
         foreach ($rows as $row) {
 			if ($i == 2){ break; }
 			$wdstring .= strtoupper($row['word']).",";
-			$wcstring .= strtoupper($row['clue']).",";
+			$wcstring .= ($row['clue']).",";
 			$i++;
 		}
 		$wdstring=rtrim($wdstring,',');
@@ -2079,12 +2079,14 @@ function xwordhangman() {
 	$ratewort = base64_encode($atts['answer']); // hier Shortcode param 'answer=' einsetzen
 	wp_localize_script( 'hangman-app-script', 'hangman_app_script_data', Array ( 'answer' => $ratewort ) );
 	wp_enqueue_style('wp-hangman-styles');
-	return 'Erraten Sie das Wort, das aus '.strlen($atts['answer']).' Buchstaben besteht. <strong>Hinweis zur Antwort:</strong> '.$atts['hint'].'<div id="hangman-game">
+	$htmout = '<ul class="footer-menu" style="display:inline"><li><a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li></ul>';
+	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($atts['answer']).' Buchstaben besteht. &nbsp; <strong>Hinweis zur Antwort:</strong> '.$atts['hint'].'<div id="hangman-game">
 			<div id="hangman-available-characters"><!-- the hangman game begins -->
 			<ul id="hangman-available-characters-list"></ul></div>
 			<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
 			<div id="hangman-figure"><canvas id="hangman-canvas"></canvas></div></div><!-- the hangman game ends -->
 	';
+	return $htmout;
 }
 //   ----------------------------- hangman ended -------------------------------------
 

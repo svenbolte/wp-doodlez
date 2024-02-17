@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Doodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-17 14:53+0000\n"
+"POT-Creation-Date: 2024-02-17 20:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -143,6 +143,10 @@ msgstr ""
 msgid "hangman"
 msgstr ""
 
+#: WPdoodlez.php:2082
+msgid "hangman new game other word"
+msgstr ""
+
 #. Author URI of the plugin
 msgid "https://github.com/svenbolte"
 msgstr ""
@@ -249,7 +253,7 @@ msgstr ""
 msgid "play crossword"
 msgstr ""
 
-#: WPdoodlez.php:806 WPdoodlez.php:1313
+#: WPdoodlez.php:806 WPdoodlez.php:1313 WPdoodlez.php:2082
 msgid "play hangman"
 msgstr ""
 

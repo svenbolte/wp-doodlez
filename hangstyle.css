@@ -13,21 +13,20 @@ padding-left:0
 }
 
 #hangman-answer-placeholders,#hangman-available-characters {
-padding:8px
+padding:4px
 }
 
 #hangman-available-characters-list,#hangman-placeholders,.word-placeholder > ul {
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-margin:0 auto
+gap:5px;
+margin:4px auto
 }
 
 .character-placeholder,.hangman-available-character,.word-placeholder {
 cursor:pointer;
-list-style-type:none!important;
-margin:2px 5px;
-padding:5px 10px
+list-style-type:none!important
 }
 
 .hangman-available-character {
@@ -36,6 +35,10 @@ border-radius:5px;
 box-shadow:1px 1px 2px #888;
 min-width:40px;
 text-align:center
+}
+
+.hangman-available-character:hover {
+background-color:#ccc8
 }
 
 .hangman-available-character.disabled {
@@ -48,7 +51,6 @@ display:flex
 
 .character-placeholder {
 align-self:baseline;
-margin:2px 0;
 max-width:22px;
 padding:5px
 }
@@ -74,8 +76,7 @@ padding:8px
 clear:both;
 display:inline-block;
 height:100%;
-margin:20px auto;
-padding:8px
+padding:6px
 }
 
 #hangman-canvas {

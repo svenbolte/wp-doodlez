@@ -5,7 +5,7 @@
       const availableChars = [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
             'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
           ],
           maxGuesses = 10,
           answer = getAnswer(),
@@ -265,7 +265,6 @@
           return;
         }
 
-
         if (!isValidChar(currentGuess) || guessedChars.includes(currentGuess)) {
           console.log('Falsche Antwort');
           return;
@@ -282,7 +281,9 @@
         }
         else {
           misses++;
-          drawHangman(misses - 1);
+          // console.log("falsch: " + misses);
+		  noticesSelector.innerHTML = "<span class='newlabel yellow headline'>Falsch: " + misses + " von 10</span>";
+		  drawHangman(misses - 1);
           if (playerLost()) {
             doGameEnd('lost');
           }
@@ -355,10 +356,11 @@
         var html;
 
         if ('won' === outcome) {
-          html = '<p>Sie haben den Betriff erraten Herzlichen Glückwunsch.</p>';
+          html = '<span class="newlabel white">Sie haben den Betriff ' + answer + ' erraten. Herzlichen Glückwunsch.</span>';
         }
         else {
-          html = '<p>Sie haben den Begriff leider nicht erraten<button id="hangman-reset-game">Neu versuchen</button></p>';
+          html = '<span class="newlabel yellow">Sie haben den Begriff ' + answer + ' leider nicht erraten!</span>';
+			// <button id="hangman-reset-game">Neu versuchen</button>
         }
 
         noticesSelector.innerHTML = html;
