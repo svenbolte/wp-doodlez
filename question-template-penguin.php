@@ -28,11 +28,17 @@ get_header();
 		echo '<div class="entry-meta-top">';
 		echo meta_icons(); 
 		echo '</div>';
-		if ( is_single() ) {
-			the_title( '<h1 class="entry-title">', '</h1>' );
+		if ( isset($_GET['crossword'])) {
+			if (1 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">Kreuzworträtsel</h1>';
+			if (2 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">Wortpuzzle</h1>';
+			if (3 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">Hangman Rätsel</h1>';
 		} else {
-			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-		}
+			if ( is_single() ) {
+				the_title( '<h1 class="entry-title">', '</h1>' );
+			} else {
+				the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
+			}
+		}	
 		echo '</header><!-- .entry-header -->';
 		?>
 		<div class="entry-content">

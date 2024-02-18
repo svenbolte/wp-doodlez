@@ -820,6 +820,7 @@ function random_quote_func() {
 				$readmore = '<div class="middle">' . __('answer question', 'WPdoodlez') . ' &nbsp;<i class="fa fa-forward"></i></div>';
 				$message .= $readmore;
 				// Bild zur Quizfrage einfügen, wenn vorhanden
+				$bildshow=''; $bildlink='';
 				if (!empty($quizbild[0])) {
 					$upload_dir = wp_upload_dir();
 					$upload_basedir = $upload_dir['basedir'];
@@ -829,7 +830,7 @@ function random_quote_func() {
 						$bildshow = '<div class="middle" style="opacity:.8;top:3px"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:3px;top:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></div>';
 					} 
 					$message .= $bildshow;
-				} else { $bildshow=''; $bildlink='';}
+				}
 				$message .= '</div>';
 			}			
 			$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
@@ -2042,7 +2043,7 @@ function xwordhangman() {
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
 		if ($crossohneleer) {
 				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
-				$crossfrag = get_the_content();
+				$crossfrag = get_the_title().' - '.get_the_content();
 				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
 				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
 					$element = array( "word" => $crossant, "clue" => $crossfrag );
@@ -2080,7 +2081,8 @@ function xwordhangman() {
 	wp_localize_script( 'hangman-app-script', 'hangman_app_script_data', Array ( 'answer' => $ratewort ) );
 	wp_enqueue_style('wp-hangman-styles');
 	$htmout = '<ul class="footer-menu" style="display:inline"><li><a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li></ul>';
-	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($atts['answer']).' Buchstaben besteht. &nbsp; <strong>Hinweis zur Antwort:</strong> '.$atts['hint'].'<div id="hangman-game">
+	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($atts['answer']).' Buchstaben 
+			('.count( array_unique( str_split( $atts['answer']))).' davon eindeutig) besteht. &nbsp; <strong>Hinweis zur Antwort:</strong> '.$atts['hint'].'<div id="hangman-game">
 			<div id="hangman-available-characters"><!-- the hangman game begins -->
 			<ul id="hangman-available-characters-list"></ul></div>
 			<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
