@@ -2042,51 +2042,52 @@ function xwordhangman() {
 		$answers = get_post_custom_values('quizz_answer');
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
 		if ($crossohneleer) {
-				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
-				$crossfrag = get_the_title().' - '.get_the_content();
-				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
-				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
-					$element = array( "word" => $crossant, "clue" => $crossfrag );
-					$rows[] = $element;
+			$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
+			$crossfrag = get_the_content();
+			if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
+				strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
+				$quizkat='';
+				$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+				if ( $terms && !is_wp_error( $terms ) ) {
+					foreach ( $terms as $term ) {
+						$quizkat .= ' &nbsp; <i class="fa fa-folder-open"></i> ' . $term->name . ' ';
+					}
 				}	
+				$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+				$element = array( "word" => $crossant, "clue" => $crossfrag, 'details' => '<a target="_blank" title="Frage als Quizfrage spielen" href="'.get_the_permalink().'">'.get_the_title().'</a> aus '.$herkunftsland[0].' '.$quizkat.' ' );
+				$rows[] = $element;
+			}	
 		}	
       endwhile;
     }
     wp_reset_query();  
-    $html = '';
     if ($rows) {
-		$i = 1;
-		$wdstring='';$wcstring='';
-        foreach ($rows as $row) {
-			if ($i == 2){ break; }
-			$wdstring .= strtoupper($row['word']).",";
-			$wcstring .= ($row['clue']).",";
-			$i++;
-		}
+		$wdstring='';$wcstring='';$wdetails='';
+		$wdstring = strtoupper($rows[0]['word']).",";
+		$wcstring = ($rows[0]['clue']).",";
+		$wdetails = $rows[0]['details'];
 		$wdstring=rtrim($wdstring,',');
 		$wcstring=rtrim($wcstring,',');
 	}
-	
-	// Extract the date attribute from the shortcode
-	$atts = array(
-		'answer' => $wdstring, // word 
-		'hint' => $wcstring, // hint 
-	);
 	$suffix = ( defined( 'STYLE_DEBUG' ) && STYLE_DEBUG ) ? '' : '.min';
 	// Enqueue the JavaScript file
 	wp_enqueue_script('hangman-app-script', plugins_url('/hangapp'.$suffix.'.js', __FILE__), array(), '1.0', true);
 	wp_register_style( 'wp-hangman-styles', plugin_dir_url( __FILE__ ) . '/hangstyle'.$suffix.'.css', null );
 	// script laden und lokalisieren
-	$ratewort = base64_encode($atts['answer']); // hier Shortcode param 'answer=' einsetzen
+	$ratewort = base64_encode($wdstring); 
 	wp_localize_script( 'hangman-app-script', 'hangman_app_script_data', Array ( 'answer' => $ratewort ) );
 	wp_enqueue_style('wp-hangman-styles');
-	$htmout = '<ul class="footer-menu" style="display:inline"><li><a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li></ul>';
-	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($atts['answer']).' Buchstaben 
-			('.count( array_unique( str_split( $atts['answer']))).' davon eindeutig) besteht. &nbsp; <strong>Hinweis zur Antwort:</strong> '.$atts['hint'].'<div id="hangman-game">
-			<div id="hangman-available-characters"><!-- the hangman game begins -->
-			<ul id="hangman-available-characters-list"></ul></div>
-			<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
-			<div id="hangman-figure"><canvas id="hangman-canvas"></canvas></div></div><!-- the hangman game ends -->
+	$htmout = '<ul class="footer-menu" style="display:inline"><li>
+		<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'">
+		<i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li></ul>';
+	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($wdstring).' Buchstaben 
+		('.count( array_unique( str_split( $wdstring))).' davon eindeutig) besteht. &nbsp; 
+		<strong>Hinweis zur Antwort:</strong> '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '
+		.$wcstring.'<div id="hangman-game">
+		<div id="hangman-available-characters"><!-- the hangman game begins -->
+		<ul id="hangman-available-characters-list"></ul></div>
+		<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
+		<div id="hangman-figure"><canvas id="hangman-canvas"></canvas></div></div><!-- the hangman game ends -->
 	';
 	return $htmout;
 }
