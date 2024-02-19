@@ -1882,7 +1882,7 @@ function xwordquiz() {
 		$answers = get_post_custom_values('quizz_answer');
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
 		if ($crossohneleer) {
-				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
+				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-z]/", '', esc_html($answers[0]) ) );
 				$crossfrag = get_the_content();
 				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
 				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
@@ -1949,8 +1949,13 @@ function xwordquiz() {
 
 // ------------------------------- wordsearch puzzle ----------------------------------
 
-function umlauteumwandeln($str){
-	$tempstr = Array("Ä" => "AE", "Ö" => "OE", "Ü" => "UE", "ä" => "ae", "ö" => "oe", "ü" => "ue", "ß" => "ss"); 
+function umlauteumwandeln($str) {   // wandelt Umlaute und Akzentbuchstaben in normale Buchstaben/ue/oe um
+	$tempstr = array(   'Ä' => 'AE', 'Ö' => 'OE', 'Ü' => 'UE', 'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss', 
+		'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+		'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+		'Ú'=>'U', 'Û'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+		'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+		'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
 	return strtr($str, $tempstr);
 }
 
@@ -1970,7 +1975,7 @@ function xwordpuzzle() {
 		$answers = get_post_custom_values('quizz_answer');
 		$crossohneleer =  (strpos($answers[0], ' ') == false);
 		if ($crossohneleer) {
-				$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
+				$crossant = preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
 				$crossfrag = get_the_content();
 				if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
 				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
@@ -2026,49 +2031,68 @@ function xwordpuzzle() {
 
 //   ----------------------------- hangman begins -------------------------------------
 function xwordhangman() {
-	  // Get random word from all answers and the question as hint
-	  $args=array(
-      'orderby'=> 'rand',
-      'order'=> 'rand',
-      'post_type' => 'question',
-      'post_status' => 'publish',
-      'posts_per_page' => -1,
-	  'showposts' => -1,
-    );
-    $my_query = new WP_Query($args);
-	$rows=array();
-    if( $my_query->have_posts() ) {
-      while ($my_query->have_posts()) : $my_query->the_post(); 
-		$answers = get_post_custom_values('quizz_answer');
-		$crossohneleer =  (strpos($answers[0], ' ') == false);
-		if ($crossohneleer) {
-			$crossant = umlauteumwandeln(preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html($answers[0]) ) );
-			$crossfrag = get_the_content();
-			if( strlen($crossant) <= 12 && strlen($crossant) >= 2 &&
-				strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
-				$quizkat='';
-				$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
-				if ( $terms && !is_wp_error( $terms ) ) {
-					foreach ( $terms as $term ) {
-						$quizkat .= ' &nbsp; <i class="fa fa-folder-open"></i> ' . $term->name . ' ';
-					}
+	$randomhang = isset($_GET['randomize'])?intval(esc_html($_GET['randomize'])):0;
+	if ($randomhang == 1) {
+		// Get random word from all answers and the question as hint
+		$args=array(
+		  'orderby'=> 'rand',
+		  'order'=> 'rand',
+		  'post_type' => 'question',
+		  'post_status' => 'publish',
+		  'posts_per_page' => -1,
+		  'showposts' => -1,
+		);
+		$my_query = new WP_Query($args);
+		$rows=array();
+		if( $my_query->have_posts() ) {
+		  while ($my_query->have_posts()) : $my_query->the_post(); 
+			$answers = get_post_custom_values('quizz_answer');
+			$crossohneleer =  (strpos($answers[0], ' ') == false);
+			if ($crossohneleer) {
+				$crossant = preg_replace("/[^A-Za-z]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
+				$crossfrag = get_the_content();
+				if( strlen($crossant) <= 20 && strlen($crossant) >= 2 &&
+					strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
+					$quizkat='';
+					$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+					if ( $terms && !is_wp_error( $terms ) ) {
+						foreach ( $terms as $term ) {
+							$quizkat .= ' &nbsp; <i class="fa fa-folder-open"></i> ' . $term->name . ' ';
+						}
+					}	
+					$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+					$element = array( "wlink" => get_the_permalink(), "word" => $crossant, "clue" => $crossfrag, 'details' => '<a target="_blank" title="Frage als Quizfrage spielen" href="'.get_the_permalink().'">'.get_the_title().'</a> aus '.$herkunftsland[0].' '.$quizkat.' ' );
+					$rows[] = $element;
 				}	
-				$herkunftsland = get_post_custom_values('quizz_herkunftsland');
-				$element = array( "word" => $crossant, "clue" => $crossfrag, 'details' => '<a target="_blank" title="Frage als Quizfrage spielen" href="'.get_the_permalink().'">'.get_the_title().'</a> aus '.$herkunftsland[0].' '.$quizkat.' ' );
-				$rows[] = $element;
 			}	
+		  endwhile;
+		}
+		wp_reset_query();  
+		if ($rows) {
+			$wdstring='';$wcstring='';$wdetails='';
+			$wdstring = strtoupper($rows[0]['word']).",";
+			$wcstring = ($rows[0]['clue']).",";
+			$wdetails = $rows[0]['details'];
+			$wdstring=rtrim($wdstring,',');
+			$wcstring=rtrim($wcstring,',');
+			$wlink = $rows[0]['wlink'];
+		}
+	} else {
+		$quizkat='';
+		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+		if ( $terms && !is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
+				$quizkat .= ' &nbsp; <i class="fa fa-folder-open"></i> ' . $term->name . ' ';
+			}
 		}	
-      endwhile;
-    }
-    wp_reset_query();  
-    if ($rows) {
-		$wdstring='';$wcstring='';$wdetails='';
-		$wdstring = strtoupper($rows[0]['word']).",";
-		$wcstring = ($rows[0]['clue']).",";
-		$wdetails = $rows[0]['details'];
-		$wdstring=rtrim($wdstring,',');
-		$wcstring=rtrim($wcstring,',');
-	}
+		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+		$answers = get_post_custom_values('quizz_answer');
+		$crossant = preg_replace("/[^A-Za-z]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
+		$wdstring = $crossant;
+		$wcstring = get_the_content();
+		$wdetails = '<a target="_blank" title="Frage als Quizfrage spielen" href="'.get_the_permalink().'">'.get_the_title().'</a> aus '.$herkunftsland[0].' '.$quizkat.' ';
+		$wlink = get_the_permalink();
+	}	
 	$suffix = ( defined( 'STYLE_DEBUG' ) && STYLE_DEBUG ) ? '' : '.min';
 	// Enqueue the JavaScript file
 	wp_enqueue_script('hangman-app-script', plugins_url('/hangapp'.$suffix.'.js', __FILE__), array(), '1.0', true);
@@ -2077,13 +2101,14 @@ function xwordhangman() {
 	$ratewort = base64_encode($wdstring); 
 	wp_localize_script( 'hangman-app-script', 'hangman_app_script_data', Array ( 'answer' => $ratewort ) );
 	wp_enqueue_style('wp-hangman-styles');
-	$htmout = '<ul class="footer-menu" style="display:inline"><li>
-		<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'">
-		<i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li></ul>';
+	$htmout = '<blockquote class="blockbulb"><ul class="footer-menu" style="display:inline"><li>
+		<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3,'randomize'=>1), get_post_permalink() ).'">
+		<i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li>';
+	$htmout .= '<li><a href="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'" title="diese Frage teilen" ><i class="fa fa-share-square-o"></i> Spiel teilen</a></li></ul>';
 	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($wdstring).' Buchstaben 
 		('.count( array_unique( str_split( $wdstring))).' davon eindeutig) besteht. &nbsp; 
-		<strong>Hinweis zur Antwort:</strong> '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '
-		.$wcstring.'<div id="hangman-game">
+		<strong>Hinweis:</strong> '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '
+		.$wcstring.'</blockquote><div id="hangman-game">
 		<div id="hangman-available-characters"><!-- the hangman game begins -->
 		<ul id="hangman-available-characters-list"></ul></div>
 		<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
