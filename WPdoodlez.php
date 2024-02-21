@@ -2049,7 +2049,7 @@ function xwordhangman() {
 			$answers = get_post_custom_values('quizz_answer');
 			$crossohneleer =  (strpos($answers[0], ' ') == false);
 			if ($crossohneleer) {
-				$crossant = preg_replace("/[^A-Za-z]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
+				$crossant = preg_replace("/[^A-Za-z0-9]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
 				$crossfrag = get_the_content();
 				if( strlen($crossant) <= 20 && strlen($crossant) >= 2 &&
 					strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
@@ -2087,7 +2087,7 @@ function xwordhangman() {
 		}	
 		$herkunftsland = get_post_custom_values('quizz_herkunftsland');
 		$answers = get_post_custom_values('quizz_answer');
-		$crossant = preg_replace("/[^A-Za-z]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
+		$crossant = preg_replace("/[^A-Za-z0-9]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
 		$wdstring = $crossant;
 		$wcstring = get_the_content();
 		$wdetails = '<a target="_blank" title="Frage als Quizfrage spielen" href="'.get_the_permalink().'">'.get_the_title().'</a> aus '.$herkunftsland[0].' '.$quizkat.' ';
@@ -2104,11 +2104,13 @@ function xwordhangman() {
 	$htmout = '<blockquote class="blockbulb"><ul class="footer-menu" style="display:inline"><li>
 		<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3,'randomize'=>1), get_post_permalink() ).'">
 		<i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li>';
-	$htmout .= '<li><a href="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'" title="diese Frage teilen" ><i class="fa fa-share-square-o"></i> Spiel teilen</a></li></ul>';
+	$htmout .= '</ul>';
 	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($wdstring).' Buchstaben 
 		('.count( array_unique( str_split( $wdstring))).' davon eindeutig) besteht. &nbsp; 
-		<strong>Hinweis:</strong> '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '
-		.$wcstring.'</blockquote><div id="hangman-game">
+		<strong>Hinweis:</strong> <a href="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'"><i title="Link aufrufen" class="fa fa-share-square-o"></i></a> 
+		 &nbsp; <input type="text" title="Link zum teilen kopieren" class="copy-to-clipboard" value="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'" readonly>
+		 &nbsp; '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '.$wcstring.'
+ 		</blockquote><div id="hangman-game">
 		<div id="hangman-available-characters"><!-- the hangman game begins -->
 		<ul id="hangman-available-characters-list"></ul></div>
 		<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
