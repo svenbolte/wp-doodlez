@@ -2105,8 +2105,8 @@ function xwordhangman() {
 		<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3,'randomize'=>1), get_post_permalink() ).'">
 		<i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li>';
 	$htmout .= '</ul>';
-	$htmout .= ' &nbsp; Erraten Sie das Wort, das aus '.strlen($wdstring).' Buchstaben 
-		('.count( array_unique( str_split( $wdstring))).' davon eindeutig) besteht. &nbsp; 
+	$htmout .= ' &nbsp; Erraten Sie das Wort/den Satz (ohne Leerzeichen) aus '.strlen($wdstring).' Buchstaben 
+		('.count( array_unique( str_split( $wdstring))).' davon eindeutig). &nbsp; 
 		<strong>Hinweis:</strong> <a href="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'"><i title="Link aufrufen" class="fa fa-share-square-o"></i></a> 
 		 &nbsp; <input type="text" title="Link zum teilen kopieren" class="copy-to-clipboard" value="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'" readonly>
 		 &nbsp; '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '.$wcstring.'
