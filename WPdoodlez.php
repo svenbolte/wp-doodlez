@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.135
-Stable tag: 9.1.1.135
+Version: 9.1.1.136
+Stable tag: 9.1.1.136
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
@@ -71,19 +71,19 @@ function wpdoodlez_sc_func($atts) {
 	wp_enqueue_script( "WPdoodlez", plugins_url( 'WPdoodlez.js', __FILE__ ), array('jquery'), null, true);
 	wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array(), null, 'all');
 	global $post;
-	$args = shortcode_atts(array( 'id' => 0, 'chart' => true ), $atts);
+	$args = shortcode_atts(array( 'id' => 0, 'chart' => 1 ), $atts);
 	$output ='';
 	$qargs = array(
 		'p'         => $args['id'],
 		'post_type' => array('wpdoodle'),
 		'post_status' => 'publish',
-		'posts_per_page' => 1
+		'posts_per_page' => 2
 	);
 	$query1 = new WP_Query( $qargs );
 	if ( $query1->have_posts() ) {
 		while ( $query1->have_posts() ) {
 			$query1->the_post();
-			$output .= get_doodlez_content($args['chart']);
+			$output .= get_doodlez_content(intval($args['chart']));
 			$output .= '<script>var wpdoodle_ajaxurl = "' . admin_url( 'admin-ajax.php', is_ssl() ? 'https' : 'http' ).'";'; 
 			$output .= 'var wpdoodle = "'. md5( AUTH_KEY . get_the_ID() ). '";</script>';
 		}
@@ -655,7 +655,7 @@ function get_doodlez_content($chartan) {
 		// Chart Pie anzeigen zu den Ergebnissen
 		$piesum = rtrim($piesum, ",");
 		$pielabel = rtrim($pielabel, ",");
-		if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) && ($chartan) ) {
+		if( class_exists( 'PB_ChartsCodes' ) && !empty($pielabel) && (1 === $chartan) ) {
 			$htmlout .= do_shortcode('[chartscodes_polar accentcolor="1" title="' . __( 'votes pie chart', 'WPdoodlez' ) . '" values="'.$piesum.'" labels="'.$pielabel.'" absolute="1"]');
 		}	
 	}		/* END password protected? */

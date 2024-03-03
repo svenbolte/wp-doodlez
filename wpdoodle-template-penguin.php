@@ -26,7 +26,7 @@ get_header();
 		echo '</header><!-- .entry-header -->';
 		?>
 		<div class="entry-content">
-			<?php echo get_doodlez_content(true); ?>
+		<?php echo get_doodlez_content(1);  // mit Tortengrafik ?>
 		</div><!-- .entry-content -->
 		<footer class="entry-footer">
 		</footer><!-- .entry-footer -->
