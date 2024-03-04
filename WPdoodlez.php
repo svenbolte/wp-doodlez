@@ -67,6 +67,7 @@ function wd_get_the_user_ip() {
 }
 
 // wpdoodlez_sc(ID) - Call WPDoodles complete Content from another page or post as a shortcode
+//  only use one shortcode per page or post - not more of them on one page/post!
 function wpdoodlez_sc_func($atts) {
 	wp_enqueue_script( "WPdoodlez", plugins_url( 'WPdoodlez.js', __FILE__ ), array('jquery'), null, true);
 	wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array(), null, 'all');
