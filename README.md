@@ -1,29 +1,48 @@
 # WPdoodlez, Polls, Quizz and Crossword
 
 ### WPDoodlez
-plan and vote to find a common appointment date with participiants for an event. It adds a custom post type "wpdoodlez".
+plan and vote to find a common appointment date with participiants for an event. Works similar to famous Doodle(TM) website.
+It adds a custom post type "wpdoodlez".
 
-Shortcode: ```[wpdoodlez_sc id=post-ID chart=true]``` set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
+You can just use the custom posts for polls and appointments or place the poll in an existing post or page using the shortcode:
 
 ### Poll
 uses same technology and custom post type like WPDoodlez
 create classic polls to let visitors vote about a question
 
-Shortcode: ```[wpdoodlez_stats]``` show stats of all polls in a list
+
+### Shortcodes
+
+Shortcode: ´´´[wpdoodlez_sc id=post-ID chart=true]´´´
+ set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
+ set chart to fals to omit showing cake chart (requires chartscodes plugin)
+
+Shortcode: ```[wpdoodlez_stats]``` show stats of all polls in a list on a page or post
+	id = 0  // shows stats of all polls and appointments, set other id to specify the output
+Notice: You may use all shortcodes only once per page or post.
+
 
 ### Quizzz
-Play a quiz game with one or four answers and hangman (galgenmännchen) option for finding the solution
-Quizzz supports categories images and integrates them in single and header if used in theme. It adds a custom post type "question"
-see readme.txt for more details.
-Add Shortcode ```[random-question]``` to any post, page or html-widget
+Play a quiz game with one or four answers
+Quizzz supports categories images and integrates them in single and header if used in theme.
+It adds a custom post type "question". See readme.txt for more details.
+If you place pictures in upload/quizbilder folder and enter the filename of the picture you can make questions displaying the picture
 
-### Crossword (Keuzwort)
-display a crossword game built on the quizzz words
-can be invoked from the menu in each quizfrage post or in the random question widget shortcode
+Add Shortcode ´´´[random-question]´´´ to an html widget (only on front page)
 
-### word puzzle (Wortpuzzle)
-display a word puzzle from selected answers from quiz. On dragging over the correct words the question will be displayed
-can be invoked from the menu in each quizfrage post or in the random question widget shortcode
+#### Crossword
+add crossword=1 to any quizfrage post commandline 
+displays a crossword game built on the quizzz words (by shortcode and clickable in random question widget
+
+
+#### Wordpuzzle
+add crossword=2 to any quizfrage post commandline 
+displays a wordpuzzle with random words from quizfragen Answers
+
+
+#### Hangman js
+add crossword=3 to any quizfrage post commandline 
+displays a hangman quiz with canvas graph. Using random words from quizfragen Answers
 
 
 ## Why this fork?
