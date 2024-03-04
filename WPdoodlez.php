@@ -95,14 +95,16 @@ function wpdoodlez_sc_func($atts) {
 add_shortcode('wpdoodlez_sc', 'wpdoodlez_sc_func');
 
 
-// wpdoodlez-adminstats
+// wpdoodlez-adminstats for polls
 function wpdoodlez_stats_func($atts) {
 	global $post;
 	$args = shortcode_atts(array( 'id' => 0 ), $atts);
+	if (intval($args['id']) > 0) $idfilter=array(intval($args['id'])); else $idfilter='';
 	$output ='';
 	$qargs = array(
 		'post_type' => array('wpdoodle'),
 		'post_status' => 'publish',
+		'post__in'  => $idfilter,
 		'posts_per_page' => -1
 	);
 	$query1 = new WP_Query( $qargs );
