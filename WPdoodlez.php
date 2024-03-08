@@ -147,8 +147,8 @@ function wpdoodlez_stats_func($atts) {
 				}
 				$titelqm = get_the_title();
 				if ( substr($titelqm, -1, 1) != '?' ) $titelqm .= '?';
-				$output .= '<p title="'.__( 'Vote!', 'WPdoodlez' ).'" style="font-size:1.1em;margin-bottom:8px"><i class="fa fa-lg fa-check-square-o"></i> <a href="'.get_the_permalink().'">'.get_the_id().' &nbsp; '.$titelqm.'</a></p>';
 				$output .= '<table>';	
+				$output .= '<thead><tr><th colspan=3><i class="fa fa-lg fa-check-square-o"></i> <a title="'.__( 'Vote!', 'WPdoodlez' ).'" href="'.get_the_permalink().'">'.get_the_id().' &nbsp; '.$titelqm.'</a></th></tr></thead>';
 				$xperc = 0;
 				$votecounter = 0;
 				foreach ( $suggestions as $key => $value ) {
