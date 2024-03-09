@@ -10,13 +10,15 @@ Shortcode: ´´´[wpdoodlez_sc id=post-ID chart=true]´´´
  set post ID to integrate Doodlez or Poll in other pages, set chart to false if you do not want pie graph
  set chart to fals to omit showing cake chart (requires chartscodes plugin)
 
+ Notice: You may use this shortcode only once per page or post.
+
 ### Poll
 uses same technology and custom post type like WPDoodlez
 create classic polls to let visitors vote about a question
 
-Shortcode: ´´´[wpdoodlez_stats id=22817]´´´ show stats of all polls in a list on a page or post
+Shortcode: ´´´[wpdoodlez_stats id=22817 type=poll|doodlez]´´´ show stats of all polls or doodlez in a list on a page or post
 	id = 0  // or omit id parameter - shows stats of all polls and appointments, set other id to specify the output
-Notice: You may use all shortcodes only once per page or post.
+	type = poll (or empty, default) displays all poll results // or type = doodlez display all doodlez results
 
 ### Quizzz
 Play a quiz game with one or four answers

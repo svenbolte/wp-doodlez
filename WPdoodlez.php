@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.136
-Stable tag: 9.1.1.136
+Version: 9.1.1.140
+Stable tag: 9.1.1.140
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
@@ -97,9 +97,10 @@ add_shortcode('wpdoodlez_sc', 'wpdoodlez_sc_func');
 
 // wpdoodlez-adminstats for polls
 function wpdoodlez_stats_func($atts) {
-	global $post;
-	$args = shortcode_atts(array( 'id' => 0 ), $atts);
+	global $wp,$post;
+	$args = shortcode_atts(array( 'id' => 0, 'type' => 'poll' ), $atts);   // Type = poll oder doodlez
 	if (intval($args['id']) > 0) $idfilter=array(intval($args['id'])); else $idfilter='';
+	$wpdtype = esc_html($args['type']);
 	$output ='';
 	$qargs = array(
 		'post_type' => array('wpdoodle'),
@@ -120,7 +121,7 @@ function wpdoodlez_stats_func($atts) {
 				}
 			}
 			$polli = array_key_exists('vote1', $suggestions);
-			if ( $polli ) {
+			if ( $wpdtype == 'poll' && $polli ) {
 				$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 				$cct = 0;
 				$voteip='';$firstvote='';$votezeit='';
@@ -171,6 +172,58 @@ function wpdoodlez_stats_func($atts) {
 					} 
 				}	
 				$output .= '</td></tr></tfoot>';
+				$output .= '</table>';
+			} else if ( $wpdtype == 'doodlez' && !$polli ) {      
+				// Kopfzeilen     // Type = 'doodlez'
+				$output .= '<table><thead><tr><th colspan=10><i class="fa fa-calendar-o"></i> 
+					<a href="'.get_the_permalink().'">
+					' . __( 'Voting', 'WPdoodlez' ) . ': '.get_the_title().'</a> &nbsp;'. get_the_excerpt(). '</th></tr>';
+				$output .= '<tr><th>' . __( 'User name', 'WPdoodlez'  ) . '</th><th><i class="fa fa-clock-o"></i></th>';
+				foreach ( $suggestions as $key => $value ) {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
+						$output .=  '<th style="word-break:break-all;overflow-wrap:anywhere">';
+						// ICS Download zum Termin anbieten
+						if( function_exists('export_ics') && is_singular() ) {
+							$nextnth = strtotime($key);
+							$nextnth1h = strtotime($key);
+							$output .=  ' <a title="'.__("ICS add reminder to your calendar","penguin").'" href="'.home_url(add_query_arg(array($_GET, 'start' =>wp_date('Ymd\THis', $nextnth), 'ende' => wp_date('Ymd\THis', $nextnth1h) ),$wp->request.'/icalfeed/')).'"><i class="fa fa-calendar-check-o"></i></a> ';
+						}	
+						$output .=  $key . '</th>';
+					}	
+				}
+				$output .=  '</tr></thead><tbody>';
+				$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+				// Inhalt Abstimmungen
+				foreach ( $votes as $name => $vote ) {
+					$output .= '<tr>';
+					$output .=  '<td style="text-align:left">'.$name.'</td>'; 
+					$output .=  '<td style="text-align:left"><abbr>'; 
+					if (isset($vote['zeit'])) $votezeit = date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')); else $votezeit='';
+					if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
+					// Wenn ipflag plugin aktiv und user angemeldet
+					$output .=  ' ' . $votezeit.'</abbr></td>';
+					foreach ( $suggestions as $key => $value ) {
+						if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes") {
+							$output .=  '<td style="text-align:center">';
+							if ( !empty($vote[ $key ]) ) {
+								$votes_cout[ $key ] ++;
+								$output .=  '<label data-key="' . $key . '">'. $value[ 0 ].'</label>';
+							} else {
+								$output .=  '<label></label>';
+							}
+							$output .=  '</td>';
+						}
+					}	
+					$output .= '</tr>';
+				}
+				$output .= '</tbody><tfoot>';
+				$output .= '<tr><td>' . __( 'total votes', 'WPdoodlez' ).':</td><td></td>';
+				foreach ( $votes_cout as $key => $value ) {
+					if ($key != "post_views_count" && $key != "post_views_timestamp" && $key != "likes" ) {
+						$output .= '<td>'. $value.'</td>';
+					}
+				}
+				$output .= '</tr></tfoot>';
 				$output .= '</table>';
 			}	
 		}
