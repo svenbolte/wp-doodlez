@@ -3,10 +3,10 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.140
-Stable tag: 9.1.1.140
+Version: 9.1.1.141
+Stable tag: 9.1.1.141
 Requires at least: 6.0
-Tested up to: 6.5.2
+Tested up to: 6.5.3
 Requires PHP: 8.1
 
 ## Description ##
@@ -146,6 +146,10 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+
+=== 9.1.1.141 ===
+wp 653 compatibility
+quizbilder minified and web optimized
 
 === 9.1.1.136 ===
 hangman game added as javascript - much faster and slim and better canvas graphics

@@ -10,10 +10,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.140
-Stable tag: 9.1.1.140
+Version: 9.1.1.141
+Stable tag: 9.1.1.141
 Requires at least: 6.0
-Tested up to: 6.5.2
+Tested up to: 6.5.3
 Requires PHP: 8.0
 */
 
