@@ -613,7 +613,7 @@ function get_doodlez_content($chartan) {
 					if( function_exists('export_ics') && is_singular() ) {
 						$nextnth = strtotime($key);
 						$nextnth1h = strtotime($key);
-						$htmlout .= ' <a title="'.__("ICS add reminder to your calendar","penguin").'" href="'.home_url(add_query_arg(array($_GET, 'start' =>wp_date('Ymd\THis', $nextnth), 'ende' => wp_date('Ymd\THis', $nextnth1h) ),$wp->request.'/icalfeed/')).'"><i class="fa fa-calendar-check-o"></i></a> ';
+						$htmlout .= ' <a title="'.__("ICS add reminder to your calendar","WPdoodlez").'" href="'.home_url(add_query_arg(array($_GET, 'start' =>wp_date('Ymd\THis', $nextnth), 'ende' => wp_date('Ymd\THis', $nextnth1h) ),$wp->request.'/icalfeed/')).'"><i class="fa fa-calendar-check-o"></i></a> ';
 					}	
 					$htmlout .= $key . '</th>';
 				}	
@@ -848,18 +848,20 @@ function random_quote_func() {
 		  while ($my_query->have_posts()) {
 			$my_query->the_post(); 
 			$quizkat='';
+			$spiele = '';
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			if ( $terms && !is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
-					$quizkat .= '&nbsp; <i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp; ';
+					$quizkat .= '<i class="fa fa-folder-open"></i> <a href="'. get_term_link($term) .'">' . $term->name . '</a> &nbsp;';
 				}
 			}	
 			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
 			$answers = get_post_custom_values('quizz_answer');
 			$quizbild = get_post_custom_values('quizz_bild');
-			$quizkat .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
-			$quizkat .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
-			$quizkat .= ' &nbsp; <a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a>';
+			$spiele .= ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
+			$spiele .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a>';
+			$spiele .= ' &nbsp; <a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a>';
+			$spiele .= ' &nbsp; <a title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('Sudoku','WPdoodlez').'</a>';
 			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 			$message .= '<header class="entry-header" style="margin:0 -4px">';
 			// Wenn eine Quizkategorie da, Katbild anzeigen
@@ -889,8 +891,9 @@ function random_quote_func() {
 				}
 				$message .= '</div>';
 			}			
-			$message .= '<div class="greybox" style="background-color:'.$accentcolor.'19"><a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>&nbsp;';
-			$message .= $quizkat;
+			$message .= '<div class="meta-icons iconleiste" style="background-color:'.$accentcolor.'10">';
+			$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>'. $spiele;
+			$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19">' . '' . $quizkat;
 			$message .= '</div></header>';
 			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
 			$message .= '&nbsp; ' . $herkunftsland[0].'</a></h2>';
@@ -1336,7 +1339,8 @@ function quiz_show_form( $content ) {
 		}
 		$formstyle .='</style>';
 		$listyle = '<li style="padding:6px 0 6px 0;display:inline">';
-		$letztefrage ='<div style="text-align:center;margin-top:10px"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
+		$spiele = '';
+		$letztefrage = '<blockquote class="blockleer" style="margin-top:1em;text-align:center"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
 		// für die Zwischenablage 
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 		$copytags = '';
@@ -1346,7 +1350,7 @@ function quiz_show_form( $content ) {
 			}
 		}	
 		$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
-		$letztefrage.= $listyle.'<input name="clippy" title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
+		$letztefrage .= $listyle.'<input name="clippy" title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
 		$letztefrage .= '</li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
 		// wenn current theme penguin, dann link zu umfragen
 		$wpxtheme = wp_get_theme(); 
@@ -1364,11 +1368,13 @@ function quiz_show_form( $content ) {
 			}
 		} else {
 			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
-			$letztefrage.='</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
-			$letztefrage.= $listyle.'<a title="Kreuzworträtsel spielen" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a></li>';
-			$letztefrage.= $listyle.'<a title="Wortsuche spielen" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a></li>';
-			$letztefrage.= $listyle.'<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
+			$letztefrage .= '</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
+			$spiele .= $listyle.'<a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a></li>';
+			$spiele .= $listyle.'<a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a></li>';
+			$spiele .= $listyle.'<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
+			$spiele .= $listyle.'<a title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('Sudoku','WPdoodlez').'</a></li>';
 		}
+		$letztefrage .= $spiele;
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('certificate','WPdoodlez').'</a></li>';
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 		if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
@@ -1378,7 +1384,7 @@ function quiz_show_form( $content ) {
 			$letztefrage .= '</li>'.$listyle. __('Your session','WPdoodlez');
 			$letztefrage .= ' <progress id="rf" value="'.$sperct.'" max="100" style="width:100px"></progress> R: ' . number_format_i18n(@$_COOKIE['rightscore'] ?? 0). ' / F: '.number_format_i18n(@$_COOKIE['wrongscore'] ?? 0).'</li>';
 		}	
-		$letztefrage .= '</ul></div>';
+		$letztefrage .= '</ul></blockquote>';
 		$letztefrage .= quiz_adminstats($statsbisher);
 		if (!$ende) {
 			$antwortmaske = $content . '<div class="qiz">';
@@ -2175,5 +2181,188 @@ function xwordhangman() {
 	return $htmout;
 }
 //   ----------------------------- hangman ended -------------------------------------
+
+//   ----------------------------- Sudoku php game and solver -------------------------------------
+
+// Sudoku Class --------------------------------------------------------------------
+
+class Sudoku {
+    private $_matrix;
+    public function __construct(array $matrix = null) {
+        if (!isset($matrix)) {
+            $this->_matrix = $this->_getEmptyMatrix();
+        } else {
+            $this->_matrix = $matrix;
+        }
+    }
+ 
+    public function generate() {
+        $this->_matrix = $this->_solve($this->_getEmptyMatrix());
+        $cells = array_rand(range(0, 80), 30);
+        $i = 0;
+        foreach ($this->_matrix as &$row) {
+            foreach ($row as &$cell) {
+                if (!in_array($i++, $cells)) {
+                    $cell = null;
+                }
+            }
+        }
+        return $this->_matrix;
+    }
+ 
+    public function solve() {
+        $this->_matrix = $this->_solve($this->_matrix);
+        return $this->_matrix;
+    }
+ 
+    public function getHtml() {
+		echo '<div class="sdk-table">';
+        for ($row = 0; $row < 9; $row++) {
+            echo '<div class="sdk-row">';
+            for ($column = 0; $column < 9; $column++) {
+				echo '<div class="sdk-col">';
+				if (empty($this->_matrix[$row][$column])) echo '<input class="sdk-input" min="1" max="9" type="number" step="1" size="1">';
+				else echo $this->_matrix[$row][$column];
+				echo '</div>';
+            }
+            echo '</div>';
+        }
+		echo '</div>';
+    }
+ 
+    private function _getEmptyMatrix() {
+        return array_fill(0, 9, array_fill(0, 9, 0));
+    }
+ 
+    private function _solve($matrix) {
+        while(true) {
+            $options = array();
+            foreach ($matrix as $rowIndex => $row) {
+                foreach ($row as $columnIndex => $cell) {
+                    if (!empty($cell)) {
+                        continue;
+                    }
+                    $permissible = $this->_getPermissible($matrix, $rowIndex, $columnIndex);
+                    if (count($permissible) == 0) {
+                        return false;
+                    }
+                    $options[] = array(
+                        'rowIndex' => $rowIndex,
+                        'columnIndex' => $columnIndex,
+                        'permissible' => $permissible
+                    );
+                }
+            }
+            if (count($options) == 0) {
+                return $matrix;
+            }
+ 
+            usort($options, array($this, '_sortOptions'));
+ 
+            if (count($options[0]['permissible']) == 1) {
+                $matrix[$options[0]['rowIndex']][$options[0]['columnIndex']] = current($options[0]['permissible']);
+                continue;
+            }
+ 
+            foreach ($options[0]['permissible'] as $value) {
+                $tmp = $matrix;
+                $tmp[$options[0]['rowIndex']][$options[0]['columnIndex']] = $value;
+                if ($result = $this->_solve($tmp)) {
+                    return $result;
+                }
+            }
+ 
+            return false;
+        }
+    }
+ 
+    private function _getPermissible($matrix, $rowIndex, $columnIndex) {
+        $valid = range(1, 9);
+        $invalid = $matrix[$rowIndex];
+        for ($i = 0; $i < 9; $i++) {
+            $invalid[] = $matrix[$i][$columnIndex];
+        }
+        $box_row = $rowIndex % 3 == 0 ? $rowIndex : $rowIndex - $rowIndex % 3;
+        $box_col = $columnIndex % 3 == 0 ? $columnIndex : $columnIndex - $columnIndex % 3;
+        $invalid = array_unique(array_merge(
+            $invalid,
+            array_slice($matrix[$box_row], $box_col, 3),
+            array_slice($matrix[$box_row + 1], $box_col, 3),
+            array_slice($matrix[$box_row + 2], $box_col, 3)
+        ));
+        $valid = array_diff($valid, $invalid);
+        shuffle($valid);
+        return $valid;
+    }
+ 
+    private function _sortOptions($a, $b) {
+        $a = count($a['permissible']);
+        $b = count($b['permissible']);
+        if ($a == $b) {
+            return 0;
+        }
+        return ($a < $b) ? -1 : 1;
+    }
+ 
+}
+
+// ---------------------------------------------------------------------------------
+
+/* -------------- sample grid to solve  ---------------------
+$grid = array(
+    array(0,0,0,0,0,0,2,0,3),
+    array(8,0,7,0,0,0,0,6,0),
+    array(0,0,2,6,5,0,0,0,8),
+    array(0,3,0,0,0,0,0,0,0),
+    array(7,5,0,2,0,0,1,0,0),
+    array(0,0,1,0,3,0,5,0,0),
+    array(4,0,0,5,0,0,8,7,0),
+    array(6,0,0,0,4,2,0,0,0),
+    array(0,9,5,0,6,0,0,2,0)
+);
+$s = new Sudoku($grid);  // new class can be instantiated and stored in a variable using the new keyword and passing the variable into that function:
+$s->solve();  /// This Function is to solve the puzzle..
+echo $s->getHtml(); // DIsplay the solution or output in the html format
+
+// --------------- generate new sudoku -----------------------
+$s2 = new Sudoku();
+$s2->generate();  // Generate the new sudoku puzzle
+echo $s2->getHtml();
+$s2->solve();
+echo $s2->getHtml();
+   ------------------------------------------------------ */
+
+function xsudoku() {
+	echo '<style>
+	input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+	@media screen {#loesung {display:none} }
+	@media print {#loesung {display:block} }
+	.sdk-input{font-size:.9em;height:30px;text-align:center;width:30px}
+	.sdk-row:after{clear:both;content:".";display:block;height:0;visibility:hidden}
+	.sdk-table{border:#AAA solid 2px;border-radius:6px;color:#777;display:block;font-size:1.8em;margin:auto;max-width:421px;position:relative}
+	.sdk-row{display:block;position:relative;width:100%;z-index:2}
+	.sdk-col{align-content:center;align-items:center;border-color:#CCC;border-style:dashed;border-width:2px 2px 0 0;display:flex;float:left;justify-content:center;min-height:45px;position:relative;width:45px}
+	.sdk-row.sdk-border{border-bottom:#AAA solid 2px}
+	.sdk-col.sdk-border{border-right:#AAA solid 2px}
+	.sdk-table .sdk-row .sdk-col:last-child{border-right:none}
+	.sdk-table .sdk-row:first-child .sdk-col,.sdk-table .sdk-row:nth-child(4) .sdk-col,.sdk-table .sdk-row:nth-child(7) .sdk-col{border-top:none}
+	.sdk-row:first-child .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(2) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(3) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(7) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(8) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(9) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(4) .sdk-col:nth-child(n+1):nth-child(-n+3),.sdk-row:nth-child(5) .sdk-col:nth-child(n+1):nth-child(-n+3),.sdk-row:nth-child(6) .sdk-col:nth-child(n+1):nth-child(-n+3),.sdk-row:nth-child(4) .sdk-col:nth-child(n+7):nth-child(-n+9),.sdk-row:nth-child(5) .sdk-col:nth-child(n+7):nth-child(-n+9),.sdk-row:nth-child(6) .sdk-col:nth-child(n+7):nth-child(-n+9){background-color:#ccc8}
+	</style>';
+	$disclaimer = __('Random generated Sudoku. Enter your numbers and click for solution or print with solution' ,'WPdoodlez').'. ';
+    echo esc_html__($disclaimer);
+	$s2 = new Sudoku();
+	$s2->generate();  // Generate the new sudoku puzzle
+	echo $s2->getHtml();
+	?>
+	<button style="width:100%" onclick="document.getElementById('loesung').style.display = 'block'">
+	<?php echo __('solution','penguin'); ?></button>
+	<?php
+	echo '<div id="loesung">';
+	$s2->solve();
+	echo $s2->getHtml();
+	echo '</div>';
+}
+
+//   ----------------------------- sudoku ended -------------------------------------
 
 ?>

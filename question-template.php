@@ -28,9 +28,10 @@ get_header();
 		edit_post_link( __( 'Edit','WPdoodlez' ), '<span class="edit-link">', '</span>' );
 		echo '</div>';
 		if ( isset($_GET['crossword'])) {
-			if (1 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">Kreuzworträtsel</h1>';
-			if (2 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">Wortpuzzle</h1>';
-			if (3 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">Hangman Rätsel</h1>';
+			if (1 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'.__('crossword','WPdoodlez').'</h1>';
+			if (2 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('wordsearch','WPdoodlez').'</h1>';
+			if (3 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('hangman','WPdoodlez').'</h1>';
+			if (4 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('Sudoku','WPdoodlez').'</h1>';
 		} else {
 			if ( is_single() ) {
 				the_title( '<h1 class="entry-title">', '</h1>' );
@@ -47,6 +48,7 @@ get_header();
 				if (1 == esc_html($_GET['crossword'])) echo xwordquiz();
 				if (2 == esc_html($_GET['crossword'])) echo xwordpuzzle();
 				if (3 == esc_html($_GET['crossword'])) echo xwordhangman();
+				if (4 == esc_html($_GET['crossword'])) echo xsudoku();
 			} else the_content( );
 		?>
 		</div><!-- .entry-content -->
