@@ -45,6 +45,22 @@ get_header();
 		<?php
 			// lieber Kreuzworträtsel spielen
 			if ( isset($_GET['crossword'])) {
+				?>
+				<span style="float:right">Spielzeit: <input style="text-align:center;height:1.3em;width:70px;font-size:1.3em" type="text" name="zeit" id="zeit"></span>
+				<script>var start = new Date();
+				function leadingZero(tish) {
+				if (tish <= 9) { tish = '0'+tish; }
+				return tish;}
+				function zeit() {
+				var jetzt = new Date();
+				sekunden = parseInt((jetzt.getTime() - start.getTime()) / 1000);
+				minuten = parseInt(sekunden / 60);
+				sekunden = sekunden % 60;
+				text = minuten + ":" + leadingZero(sekunden);
+				document.getElementById('zeit').value = text;
+				timerID=setTimeout("zeit()", 1000);	}
+				zeit();</script>
+				<?php
 				if (1 == esc_html($_GET['crossword'])) echo xwordquiz();
 				if (2 == esc_html($_GET['crossword'])) echo xwordpuzzle();
 				if (3 == esc_html($_GET['crossword'])) echo xwordhangman();
