@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.145
-Stable tag: 9.1.1.145
+Version: 9.1.1.146
+Stable tag: 9.1.1.146
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -836,6 +836,18 @@ function qu_post_custom_columns($column) {
   }
 }
 
+// Spielesammlung einblenden
+function wpd_games_bar() {
+	$spiele = '<ul class="footer-menu" style="display:inline-block">';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('puzzle','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('Sudoku','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-map-signs"></i> '. __('Shuffle','WPdoodlez').'</a></li>';
+	$spiele .= '</ul>';
+	return $spiele;
+}
+
 
 // Shortcode Random Question (als Widget auf der Homepage)
 function random_quote_func() {
@@ -851,7 +863,6 @@ function random_quote_func() {
 		  while ($my_query->have_posts()) {
 			$my_query->the_post(); 
 			$quizkat='';
-			$spiele = '<span class="greybox">';
 			$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
 			if ( $terms && !is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
@@ -861,11 +872,6 @@ function random_quote_func() {
 			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
 			$answers = get_post_custom_values('quizz_answer');
 			$quizbild = get_post_custom_values('quizz_bild');
-			$spiele .= '&nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a>';
-			$spiele .= '&nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('puzzle','WPdoodlez').'</a>';
-			$spiele .= '&nbsp; <a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a>';
-			$spiele .= '&nbsp; <a title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('sudoku','WPdoodlez').'</a>';
-			$spiele .= '&nbsp; <a title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('shuffle','WPdoodlez').'</a></span>';
 			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = '?t=0'; }
 			$message .= '<header class="entry-header" style="margin:0 -4px">';
 			// Wenn eine Quizkategorie da, Katbild anzeigen
@@ -896,7 +902,8 @@ function random_quote_func() {
 				$message .= '</div>';
 			}			
 			$message .= '<div class="meta-icons iconleiste" style="background-color:'.$accentcolor.'10">';
-			$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'"><i class="fa fa-question-circle"></i></a>'. $spiele;
+			$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'">
+				<i class="fa fa-question-circle"></i></a><span class="greybox">'. wpd_games_bar().'</span>';
 			$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19">' . '' . $quizkat;
 			$message .= '</div></header>';
 			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
@@ -1343,7 +1350,6 @@ function quiz_show_form( $content ) {
 		}
 		$formstyle .='</style>';
 		$listyle = '<li style="padding:6px 0 6px 0;display:inline">';
-		$spiele = '';
 		$letztefrage = '<blockquote class="blockleer" style="margin-top:1em;text-align:center"><ul class="footer-menu" style="padding:2px 2px;text-transform:uppercase;">';
 		// für die Zwischenablage 
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
@@ -1373,13 +1379,8 @@ function quiz_show_form( $content ) {
 		} else {
 			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 			$letztefrage .= '</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
-			$spiele .= $listyle.'<a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-th"></i> '. __('crossword','WPdoodlez').'</a></li>';
-			$spiele .= $listyle.'<a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('wordsearch','WPdoodlez').'</a></li>';
-			$spiele .= $listyle.'<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
-			$spiele .= $listyle.'<a title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('Sudoku','WPdoodlez').'</a></li>';
-			$spiele .= $listyle.'<a title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-map-signs"></i> '. __('Shuffle','WPdoodlez').'</a></li>';
 		}
-		$letztefrage .= $spiele;
+		$letztefrage .= wpd_games_bar();
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('certificate','WPdoodlez').'</a></li>';
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
 		if ( @$_COOKIE['wrongscore'] > 0 || @$_COOKIE['rightscore'] >0 ) { $sperct = intval (@$_COOKIE['rightscore'] / (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']) * 100); } else { $sperct= 0; }
@@ -1967,7 +1968,9 @@ function xwordquiz() {
     wp_localize_script('crossword-script', 'crossword_vars', array(
         'cwdcw_ansver' => 'yes', 'cwdcw_ansver_incorect' => 'yes',
     ));
-	$html = ' &nbsp; <a title="'.__('play crossword','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('start new game','WPdoodlez').'</a>';
+	$html = wpd_games_bar();
+	$html .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
+		add_query_arg( array('crossword'=>1), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
     if ($rows) {
 		$html .= '<script>document.getElementById("primary").className="page-fullwidth"</script>';
         $html .= '<div class="crossword_wrapper">';
@@ -2065,8 +2068,10 @@ function xwordpuzzle() {
 		}
 		$wdstring=rtrim($wdstring,',').']';
 		$wcstring=rtrim($wcstring,',').']';
+		$html .= wpd_games_bar();
+		$html .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
+			add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
 		$html .= '<p>'.__('please mark words with pressed mousekey','WPdoodlez');
-		$html .= ' &nbsp; <a title="'.__('play word puzzle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>2), get_post_permalink() ).'"><i class="fa fa-puzzle-piece"></i> '. __('start new game','WPdoodlez').'</a>';
 		$html .= '</p><div class="wrap"><section id="ws-area"></section>';
 		$html .= '<ul class="ws-words"></ul></div>';
 		$html .= '<!-- noformat on --><script>';
@@ -2168,16 +2173,16 @@ function xwordhangman() {
 	$ratewort = base64_encode($wdstring); 
 	wp_localize_script( 'hangman-app-script', 'hangman_app_script_data', Array ( 'answer' => $ratewort ) );
 	wp_enqueue_style('wp-hangman-styles');
-	$htmout = '<blockquote class="blockbulb"><ul class="footer-menu" style="display:inline"><li>
-		<a title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3,'randomize'=>1), get_post_permalink() ).'">
-		<i class="fa fa-universal-access"></i> '. __('hangman new game other word','WPdoodlez').'</a></li>';
-	$htmout .= '</ul>';
-	$htmout .= ' &nbsp; Erraten Sie das Wort/den Satz (ohne Leerzeichen) aus '.strlen($wdstring).' Buchstaben 
+
+	$htmout = wpd_games_bar();
+	$htmout .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
+		add_query_arg( array('crossword'=>3,'randomize'=>1), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
+	$htmout .= '<p>Erraten Sie das Wort/den Satz (ohne Leerzeichen) aus '.strlen($wdstring).' Buchstaben 
 		('.count( array_unique( str_split( $wdstring))).' davon eindeutig). &nbsp; 
-		<strong>Hinweis:</strong> <a href="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'"><i title="Link aufrufen" class="fa fa-share-square-o"></i></a> 
-		 &nbsp; <input type="text" title="Link zum teilen kopieren" class="copy-to-clipboard" value="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'" readonly>
-		 &nbsp; '.$wdetails.' &nbsp; <i class="fa fa-question-circle"></i> '.$wcstring.'
- 		</blockquote><div id="hangman-game">
+		<i class="fa fa-hand-o-right"></i> <a href="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'"><i title="Link aufrufen" class="fa fa-share-square-o"></i></a> 
+		 &nbsp; <input type="text" placeholder="Wort und Enter" title="Link zum teilen kopieren" class="copy-to-clipboard" value="'.add_query_arg( array('crossword'=>3,'randomize'=>0), $wlink ).'" readonly>
+		 &nbsp; '.$wdetails.'<p style="font-size:1.3em;margin-top:1em"> &nbsp; <i class="fa fa-question-circle"></i> '.$wcstring.'</p>
+ 		<div id="hangman-game">
 		<div id="hangman-available-characters"><!-- the hangman game begins -->
 		<ul id="hangman-available-characters-list"></ul></div>
 		<div id="hangman-answer-placeholders"></div><div id="hangman-notices"></div>
@@ -2353,15 +2358,16 @@ function xsudoku() {
 	.sdk-table .sdk-row:first-child .sdk-col,.sdk-table .sdk-row:nth-child(4) .sdk-col,.sdk-table .sdk-row:nth-child(7) .sdk-col{border-top:none}
 	.sdk-row:first-child .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(2) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(3) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(7) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(8) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(9) .sdk-col:nth-child(n+4):nth-child(-n+6),.sdk-row:nth-child(4) .sdk-col:nth-child(n+1):nth-child(-n+3),.sdk-row:nth-child(5) .sdk-col:nth-child(n+1):nth-child(-n+3),.sdk-row:nth-child(6) .sdk-col:nth-child(n+1):nth-child(-n+3),.sdk-row:nth-child(4) .sdk-col:nth-child(n+7):nth-child(-n+9),.sdk-row:nth-child(5) .sdk-col:nth-child(n+7):nth-child(-n+9),.sdk-row:nth-child(6) .sdk-col:nth-child(n+7):nth-child(-n+9){background-color:#ccc8}
 	</style>';
+	echo wpd_games_bar();
+	echo '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" 
+		href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
 	$disclaimer = __('Random generated Sudoku. Enter your numbers and click for solution or print with solution' ,'WPdoodlez').'. ';
     echo esc_html__($disclaimer);
 	$s2 = new Sudoku();
 	$s2->generate();  // Generate the new sudoku puzzle
 	echo $s2->getHtml();
-	?>
-	<button style="width:100%" onclick="document.getElementById('loesung').style.display = 'block'">
-	<?php echo __('solution','WPdoodlez'); ?></button>
-	<?php
+	echo '<button style="width:100%" onclick="document.getElementById(\'loesung\').style.display = \'block\'">';
+	echo __('solution','WPdoodlez'). '</button>';
 	echo '<div id="loesung">';
 	$s2->solve();
 	echo $s2->getHtml();
@@ -2431,10 +2437,11 @@ function xwordshuffle() {
     wp_reset_query();  
     $html = '';
     if ($rows) {
-		$html .= '<p>'.__('please drag and drop word in right order','WPdoodlez');
-		$html .= ' &nbsp; <a title="'.__('new game','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a>';
-		$html .= '</p>';
-		$html .= '<style>#div1 {display:inline-block;font-size:2rem;width:99%;height: 2.1em;
+		$html .= wpd_games_bar();
+		$html .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
+			add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
+		$html .= '<p>'.__('please drag and drop (or enter) word in right order','WPdoodlez') . '</p>';
+		$html .= '<style>#div1 {display:inline-block;font-size:2rem;width:100%;height: 2.1em;
 		padding: 10px;border: 1px solid #aaa;white-space:nowrap}
 		.drag {font-size:2rem;font-family:sans-serif;border:1px dotted black;padding:4px;margin:12px}
 		</style><script>
@@ -2459,21 +2466,33 @@ function xwordshuffle() {
 				alert("'.__('Congrats. You solved by entering the word','WPdoodlez').'");
 			}
 		}
+		function shuf_solve() {
+		  var x = document.getElementById("aufloesen");
+		  if (x.style.display === "none") {
+			x.style.display = "inline-block";
+		  } else {
+			x.style.display = "none";
+		  }
+		}
 		</script>';
 		// **** convertieren ***
 		setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge');
 		$hint = $rows[0]['clue'];
 		$str = $rows[0]['word'];
 		$strup = mb_strtoupper($str, "UTF-8");
-		$html .= '<p style="font: 2rem monospace,sans-serif">' . $hint . '</p>';
+		$html .= '<p style="font-size:1.2em;margin-top:1em"><i class="fa fa-hand-o-right"></i> ' . $hint . '</p>';
 		$shuffled = str_shuffle_unicode($strup);
 		$html .= '<p>' . checkWord($shuffled,$strup).'<br></p>';
 		$html .= '<div id="div1" ondrop="drop(event);gettext()" ondragover="allowDrop(event)"></div>';
-		$html .= '<br><input type="text" id="solution" onchange="checkright()" style="text-transform:uppercase" /><label for="solution"> Lösungsversuch</label>';
-		$html .= '<br><input type="hidden" id="compareto" style="text-transform:uppercase" value="'.$strup.'"/>';
+		$html .= '<br><input type="text" placeholder="'.__('input word and ENTER','WPdoodlez').'" id="solution" onchange="checkright()" 
+			style="text-transform:uppercase;width:100%" /><label for="solution">'.__('your guess','WPdoodlez').'</label>';
+		$html .= '<input type="hidden" id="compareto" style="text-transform:uppercase" value="'.$strup.'"/>';
+		$html .= ' &nbsp; <button class="btn" onclick="shuf_solve()">'.__('solution','WPdoodlez').'</button>
+			<div id="aufloesen" style="display:none;text-transform:uppercase;font-size:1.3em">'.$strup.'</div>';
 		return $html;
 	}
 }
+
 //   ----------------------------- wortpuzzle module ended -------------------------------------
 
 ?>

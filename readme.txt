@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.144
-Stable tag: 9.1.1.144
+Version: 9.1.1.146
+Stable tag: 9.1.1.146
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -146,9 +146,12 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
 
+=== 9.1.1.146 ===
+games collection updated
+word shuffle game added and games bar on all games.
 
 === 9.1.1.141 ===
-wp 653 compatibility
+wp 652 compatibility
 quizbilder minified and web optimized
 
 === 9.1.1.136 ===
