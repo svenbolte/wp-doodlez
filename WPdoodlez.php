@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.146
-Stable tag: 9.1.1.146
+Version: 9.1.1.148
+Stable tag: 9.1.1.148
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -346,7 +346,7 @@ function wpdoodlez_cookie() {
 		'show_in_admin_bar'   => true,
 		'menu_position'       => 5,
 		'menu_icon'           => 'dashicons-forms',
-		'can_export'          => false,
+		'can_export'          => true,
 		'has_archive'         => true,
 		'exclude_from_search' => false,
 		'publicly_queryable'  => true,
@@ -511,18 +511,19 @@ function get_doodlez_content($chartan) {
 			$votes_cout[ $key ]  = 0;
 		}
 	}
-
 	// admin Details link für polls
 	if (is_user_logged_in()) {
+		$htmlout .= '<ul class="footer-menu" style="float:right">';
+		$htmlout .= '<li><a href="'.add_query_arg( array('exportteilnehmer'=>'1' ), home_url( $wp->request ) ).'">' . __( 'export to CSV', 'WPdoodlez' ) . '</a></li>';	
 		if ( array_key_exists('vote1', $suggestions) ) {
 			if (!isset($_GET['admin']) ) {
-				$htmlout .= '<span style="float:right"><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . __( 'poll details', 'WPdoodlez' ) . '</a></span>';	
+				$htmlout .= '<li><a href="'.add_query_arg( array('admin'=>'1' ), home_url( $wp->request ) ).'">' . __( 'poll details', 'WPdoodlez' ) . '</a></li>';	
 			} else {
-				$htmlout .= '<span style="float:right"><a href="'.home_url( $wp->request ) .'">' . __( 'poll results', 'WPdoodlez' ) . '</a></span>';	
+				$htmlout .= '<li><a href="'.home_url( $wp->request ) .'">' . __( 'poll results', 'WPdoodlez' ) . '</a></li>';	
 			}	
 		}
+		$htmlout .= '</ul>';
 	}	
-		
 	/* password protected? */
 	if ( !post_password_required() ) {
 		// Wenn Feldnamen vote1...20, dann eine Umfrage machen, sonst eine Terminabstimmung
@@ -721,7 +722,84 @@ function get_doodlez_content($chartan) {
 	return $htmlout;
 } // end of get doodlez content	
 
-// ------------------- quizzz code and shortcode ---------------------------------------------------------------
+// Doodlez Teilnehmerliste Export CSV (nur als Admin, Aufruf aus WPD-Template)
+
+function wpd_exportteilnehmer() {
+	if ( current_user_can('administrator') ) {
+		global $wp;
+		$htmlout = '';
+		$suggestions = $votes_cout  = [ ];
+		$customs     = get_post_custom( get_the_ID() );
+		foreach ( $customs as $key => $value ) {
+			if ( !preg_match( '/^_/is', $key ) ) {
+				$suggestions[ $key ] = $value;
+				$votes_cout[ $key ]  = 0;
+			}
+		}
+		$polli = array_key_exists('vote1', $suggestions);   // if polli add icon to content
+		if ($polli) $pollfilename = __('poll','WPdoodlez'); else $pollfilename = __('appointment','WPdoodlez');
+		$filename = 'wpd_teilnehmer_'.$pollfilename.'_'.trim(get_the_title(get_the_ID()));
+		$output = fopen('php://output', 'w');
+		ob_clean();
+		header("Pragma: public");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+		header("Cache-Control: private", false);
+		header('Content-Type: text/csv; charset=utf-8');
+		header("Content-Disposition: attachment; filename=\"" . $filename . ".csv\";" );
+		header("Content-Transfer-Encoding: binary");	
+			
+		/* password protected? */
+		if ( !post_password_required() ) {
+			$csvhead = array( __( 'User name', 'WPdoodlez' ),__( 'bookingdate', 'WPdoodlez' ),
+					__( 'ip-address', 'WPdoodlez' ), __( 'country', 'WPdoodlez'  ) );
+			foreach ( $suggestions as $key => $value ) {
+				if (!in_array($key, array("post_views_count","post_views_timestamp","likes","limit_modified_date" ))) {
+					$csvhead[] = $key;
+				}	
+			}
+			// print_r($csvhead);   // CSV Tabellenkopf schreiben
+			fputcsv( $output, $csvhead, ';');
+			// Tabellenzeilen
+			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
+			foreach ( $votes as $name => $vote ) {
+				$csvout = array();
+				$csvout[] = mb_convert_encoding($name, 'ISO-8859-1', 'UTF-8'); 
+				if (isset($vote['zeit'])) $votezeit = date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')); else $votezeit='';
+				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
+				$csvout[] = $votezeit; 
+				$csvout[] = $voteip; 
+				// Wenn ipflag plugin aktiv und user angemeldet
+				if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
+					global $ipflag;
+					if(isset($ipflag) && is_object($ipflag)){
+						if(($info = $ipflag->get_info($voteip)) != false){
+							$csvout[] = $info->code .  ' ' .$info->name;
+						} else { $csvout[] =  '-'; }
+					} 
+				}	
+				foreach ( $suggestions as $key => $value ) {
+					if (!in_array($key, array("post_views_count","post_views_timestamp","likes","limit_modified_date" ))) {
+						if ( !empty($vote[ $key ]) ) {
+							$votes_cout[ $key ] ++;
+							$csvout[] = mb_convert_encoding($value[ 0 ], 'ISO-8859-1', 'UTF-8');
+						} else {
+							$csvout[] = '';
+						}
+					}
+				}	
+				fputcsv( $output, $csvout, ';');
+				// print_r($csvout);
+			}
+			fclose($output);
+		}		/* END password protected? */
+		return $htmlout;
+	}
+} // nur als Admin
+
+
+
+// === ------------------- quizzz code and shortcode --------------------------------------------------------------- ===
 
 function create_quiz_tax_category() {
 	$labels = array(
@@ -1044,6 +1122,7 @@ function exportposts() {
 			fputs( $output, $exportrow . "\n" );
 		endwhile;
 		wp_reset_postdata();
+		fclose($output);
 		exit;
 	endif;
 }

@@ -1,9 +1,14 @@
 <?php
-
 /**
  * The template for displaying all single wpdoodle
  *
  */
+
+if ( isset($_GET['exportteilnehmer']) && esc_html($_GET['exportteilnehmer']) == 1 && current_user_can('administrator') ) {
+	wpd_exportteilnehmer();
+	exit;
+}
+
 wp_enqueue_script( "WPdoodlez", plugins_url( 'WPdoodlez.js', __FILE__ ), array('jquery'), null, true);
 wp_enqueue_style( "WPdoodlez", plugins_url( 'WPdoodlez.css', __FILE__ ), array(), null, 'all');
 get_header();
