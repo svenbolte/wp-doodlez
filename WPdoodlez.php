@@ -1264,7 +1264,23 @@ function quiz_show_form( $content ) {
 		  endwhile;
 		}
 		wp_reset_query();  
+		// Link für nächste Zufallsfrage der gleichen Kategorie
 		$terms = get_the_terms(get_the_id(), 'quizcategory'); // Get all terms of a taxonomy
+		$args=array(
+		  'orderby'=>'rand', 'post_type' => 'question', 
+	      'tax_query' => array(	array( 'taxonomy' => 'quizcategory', 'field' => 'slug', 'terms' => $terms[0]->slug, )),
+		  'post_status' => 'publish', 'posts_per_page' => 1, 'showposts' => 1,
+		);
+		$my_query = null;
+		$my_query = new WP_Query($args);
+		$random_samecat_url = '';
+		if( $my_query->have_posts() ) {
+		  while ($my_query->have_posts()) : $my_query->the_post(); 
+			$random_samecat_url = get_the_permalink();
+		  endwhile;
+		}
+		wp_reset_query();  
+		// --------------- ende random posts -------------
 		$tcolor = get_theme_mod( 'link-color', '#006060' );
 		$backgd = hexdec(substr($tcolor,1,2)).','.hexdec(substr($tcolor,3,2)).','.hexdec(substr($tcolor,5,2)).',.1';
 		// get meta values for this question
@@ -1449,6 +1465,7 @@ function quiz_show_form( $content ) {
 			if (strlen($liveumfrage)<450) $letztefrage .= '</li><li><a title="admin create live-umfrage" href="'.get_home_url().'/live-umfragen?frage='.$liveumfrage.'"><i class="fa fa-check-square-o"></i> Umfrage</a>';
 		}	
 		// Nächste und letzte Frage Link, oder Kreuzwort oder Wortsucherätsel
+		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 		if (isset($nextlevel) || isset($last_bool[0]) ) {
 			if ($last_bool[0] == "last") {
 				$letztefrage .= '</li>'.$listyle.__('last question','WPdoodlez').'</li>';
@@ -1456,9 +1473,9 @@ function quiz_show_form( $content ) {
 				$letztefrage .= '</li>'.$listyle.'<a href="'.get_post_permalink($nextlevel[0]).'"><i class="fa fa-arrow-circle-right"></i>'. __('next random question','WPdoodlez').' '.$nextlevel[0].'</a></li>';
 			}
 		} else {
-			if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 			$letztefrage .= '</li>'.$listyle.'<a href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
 		}
+		$letztefrage .= '</li>'.$listyle.'<a href="' . $random_samecat_url . $timerurl.'"><i class="fa fa-rotate-right"></i> '. $terms[0]->name. ' '.__('next random question','WPdoodlez').'</a>';
 		$letztefrage .= wpd_games_bar();
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('certificate','WPdoodlez').'</a></li>';
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
