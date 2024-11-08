@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.148
-Stable tag: 9.1.1.148
+Version: 9.1.1.149
+Stable tag: 9.1.1.149
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -1969,6 +1969,30 @@ function admin_order_list_top_bar_button( $which ) {
 		echo '</a> ';
     }
 }
+
+// quiz-category filter for admin fragen list  $which (the position of the filters form) is either 'top' or 'bottom'
+add_action( 'restrict_manage_posts', function ( $post_type, $which ) {
+    if ( 'top' === $which && 'question' === $post_type ) {
+        $taxonomy = 'quizcategory';
+        $tax = get_taxonomy( $taxonomy );            // get the taxonomy object/data
+        $cat = filter_input( INPUT_GET, $taxonomy ); // get the selected category slug
+
+        echo '<label class="screen-reader-text" for="my_tax">Filter by ' .
+            esc_html( $tax->labels->singular_name ) . '</label>';
+
+        wp_dropdown_categories( [
+            'show_option_all' => $tax->labels->all_items,
+            'hide_empty'      => 0, // include categories that have no posts
+            'hierarchical'    => $tax->hierarchical,
+            'show_count'      => 0, // don't show the category's posts count
+            'orderby'         => 'name',
+            'selected'        => $cat,
+            'taxonomy'        => $taxonomy,
+            'name'            => $taxonomy,
+            'value_field'     => 'slug',
+        ] );
+    }
+}, 10, 2 );
 
 // Add the custom columns to the book post type:
 add_filter( 'manage_question_posts_columns', 'set_custom_edit_question_columns' );
