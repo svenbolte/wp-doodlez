@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.149
-Stable tag: 9.1.1.149
+Version: 9.1.1.150
+Stable tag: 9.1.1.150
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -145,6 +145,12 @@ quizz_ended: raised when the list of questions comes to an end, and the user is 
 
 
 ## --------------------------------------- Changelog ---------------------------------------------------- ##
+
+=== 9.1.1.148 ===
+Code bereinigt, Next and last question removed.
+Next button for same category in single display added
+wpd game bar after certificate in separate line
+admin stats now with stats per quizcategory
 
 === 9.1.1.148 ===
 CSV export für Teilnehmerlisten von Doodlez Terminabstimmung oder Umfragedetails (Semikolon getrennt für Excel)
