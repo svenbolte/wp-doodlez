@@ -28,6 +28,18 @@ If you place pictures in upload/quizbilder folder and enter the filename of the 
 
 Add Shortcode ´´´[random-question]´´´ to an html widget (only on front page)
 
+#### Quiz personal Exams
+Can be invoked from single question menu bar. exam starts a 20 questions exam from the same category as the invoking question.
+  or
+Create a new page and  
+
+Add Shortcode ´´´[personal_quiz items=20 cats='weihnachten']´´´ to an html widget (only on front page)
+	cats may be one or an array of value quizcategory slugs
+	items can be chosen - number of questions asked
+
+On finish an exam certifikate will be displayed.
+When "Penguin-Mod" theme is active the result will be stored in the pruefungen database table and admins can re-issue the certificate.
+
 #### Crossword
 You can add a random crossword game to your pages and posts or call the crossword game from the random quizzz widget.
 16 random words and questions will be chosen and put into a crossword game. Admin can display the solutions, users can see vocals as hints.
@@ -83,3 +95,4 @@ Highlights
 * The first value of the custom field will be displayed in the row as users answer
 * The last row in the table contains total votes count
 * shortcodes for poll stats and to embed a poll in any page or post or html widget
+* quizzes and exams with certificates

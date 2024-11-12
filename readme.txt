@@ -1,10 +1,10 @@
 ### Plugin Name: WPDoodlez and Quizzz ###
 Contributors: robert_kolatzek, PBMod
-Tags: doodle, poll, question, meeting, vote
+Tags: doodle, poll, question, meeting, vote, quiz-exam, quiz
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.150
-Stable tag: 9.1.1.150
+Version: 9.1.1.151
+Stable tag: 9.1.1.151
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -38,6 +38,20 @@ It adds a custom post type "question". See readme.txt for more details.
 If you place pictures in upload/quizbilder folder and enter the filename of the picture you can make questions displaying the picture
 
 Add Shortcode ´´´[random-question]´´´ to an html widget (only on front page)
+
+
+#### Quiz personal Exams
+Can be invoked from single question menu bar. exam starts a 20 questions exam from the same category as the invoking question.
+  or
+Create a new page and  
+
+Add Shortcode ´´´[personal_quiz items=20 cats='weihnachten']´´´ to an html widget (only on front page)
+	cats may be one or an array of value quizcategory slugs
+	items can be chosen - number of questions asked
+
+On finish an exam certifikate will be displayed.
+When "Penguin-Mod" theme is active the result will be stored in the pruefungen database table and admins can re-issue the certificate.
+
 
 #### Crossword
 You can add a random crossword game to your pages and posts or call the crossword game from the random quizzz widget.

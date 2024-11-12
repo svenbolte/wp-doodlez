@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.150
-Stable tag: 9.1.1.150
+Version: 9.1.1.151
+Stable tag: 9.1.1.151
 Requires at least: 6.0
 Tested up to: 6.6.2
 Requires PHP: 8.2
@@ -926,6 +926,168 @@ function wpd_games_bar() {
 	return $spiele;
 }
 
+// Zusammenstellung eines Quiz mit Wertung Personangebunden
+function personal_quiz_exam_func($atts) {
+	$atts = shortcode_atts( array(
+		'items' => 20, // Default value 20
+		'cats' => array('edv'), // Default Cat slug is edv
+	), $atts );
+	$catarg = sanitize_text_field($atts[ 'cats' ]);
+	$anzfragen = (int) $atts['items'];
+	if (! empty($_POST)) {   // Antworten und Auswerten
+		// Beenden, wenn nonce nicht stimmt.
+		if ( !wp_verify_nonce( $_POST['quiz_exam_nonce'], 'quiz_exam_submit' ) ) return "Nonce not valid";
+		$auswertung='';
+		$erzpunkte = 0;
+		foreach ($_POST as $key => $value) {
+			if (str_contains($key,'tname')) $tname = esc_html($value);
+			if (str_contains($key,'zeit')) $tzeit = esc_html($value);
+			if (str_contains($key,'ans')) $given = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html($value)));
+			if (str_contains($key,'rt')) $correcta = preg_replace("/[^A-Za-z0-9]/", '', strtolower(esc_html(base64_decode($value))));
+			if (str_contains($key,'fra')) {
+				if ($given == $correcta) {
+					$erzpunkte += 1; 
+					$auswertung .= '#'. $value.':R';
+				} else {
+					$auswertung .= '#'. $value.':F';
+				}	
+				$auswertung .= ' | ';
+			}	
+		}
+		$sperct = round( ( $erzpunkte / $anzfragen ) * 100 , 0 );
+		// Zertifikat ausgeben
+		$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
+		$theForm .= '<div style="position:relative">
+			<div><img src="'.plugin_dir_url(__FILE__).'/lightbulb-1000-300.jpg" style="width:100%"></div>
+			<div class="middle" style="opacity:1;position:absolute;top:50%;bottom:50%;width:100%;text-align:center;color:white;font-size:4em;z-index:99999">'.__('quiz exam certificate','WPdoodlez') .'</div>
+			</div><div style="text-align:center;padding-top:20px;font-size:1.5em">';
+		$theForm .= '<h6>'.$tname.'</h6>'.__('you have ','WPdoodlez') .' '.__('at quiz-exam','WPdoodlez') .' "'. strtoupper($catarg)
+			.'"<br>'.__('within ','WPdoodlez') .' ['.$tzeit.'] '.__('minutes','WPdoodlez') .' '. $anzfragen .' '.__('questions answered','WPdoodlez')
+			.',<br>'.__('with','WPdoodlez').' '.$erzpunkte. '  ('.$sperct.'%) '.__('right','WPdoodlez').' '.__('and','WPdoodlez') .' '.$anzfragen - $erzpunkte.' ('. (100 - $sperct) .'%) '.__('wrong','WPdoodlez').'.';
+		$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
+		if ( $sperct < 50 ) { $fail='<span style="color:tomato">'.__('unfortunately not','WPdoodlez').'</span>'; } else { $fail=''; }
+		$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').': '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
+		$theForm .= '<blockquote style="font-size:.8em">Auswertung: &nbsp;'.$auswertung.'</blockquote>';
+		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+		$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
+		$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
+		// Wenn Penguin Theme vorhanden, dann in Datenbank schreiben tabelle pruefungen, ansonsten Tabelle anlegen und speichern
+		global $wpdb;
+		// creates pruefungen in database if not exists
+		$table = $wpdb->prefix . "pruefungen";
+		$charset_collate = $wpdb->get_charset_collate();
+		$sql = "CREATE TABLE IF NOT EXISTS " . $table . " (
+			id int(11) not null auto_increment,
+			name varchar(60) not null,
+			seminar varchar(200) not null,
+			gesamt int(3) not null,
+			erreicht int(3) not null,
+			erzielt int(3) not null,
+			falsch varchar(4000) not null,
+			dauer varchar(60) not null,
+			bewertung varchar(500) not null,
+			userip varchar(50) not null,
+			datum TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (`id`) ) $charset_collate;";
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+		$html = '';
+		// does the inserting, in case the form is filled and submitted
+		$table = $wpdb->prefix."pruefungen";
+		$name = strip_tags($_POST["tname"], "");
+		$seminar = 'Quiz-Examen - '.$catarg;
+		$gesamt = $anzfragen;
+		$erreicht = $erzpunkte;
+		$erzielt =  $sperct;
+		$bewertung = get_schulnote( $sperct );
+		$falsch = $auswertung;
+		$dauer = $tzeit;
+		$userip = wd_get_the_user_ip();
+		$datum = current_time( "mysql" );
+		$filtered_name = preg_replace('/[^a-zA-ZüäöÜÄÖß -]/', '', $name);
+		$wpdb->insert(
+			$table,
+			array(
+				"name" => $filtered_name,
+				"seminar" => $seminar,
+				"gesamt" => $gesamt,
+				"erreicht" => $erreicht,
+				"erzielt" => $erzielt,
+				"bewertung" => $bewertung,
+				"falsch" => $falsch,
+				"dauer" => $dauer,
+				"userip" => $userip,
+				"datum" => $datum
+			)
+		);
+		// Zertifikat ausgeben
+		return $theForm;
+	} else {   // Fragen stellen
+		$htmout = '<form id="quizform" action="" method="POST" class="quiz_form form">';
+		$htmout .= wp_nonce_field( 'quiz_exam_submit', 'quiz_exam_nonce', 1, 0 );
+		$htmout .= '<b>Ihr Name bitte</b> <input required="required" type="text" name="tname" id="tname" size="22" maxlength="40" value="">';
+		$htmout .= '&nbsp; Spielzeit: <input style="text-align:center;height:1.3em;width:70px;font-size:1.3em" type="text" name="zeit" id="zeit">
+			<script>var start = new Date();
+			function leadingZero(tish) {
+			if (tish <= 9) { tish = \'0\'+tish; }
+			return tish;}
+			function zeit() {
+			var jetzt = new Date();
+			sekunden = parseInt((jetzt.getTime() - start.getTime()) / 1000);
+			minuten = parseInt(sekunden / 60);
+			sekunden = sekunden % 60;
+			text = minuten + ":" + leadingZero(sekunden);
+			document.getElementById(\'zeit\').value = text;
+			timerID=setTimeout("zeit()", 1000);	}
+			zeit();</script>';
+		if (!empty($catarg)) {
+			// cpt question categories
+			$catsarray = explode(',', $catarg );
+			$catargs = array(
+				'posts_per_page' => esc_html($atts[ 'items' ]),  'ignore_sticky_posts' => 1, 
+				'post_type' => 'question',
+				'tax_query' => array(
+					array(
+						'taxonomy' => 'quizcategory',
+						'field'    => 'slug',
+						'terms' => $catsarray
+					)
+				),
+				'orderby'        => 'rand' // Keep post order the same as the order of post ids
+			);
+			$rndpostcats = new WP_Query( $catargs );
+			$cc = 0;
+			while ( $rndpostcats->have_posts() ) {
+				$cc += 1;
+				$rndpostcats->the_post();
+				$answers = get_post_custom_values('quizz_answer');
+				$answersb = get_post_custom_values('quizz_answerb');
+				$answersc = get_post_custom_values('quizz_answerc');
+				$answersd = get_post_custom_values('quizz_answerd');
+				$ans = array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
+				shuffle($ans);
+				$htmout .= '<blockquote class="blockbuulb"><p class="headline">'.$cc.' - '.get_the_title().' - '.get_the_content().'</p>';
+				$ci = 0;
+				foreach ($ans as $an) {
+					$ci += 1;
+					$htmout .= '<input required="required" type="radio" name="ans-'.$cc.'" id="ans-'.$cc.'-'.$ci.'" value="'.$an.'">';
+					$htmout .= ' &nbsp; <label for="ans-'.$cc.'-'.$ci.'"><b>'.chr($ci+64).'</b> &nbsp; '.$an.'</label><br>';
+				}	
+				$htmout .= '<input type="hidden" name="rt-'.$cc.'" id="rt-'.$cc.'" value="'.base64_encode($answers[0]).'">';
+				$htmout .= '<input type="hidden" name="fra-'.$cc.'" id="fra-'.$cc.'" value="'.get_the_id().'">';
+				$htmout .= '</blockquote>';
+			}
+			wp_reset_query();
+			
+			$htmout .= '<input type="checkbox" class="checkbox-custom" required="required" id="gdpr" name="gdpr">';
+			$htmout .= '<label for="gdpr" class="checkbox-custom-label"> Mit der Nutzung dieses Formulars erklären Sie sich mit der Speicherung und Verarbeitung Ihrer Daten durch diese Website (siehe Datenschutz) einverstanden.</label>';
+			$htmout .= '<input type="submit" class="submit" style="width:100%" value="'.__('submit exam','WPdoodlez').'"></form>';
+			return $htmout;
+		}	
+	}
+}	
+// Add the shortcode to the WordPress system
+add_shortcode('personal_quiz', 'personal_quiz_exam_func');
 
 // Shortcode Random Question (als Widget auf der Homepage)
 function random_quote_func() {
@@ -1128,6 +1290,62 @@ function exportposts() {
 }
 
 
+// quiz total right/wrong stats auch für zertifikat
+function totalrightwrong() {
+	$message='';
+	// totals Right/wrong gesamt
+	$rct=0;$wct=0;
+	$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
+	if ( $the_query->have_posts() ) {
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
+			$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
+		}
+	}
+	wp_reset_postdata();
+	if ($rct >0 || $wct > 0) {
+		$message .= '<div><span style="display:inline-block;width:40%">Gesamt gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen</span>';
+		$message .= ' <progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress> R:'.wpdoo_number_format_short( (float) $rct ?? 0).' &nbsp;';
+		$message .= ' <progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> F:'.wpdoo_number_format_short( (float) $wct ?? 0).'</div>';
+	}	
+	// totals Right/wrong by quizcategory
+   $args = array(
+	   'taxonomy' => 'quizcategory',
+	   'orderby' => 'name',
+	   'order'   => 'ASC'
+   );
+   $qcats = get_categories($args);
+   foreach($qcats as $qcat) {
+		$rct=0;$wct=0;
+		$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1,
+		  'tax_query' => array(
+				array(
+					'taxonomy' => 'quizcategory',
+					'field' => 'slug',
+					'terms' => $qcat->slug,
+				),
+			),
+		  'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
+		if ( $the_query->have_posts() ) {
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
+				$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
+			}
+		}
+		wp_reset_postdata();
+		if ($rct >0 || $wct > 0) {
+			$message .= '<div><span style="display:inline-block;width:40%"><i class="fa fa-folder-open"></i> <a href="'.get_category_link( $qcat->term_id ).'" target="_blank">'
+			.$qcat->name.'</a> gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen</span>';
+			$message .= ' <progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress> R:' .wpdoo_number_format_short( (float) $rct ?? 0).' &nbsp;';
+			$message .= ' <progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> F:'.wpdoo_number_format_short( (float) $wct ?? 0).'</div>';
+		}	
+	}
+	return $message;
+}
+
+
 // ------ wenn admin eingeloggt, Admin stats anzeigen ------
 function quiz_adminstats($statsbisher) {
 	if( current_user_can('administrator') &&  ( is_singular() ) ) {
@@ -1167,55 +1385,8 @@ function quiz_adminstats($statsbisher) {
 			}
 		}
 		wp_reset_postdata();
-		// totals Right/wrong
-		$rct=0;$wct=0;
-		$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
-		if ( $the_query->have_posts() ) {
-			while ( $the_query->have_posts() ) {
-				$the_query->the_post();
-				$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
-				$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
-			}
-		}
-		wp_reset_postdata();
-		if ($rct >0 || $wct > 0) {
-			$message .= '<p><span style="display:inline-block;width:50%">Gesamt gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen</span>';
-			$message .= ' <progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress> R:'.wpdoo_number_format_short( (float) $rct ?? 0).' &nbsp;';
-			$message .= ' <progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> F:'.wpdoo_number_format_short( (float) $wct ?? 0).'</p>';
-		}	
-		// totals Right/wrong by quizcategory
-	   $args = array(
-		   'taxonomy' => 'quizcategory',
-		   'orderby' => 'name',
-		   'order'   => 'ASC'
-	   );
-	   $qcats = get_categories($args);
-	   foreach($qcats as $qcat) {
-			$rct=0;$wct=0;
-			$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1,
-			  'tax_query' => array(
-					array(
-						'taxonomy' => 'quizcategory',
-						'field' => 'slug',
-						'terms' => $qcat->slug,
-					),
-				),
-			  'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
-			if ( $the_query->have_posts() ) {
-				while ( $the_query->have_posts() ) {
-					$the_query->the_post();
-					$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
-					$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
-				}
-			}
-			wp_reset_postdata();
-			if ($rct >0 || $wct > 0) {
-				$message .= '<div><span style="display:inline-block;width:50%"><i class="fa fa-folder-open"></i> <a href="'.get_category_link( $qcat->term_id ).'" target="_blank">'
-				.$qcat->name.'</a> gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen</span>';
-				$message .= ' <progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress> R:' .wpdoo_number_format_short( (float) $rct ?? 0).' &nbsp;';
-				$message .= ' <progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> F:'.wpdoo_number_format_short( (float) $wct ?? 0).'</div>';
-			}	
-		}
+		// richtig/falsch und r/f nach Kategorie
+		$message .= totalrightwrong();
 		return $message;
 	}
 }	// Ende Admin Stats
@@ -1276,6 +1447,10 @@ function wpdoo_number_format_short( $n ) {
 // Einzelanzeige
 function quiz_show_form( $content ) {
 	if (get_post_type() == 'question') {
+		// Beenden, wenn nonce nicht stimmt.
+		if (!empty($_POST) && empty($_POST['tname']) ) {
+			if ( !wp_verify_nonce( $_POST['quiz_nonce'], 'quiz_submit' ) ) return "Nonce not valid";
+		}	
 		global $wp;
 		setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 		global $answer;
@@ -1283,6 +1458,11 @@ function quiz_show_form( $content ) {
 		if (isset($_POST['ans'])) $answer = esc_html($_POST['ans']);   // Answer is radio button selection 1 of 4
 		if (isset($_GET['ans']))  $answer = esc_html($_GET['ans']);  // Answer is given from shortcode
 		if (isset($_GET['ende'])) { $ende = esc_html($_GET['ende']); } else { $ende = 0; }
+		if (2 == $ende) {    // Personal Exam zum Thema durchführen und auswerten (auch als Shortcode)
+			$theForm = do_shortcode('[personal_quiz items=20 cats='.get_the_terms( get_the_ID(), 'quizcategory' )[0]->slug.']');
+			return $theForm;
+			exit;
+		}	
 		// Link für nächste Zufallsfrage
 		$args=array(
 		  'orderby'=>'rand', 'post_type' => 'question', 'post_status' => 'publish', 'posts_per_page' => 1, 'showposts' => 1,
@@ -1377,7 +1557,7 @@ function quiz_show_form( $content ) {
 			unset($choice);
 		} else {	
 			// ansonsten freie Antwort anfordern von Antwort 1
-			if ( empty($_POST) ) $showsubmit='inline-block'; else $showsubmit='none';
+			if ( empty($_POST)) $showsubmit='inline-block'; else $showsubmit='none';
 			$ansmixed .= __('answer mask','WPdoodlez'). '<span style="background-color:#eee;margin:8px 5px;font-weight:700;font-size:1.2em;padding:3px 0 3px 9px;letter-spacing:.5em;font-family:monospace">';
 			$ansmixed .= preg_replace( '/[^( |aeiouAEIOU.)$]/', '_', esc_html($answers[0])).'</span>' . strlen(esc_html($answers[0])).__(' characters long. ','WPdoodlez');
 			if ( empty($_POST) ) {
@@ -1482,6 +1662,7 @@ function quiz_show_form( $content ) {
 		if (isset($_GET['timer'])) { $timerurl='?timer=1'; } else { $timerurl = ''; }
 		$letztefrage .= '</li>'.$listyle.'<a title="Zufallsfrage" href="' . $random_post_url . $timerurl.'"><i class="fa fa-random"></i> '. __('next random question','WPdoodlez').'</a>';
 		$letztefrage .= '</li>'.$listyle.'<a title="Zufallsfrage gleiche Kat." href="' . $random_samecat_url . $timerurl.'"><i class="fa fa-rotate-right"></i> '. $terms[0]->name. ' '.__('next random question','WPdoodlez').'</a>';
+		$letztefrage.='</li>'.$listyle.'<a title="'.__('personal exam same cat.','WPdoodlez').'" href="'.add_query_arg( array('ende'=>2), home_url($wp->request) ).'"><i class="fa  fa-graduation-cap"></i> '.__('quiz exam','WPdoodlez').'</a></li>';
 		$letztefrage.='</li>'.$listyle.'<a title="'.__('certificate','WPdoodlez').'" href="'.add_query_arg( array('ende'=>1), home_url($wp->request) ).'"><i class="fa fa-certificate"></i> '.__('certificate','WPdoodlez').'</a></li>';
 		$letztefrage .= wpd_games_bar();
 		if ( @$wrongstat[0] > 0 || @$rightstat[0] >0 ) { $perct = intval(@$rightstat[0] / (@$wrongstat[0] + @$rightstat[0]) * 100); } else { $perct= 0; }
@@ -1494,9 +1675,11 @@ function quiz_show_form( $content ) {
 		}	
 		$letztefrage .= '</p></blockquote>';
 		$letztefrage .= quiz_adminstats($statsbisher);
-		if (!$ende) {   // Zertikikat Link noch nicht angeklickt
+		
+		if (0 == $ende) {   // Zertikikat Link noch nicht angeklickt
 			$antwortmaske = $content . '<div class="qiz">';
 			$antwortmaske .= $error.'<form id="quizform" action="" method="POST" class="quiz_form form"  style="'.$showqform.'">';
+			$antwortmaske .= wp_nonce_field( 'quiz_submit', 'quiz_nonce', 1, 0 );
 			if ( !current_user_can('administrator') ) {      // Nur Timer anzeigen, wenn kein Admin angemeldet
 				$antwortmaske .= "<!-- noformat on --><script>function empty() { var x; x = document.getElementById('answer').value; if (x == '') { alert('".__('please enter a value','WPdoodlez')."'); return false; }; }</script>";
 				if (isset($_GET['timer'])) { $timeranaus = '1'; } else { $timeranaus = '0'; }
@@ -1512,33 +1695,20 @@ function quiz_show_form( $content ) {
 			}	
 			$antwortmaske .= $ansmixed;
 			$theForm = $formstyle . $antwortmaske.'<input onclick="return empty();" style="display:'.$showsubmit.';margin-top:10px;width:100%" type="submit" value="'.__('check answer','WPdoodlez').'" class="quiz_button"></form></div>'. $letztefrage;
-		} else {    // Zertifikat ausgeben
+		} else if (1 == $ende) {    // Zertifikat ausgeben
 			$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
-			$theForm .= '<img src="'.plugin_dir_url(__FILE__).'/lightbulb-1000-250.jpg" style="width:100%"><div style="text-align:center;padding-top:20px;font-size:1.5em">'. __('test terminated. thanks.','WPdoodlez');
-			$theForm .= '<br><br><br>'.__('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' Fragen beantwortet,<br>davon ' .@$_COOKIE['rightscore']. '  ('.$sperct.'%) richtig und '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) falsch.';
+			$theForm .= '<div style="position:relative">
+				<div><img src="'.plugin_dir_url(__FILE__).'/lightbulb-1000-300.jpg" style="width:100%"></div>
+				<div class="middle" style="opacity:1;position:absolute;top:50%;bottom:50%;width:100%;text-align:center;color:white;font-size:4em;z-index:99999">'.__('quiz certificate','WPdoodlez') .'</div>
+				</div>';
+			$theForm .= '<div style="text-align:center;padding-top:5px;font-size:1.4em">'. __('test terminated. thanks.','WPdoodlez');
+			$theForm .= __('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' '.__('questions answered','WPdoodlez')
+			.',<br>'.__('with','WPdoodlez').' '. @$_COOKIE['rightscore']. '  ('.$sperct.'%)  '.__('right','WPdoodlez').' '.__('and','WPdoodlez') .' '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) '.__('wrong','WPdoodlez').'.';
 			$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
-			if ( $sperct < 50 ) { $fail='<span style="color:tomato">leider nicht</span>'; } else { $fail=''; }
-			$theForm .= '<p style="margin-top:20px">In Schulnoten ausgedrückt: '.get_schulnote( $sperct ).',<br>somit <strong>'.$fail.' bestanden</strong>.</p>';
-
-			// totals Right/wrong
-			$rct=0;$wct=0;
-			$the_query = new WP_Query(array('post_type' => 'question', 'posts_per_page' => -1, 'meta_key' => 'quizz_rightstat', 'orderby' => 'meta_value_num', 'order' => 'DESC'));
-			if ( $the_query->have_posts() ) {
-				while ( $the_query->have_posts() ) {
-					$the_query->the_post();
-					$rct = $rct + (int) get_post_meta( get_the_ID(), 'quizz_rightstat', true );
-					$wct = $wct + (int) get_post_meta( get_the_ID(), 'quizz_wrongstat', true );
-				}
-			}
-			wp_reset_postdata();
-			if ($rct >0 || $wct > 0) {
-				$theForm .= '<p style="margin:2em 0 2em 0">Insgesamt wurden gespielt: '.wpdoo_number_format_short( (float) intval($rct + $wct) ?? 0).' Fragen,<br>davon richtig: ' .wpdoo_number_format_short( (float) $rct ?? 0);
-				$theForm .= ' &nbsp;<progress id="rf" value="'.intval($rct/($rct+$wct)*100).'" max="100" style="width:100px"></progress>';
-				$theForm .= ' &nbsp; falsch: '.wpdoo_number_format_short( (float) $wct  ?? 0);
-				$theForm .= ' &nbsp;<progress id="rf" value="'.(100 - intval($rct/($rct+$wct)*100)).'" max="100" style="width:100px"></progress> </p>';
-			}	
-
-			$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+			if ( $sperct < 50 ) { $fail='<span style="color:tomato">'.__('unfortunately not','WPdoodlez').'</span>'; } else { $fail=''; }
+			$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').' '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
+			$theForm .= '<blockquote style="font-size:.6em;overflow:hidden;height:340px;max-height:400px">'.totalrightwrong().'</blockquote>';
+			$theForm .= '<p style="font-size:0.7em;margin-top:5px">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
 			$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
 			$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 		}

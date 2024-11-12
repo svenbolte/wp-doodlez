@@ -28,12 +28,14 @@ get_header();
 		echo '<div class="entry-meta-top">';
 		echo meta_icons(); 
 		echo '</div>';
-		if ( isset($_GET['crossword'])) {
+		if ( isset($_GET['crossword']) ) {
 			if (1 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'.__('crossword','WPdoodlez').'</h1>';
 			if (2 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('wordsearch','WPdoodlez').'</h1>';
 			if (3 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('hangman','WPdoodlez').'</h1>';
 			if (4 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('Sudoku','WPdoodlez').'</h1>';
 			if (5 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('Shuffle','WPdoodlez').'</h1>';
+		} else if ( isset($_GET['ende']) ) {
+			if (2 == esc_html($_GET['ende'])) echo '<h1 class="entry-title">'. __('personal exam','WPdoodlez').'</h1>';
 		} else {
 			if ( is_single() ) {
 				the_title( '<h1 class="entry-title">', '</h1>' );
