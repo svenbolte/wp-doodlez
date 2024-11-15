@@ -13,7 +13,7 @@ Author: PBMod
 Version: 9.1.1.151
 Stable tag: 9.1.1.151
 Requires at least: 6.0
-Tested up to: 6.6.2
+Tested up to: 6.7
 Requires PHP: 8.2
 */
 
