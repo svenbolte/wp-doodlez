@@ -380,7 +380,7 @@ function wpdoo_post_custom_columns($column) {
   switch ($column) {
     case "Shortcode":
 		echo '<input type="text" title="id=&quot;' . esc_attr( $post->ID ) . '&quot;" class="copy-to-clipboard" value="[wpdoodlez_sc id=&quot;' . esc_attr( $post->ID ) . '&quot;]" readonly>';
-		echo '<p class="description" style="display: none;">' . __( 'Shortcode copied to clipboard.', 'WPdoodlez' ) . '</p>';
+		echo '<p class="newlabel yellow" style="display: none;">' . __( 'Shortcode copied to clipboard.', 'WPdoodlez' ) . '</p>';
 		break;
   }
 }
@@ -965,7 +965,9 @@ function personal_quiz_exam_func($atts) {
 			.'"<br>'.__('within ','WPdoodlez') .' ['.$tzeit.'] '.__('minutes','WPdoodlez') .' '. $anzfragen .' '.__('questions answered','WPdoodlez')
 			.',<br>'.__('with','WPdoodlez').' '.$erzpunkte. '  ('.$sperct.'%) '.__('right','WPdoodlez').' '.__('and','WPdoodlez') .' '.$anzfragen - $erzpunkte.' ('. (100 - $sperct) .'%) '.__('wrong','WPdoodlez').'.';
 		$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
-		if ( $sperct < 50 ) { $fail='<span style="color:tomato">'.__('unfortunately not','WPdoodlez').'</span>'; } else { $fail=''; }
+		if ( $sperct < 50 ) { 
+			$fail='<span style="color:tomato"><i class="fa fa-thumbs-down"></i> '.__('unfortunately not','WPdoodlez').'</span>';
+		} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 		$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').': '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
 		$theForm .= '<blockquote style="font-size:.8em">Auswertung: &nbsp;'.$auswertung.'</blockquote>';
 		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
@@ -1025,7 +1027,8 @@ function personal_quiz_exam_func($atts) {
 	} else {   // Fragen stellen
 		$htmout = '<form id="quizform" action="" method="POST" class="quiz_form form">';
 		$htmout .= wp_nonce_field( 'quiz_exam_submit', 'quiz_exam_nonce', 1, 0 );
-		$htmout .= '<b>Ihr Name bitte</b> <input required="required" type="text" name="tname" id="tname" size="22" maxlength="40" value="">';
+		$htmout .= '<p>' . sprintf (__('you can take an exam with %s questions. Your name will be used on the certificate after the exam. See GDPR notice at end. Good luck!','WPdoodlez'),$anzfragen).'</p>';
+		$htmout .= '<strong>'.__('your name please','WPdoodlez').'</strong>* <input required="required" type="text" placeholder="'.__('firstname lastname','WPdoodlez').'" name="tname" id="tname" size="22" maxlength="40" value="">';
 		$htmout .= '&nbsp; Spielzeit: <input style="text-align:center;height:1.3em;width:70px;font-size:1.3em" type="text" name="zeit" id="zeit">
 			<script>var start = new Date();
 			function leadingZero(tish) {
@@ -1070,8 +1073,8 @@ function personal_quiz_exam_func($atts) {
 				$ci = 0;
 				foreach ($ans as $an) {
 					$ci += 1;
-					$htmout .= '<input required="required" type="radio" name="ans-'.$cc.'" id="ans-'.$cc.'-'.$ci.'" value="'.$an.'">';
-					$htmout .= ' &nbsp; <label for="ans-'.$cc.'-'.$ci.'"><b>'.chr($ci+64).'</b> &nbsp; '.$an.'</label><br>';
+					$htmout .= '<input class="radio-custom" required="required" type="radio" name="ans-'.$cc.'" id="ans-'.$cc.'-'.$ci.'" value="'.$an.'">';
+					$htmout .= ' &nbsp; <label for="ans-'.$cc.'-'.$ci.'" class="radio-custom-label"><b>'.chr($ci+64).'</b> &nbsp; '.$an.'</label><br>';
 				}	
 				$htmout .= '<input type="hidden" name="rt-'.$cc.'" id="rt-'.$cc.'" value="'.base64_encode($answers[0]).'">';
 				$htmout .= '<input type="hidden" name="fra-'.$cc.'" id="fra-'.$cc.'" value="'.get_the_id().'">';
@@ -1650,7 +1653,7 @@ function quiz_show_form( $content ) {
 		}	
 		$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
 		$letztefrage .= $listyle.'<input name="clippy" title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
-		$letztefrage .= '</li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
+		$letztefrage .= '<p class="newlabel yellow" style="display: none;">Frage in Zwischenablage kopiert</p></li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
 		// wenn current theme penguin, dann link zu umfragen
 		$wpxtheme = wp_get_theme(); 
 		if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
@@ -1705,7 +1708,9 @@ function quiz_show_form( $content ) {
 			$theForm .= __('you have ','WPdoodlez') . (@$_COOKIE['wrongscore'] + @$_COOKIE['rightscore']).' '.__('questions answered','WPdoodlez')
 			.',<br>'.__('with','WPdoodlez').' '. @$_COOKIE['rightscore']. '  ('.$sperct.'%)  '.__('right','WPdoodlez').' '.__('and','WPdoodlez') .' '.@$_COOKIE['wrongscore'].' ('. (100 - $sperct) .'%) '.__('wrong','WPdoodlez').'.';
 			$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
-			if ( $sperct < 50 ) { $fail='<span style="color:tomato">'.__('unfortunately not','WPdoodlez').'</span>'; } else { $fail=''; }
+			if ( $sperct < 50 ) { 
+				$fail='<span style="color:tomato"><i class="fa fa-thumbs-down"></i> '.__('unfortunately not','WPdoodlez').'</span>';
+			} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 			$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').' '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
 			$theForm .= '<blockquote style="font-size:.6em;overflow:hidden;height:340px;max-height:400px">'.totalrightwrong().'</blockquote>';
 			$theForm .= '<p style="font-size:0.7em;margin-top:5px">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
