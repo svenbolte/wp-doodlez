@@ -10,8 +10,8 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.151
-Stable tag: 9.1.1.151
+Version: 9.1.1.152
+Stable tag: 9.1.1.152
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.2
@@ -926,7 +926,7 @@ function wpd_games_bar() {
 	return $spiele;
 }
 
-// Zusammenstellung eines Quiz mit Wertung Personangebunden
+// Zusammenstellung eines Quiz mit Wertung Personengebunden
 function personal_quiz_exam_func($atts) {
 	$atts = shortcode_atts( array(
 		'items' => 20, // Default value 20
@@ -1063,13 +1063,27 @@ function personal_quiz_exam_func($atts) {
 			while ( $rndpostcats->have_posts() ) {
 				$cc += 1;
 				$rndpostcats->the_post();
+				$herkunftsland = get_post_custom_values('quizz_herkunftsland');
+				$quizbild = get_post_custom_values('quizz_bild');
 				$answers = get_post_custom_values('quizz_answer');
 				$answersb = get_post_custom_values('quizz_answerb');
 				$answersc = get_post_custom_values('quizz_answerc');
 				$answersd = get_post_custom_values('quizz_answerd');
 				$ans = array($answers[0],$answersb[0],$answersc[0],$answersd[0]);
 				shuffle($ans);
-				$htmout .= '<blockquote class="blockbuulb"><p class="headline">'.$cc.' - '.get_the_title().' - '.get_the_content().'</p>';
+				$htmout .= '<blockquote class="blockbuulb"><p class="headline">'.$cc.' <span class="newlabel white">'.$herkunftsland[0].'</span> - '.get_the_title().' - '.get_the_content().'</p>';
+				// Bild zur Quizfrage einfügen, wenn vorhanden
+				$bildshow=''; $bildlink='';
+				if (!empty($quizbild[0])) {
+					$upload_dir = wp_upload_dir();
+					$upload_basedir = $upload_dir['basedir'];
+					$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
+					if ( file_exists( $file ) ) {
+						$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
+						$bildshow = '<div style="opacity:.8"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:0;bottom:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></div>';
+					} 
+					$htmout .= $bildshow;
+				}
 				$ci = 0;
 				foreach ($ans as $an) {
 					$ci += 1;
@@ -1093,7 +1107,11 @@ function personal_quiz_exam_func($atts) {
 add_shortcode('personal_quiz', 'personal_quiz_exam_func');
 
 // Shortcode Random Question (als Widget auf der Homepage)
-function random_quote_func() {
+function random_quote_func($atts) {
+	$atts = shortcode_atts( array(
+		'gamebar' => 0, // Spiele-Leiste anzeigen - default wird meta_icons angezeigt
+	), $atts );
+	$gamebar = sanitize_text_field( (int) $atts[ 'gamebar' ]);
 	if ( is_home() || is_front_page() ) {
 		$args=array(
 		  'orderby'=>'rand','order'=>'rand','post_type'=>'question','post_status'=>'publish','posts_per_page'=>1,'showposts'=>1
@@ -1144,11 +1162,16 @@ function random_quote_func() {
 				}
 				$message .= '</div>';
 			}			
-			$message .= '<div class="meta-icons iconleiste" style="background-color:'.$accentcolor.'10">';
-			$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'">
-				<i class="fa fa-question-circle"></i></a><span class="greybox">'. wpd_games_bar().'</span>';
-			$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19">' . '' . $quizkat;
-			$message .= '</div></header>';
+			if (1 == $gamebar) {
+				$message .= '<div class="meta-icons iconleiste" style="background-color:'.$accentcolor.'10">';
+				$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'">
+					<i class="fa fa-question-circle"></i></a><span class="greybox">'. wpd_games_bar().'</span>';
+				$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19">' . '' . $quizkat.'</div>';
+			} else {
+				if ( function_exists('meta_icons')) $message .= '<div class="meta-icons" style="background-color:'.$accentcolor.'10">
+					'. meta_icons(0).'</div>';
+			}		
+			$message .= '</header>';
 			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
 			$message .= '&nbsp; ' . $herkunftsland[0].'</a></h2>';
 			$message .= '<div class="entry-content">'.get_the_content().'</div>';

@@ -3,8 +3,8 @@ Contributors: robert_kolatzek, PBMod
 Tags: doodle, poll, question, meeting, vote, quiz-exam, quiz
 Text Domain: WPDoodlez
 Domain Path: /lang/
-Version: 9.1.1.151
-Stable tag: 9.1.1.151
+Version: 9.1.1.152
+Stable tag: 9.1.1.152
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.2
@@ -37,8 +37,8 @@ Quizzz supports categories images and integrates them in single and header if us
 It adds a custom post type "question". See readme.txt for more details.
 If you place pictures in upload/quizbilder folder and enter the filename of the picture you can make questions displaying the picture
 
-Add Shortcode ´´´[random-question]´´´ to an html widget (only on front page)
-
+Add Shortcode ´´´[random-question gamebar=0/1]´´´ to an html widget (only on front page)
+		'gamebar' => 0, // Spiele-Leiste anzeigen - default wird meta_icons angezeigt
 
 #### Quiz personal Exams
 Can be invoked from single question menu bar. exam starts a 20 questions exam from the same category as the invoking question.
