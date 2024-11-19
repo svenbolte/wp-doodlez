@@ -1080,7 +1080,7 @@ function personal_quiz_exam_func($atts) {
 					$file = $upload_basedir . '/quizbilder/' . $quizbild[0];
 					if ( file_exists( $file ) ) {
 						$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$quizbild[0];
-						$bildshow = '<div style="opacity:.8"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:0;bottom:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></div>';
+						$bildshow = '<div style="opacity:.8"><a href="'.$bildlink.'"><img style="height:114px;max-height:150px;max-width:150px;min-width:150px;position:absolute;right:0;bottom:0;width:150px"" title="'.$quizbild[0].'" src="'.$bildlink.'"></a></div>';
 					} 
 					$htmout .= $bildshow;
 				}
