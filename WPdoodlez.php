@@ -956,20 +956,25 @@ function personal_quiz_exam_func($atts) {
 		}
 		$sperct = round( ( $erzpunkte / $anzfragen ) * 100 , 0 );
 		// Zertifikat ausgeben
+		sscanf($tzeit, "%d:%d:%d", $hours, $minutes, $seconds);
+		$time_seconds = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+		if ($time_seconds >= 1) $timepersec = round(($time_seconds / $anzfragen),1); else $timepersec = 0;
+		if ($timepersec > 10) $unusual=''; else $unusual = '<br><span style="color:tomato">'.__('the result is highly unlikely','WPdoodlez').'!</span>';
 		$theForm = '<script>document.getElementsByClassName("entry-title")[0].style.display = "none";</script>';
 		$theForm .= '<div style="position:relative">
 			<div><img src="'.plugin_dir_url(__FILE__).'/lightbulb-1000-300.jpg" style="width:100%"></div>
 			<div class="middle" style="opacity:1;position:absolute;top:50%;bottom:50%;width:100%;text-align:center;color:white;font-size:4em;z-index:99999">'.__('quiz exam certificate','WPdoodlez') .'</div>
 			</div><div style="text-align:center;padding-top:20px;font-size:1.5em">';
 		$theForm .= '<h6>'.$tname.'</h6>'.__('you have ','WPdoodlez') .' '.__('at quiz-exam','WPdoodlez') .' "'. strtoupper($catarg)
-			.'"<br>'.__('within ','WPdoodlez') .' ['.$tzeit.'] '.__('minutes','WPdoodlez') .' '. $anzfragen .' '.__('questions answered','WPdoodlez')
-			.',<br>'.__('with','WPdoodlez').' '.$erzpunkte. '  ('.$sperct.'%) '.__('right','WPdoodlez').' '.__('and','WPdoodlez') .' '.$anzfragen - $erzpunkte.' ('. (100 - $sperct) .'%) '.__('wrong','WPdoodlez').'.';
+			.'"<br>'.__('within ','WPdoodlez') .' ['.$tzeit.'] '.__('minutes','WPdoodlez') .' '. $anzfragen .' '
+			.__('questions answered','WPdoodlez').', '.__('that is','WPdoodlez').': '.$timepersec.'/s. '.$unusual
+			.' <br>'.__('you targetet','WPdoodlez').' '.$erzpunkte. '  ('.$sperct.'%) '.__('right','WPdoodlez').' '.__('and','WPdoodlez') .' '.$anzfragen - $erzpunkte.' ('. (100 - $sperct) .'%) '.__('wrong','WPdoodlez').'.';
 		$theForm .= '<p style="margin-top:20px"><progress id="file" value="'.$sperct.'" max="100"> '.$sperct.' </progress></p>';
 		if ( $sperct < 50 ) { 
 			$fail='<span style="color:tomato"><i class="fa fa-thumbs-down"></i> '.__('unfortunately not','WPdoodlez').'</span>';
 		} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 		$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').': '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
-		$theForm .= '<blockquote style="font-size:.8em">Auswertung: &nbsp;'.$auswertung.'</blockquote>';
+		$theForm .= '<blockquote style="font-size:.8em">'.__('evaluation','WPdoodlez') .' &nbsp;'.$auswertung.'</blockquote>';
 		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
 		$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
 		$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
