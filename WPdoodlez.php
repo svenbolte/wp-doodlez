@@ -10,10 +10,10 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: WPdoodlez
 Domain Path: /lang/
 Author: PBMod
-Version: 9.1.1.152
-Stable tag: 9.1.1.152
+Version: 9.1.1.153
+Stable tag: 9.1.1.153
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.7.1
 Requires PHP: 8.2
 */
 
@@ -135,7 +135,7 @@ function wpdoodlez_stats_func($atts) {
 					if (isset($vote['zeit'])) {
 						$diff = time() - $vote['zeit'];
 						if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "yellow"; } else { $newcolor = "white"; }
-						$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')).' '.ago($vote['zeit']).'</abbr></br>';
+						$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ).' '.ago($vote['zeit']).'</abbr></br>';
 						if ($cct == 1 ) $firstvote = $votezeit;
 					} else { $votezeit=''; $firstvote=''; }
 					if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
@@ -198,7 +198,7 @@ function wpdoodlez_stats_func($atts) {
 					$output .= '<tr>';
 					$output .=  '<td style="text-align:left">'.$name.'</td>'; 
 					$output .=  '<td style="text-align:left"><abbr>'; 
-					if (isset($vote['zeit'])) $votezeit = date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')); else $votezeit='';
+					if (isset($vote['zeit'])) $votezeit = wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ); else $votezeit='';
 					if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 					// Wenn ipflag plugin aktiv und user angemeldet
 					$output .=  ' ' . $votezeit.'</abbr></td>';
@@ -544,7 +544,7 @@ function get_doodlez_content($chartan) {
 				if (isset($vote['zeit'])) {
 					$diff = time() - $vote['zeit'];
 					if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "yellow"; } else { $newcolor = "white"; }
-					$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')).' '.ago($vote['zeit']).'</abbr></br>';
+					$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ).' '.ago($vote['zeit']).'</abbr></br>';
 					if ($cct == 1 ) $firstvote = $votezeit;
 				} else { $votezeit=''; $firstvote=''; }
 				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
@@ -652,7 +652,7 @@ function get_doodlez_content($chartan) {
 				$htmlout .= 'class="'. @$myname == $name ? 'myvote' : '' .'">';
 				$htmlout .= '<td style="text-align:left">'.$name.'</td>'; 
 				$htmlout .= '<td style="text-align:left"><abbr>'; 
-				if (isset($vote['zeit'])) $votezeit = date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')); else $votezeit='';
+				if (isset($vote['zeit'])) $votezeit = wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ); else $votezeit='';
 				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 				// Wenn ipflag plugin aktiv und user angemeldet
 				if( class_exists( 'ipflag' ) && is_user_logged_in() ) {
@@ -765,7 +765,7 @@ function wpd_exportteilnehmer() {
 			foreach ( $votes as $name => $vote ) {
 				$csvout = array();
 				$csvout[] = mb_convert_encoding($name, 'ISO-8859-1', 'UTF-8'); 
-				if (isset($vote['zeit'])) $votezeit = date_i18n(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] + date('Z')); else $votezeit='';
+				if (isset($vote['zeit'])) $votezeit = wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ); else $votezeit='';
 				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 				$csvout[] = $votezeit; 
 				$csvout[] = $voteip; 
@@ -975,7 +975,7 @@ function personal_quiz_exam_func($atts) {
 		} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 		$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').': '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
 		$theForm .= '<blockquote style="font-size:.8em">'.__('evaluation','WPdoodlez') .' &nbsp;'.$auswertung.'</blockquote>';
-		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.wp_date( 'D, j. F Y, H:i:s', false, false);
 		$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
 		$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 		// Wenn Penguin Theme vorhanden, dann in Datenbank schreiben tabelle pruefungen, ansonsten Tabelle anlegen und speichern
@@ -1741,7 +1741,7 @@ function quiz_show_form( $content ) {
 			} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 			$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').' '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
 			$theForm .= '<blockquote style="font-size:.6em;overflow:hidden;height:340px;max-height:400px">'.totalrightwrong().'</blockquote>';
-			$theForm .= '<p style="font-size:0.7em;margin-top:5px">'.date_i18n( 'D, j. F Y, H:i:s', false, false);
+			$theForm .= '<p style="font-size:0.7em;margin-top:5px">'.wp_date( 'D, j. F Y, H:i:s', false, false);
 			$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
 			$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 		}
