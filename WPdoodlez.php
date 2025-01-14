@@ -975,7 +975,7 @@ function personal_quiz_exam_func($atts) {
 		} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 		$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').': '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
 		$theForm .= '<blockquote style="font-size:.8em">'.__('evaluation','WPdoodlez') .' &nbsp;'.$auswertung.'</blockquote>';
-		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.wp_date( 'D, j. F Y, H:i:s', false, false);
+		$theForm .= '<p style="font-size:0.7em;margin-top:2em">'.wp_date( 'D, j. F Y, H:i:s');
 		$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
 		$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 		// Wenn Penguin Theme vorhanden, dann in Datenbank schreiben tabelle pruefungen, ansonsten Tabelle anlegen und speichern
@@ -1741,7 +1741,7 @@ function quiz_show_form( $content ) {
 			} else { $fail='<span style="color:green"><i class="fa fa-thumbs-up"></i> '; }
 			$theForm .= '<p style="margin-top:20px">'.__('in school grades','WPdoodlez').' '.get_schulnote( $sperct ).',<br>'.__('and','WPdoodlez').' <strong>'.$fail.' '.__('passed','WPdoodlez').'</strong>.</p>';
 			$theForm .= '<blockquote style="font-size:.6em;overflow:hidden;height:340px;max-height:400px">'.totalrightwrong().'</blockquote>';
-			$theForm .= '<p style="font-size:0.7em;margin-top:5px">'.wp_date( 'D, j. F Y, H:i:s', false, false);
+			$theForm .= '<p style="font-size:0.7em;margin-top:5px">'.wp_date( 'D, j. F Y, H:i:s');
 			$theForm .= '<span style="font-family:Brush Script MT;font-size:2.6em;padding-left:24px">'.wp_get_current_user()->display_name.'</span></p>';
 			$theForm .= '<p style="font-size:0.7em">'. get_bloginfo('name') .' &nbsp; '. get_bloginfo('url') .'<br>'.get_bloginfo('description'). '</p></div>';
 		}
