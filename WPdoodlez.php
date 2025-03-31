@@ -922,6 +922,8 @@ function wpd_games_bar() {
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('Sudoku','WPdoodlez').'</a></li>';
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-map-signs"></i> '. __('Shuffle','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>6), get_post_permalink() ).'"><i class="fa fa-recycle"></i> '. __('Rebus','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>7), get_post_permalink() ).'"><i class="fa fa-gg"></i> '. __('syllable puzzle','WPdoodlez').'</a></li>';
 	$spiele .= '</ul>';
 	return $spiele;
 }
@@ -1167,19 +1169,18 @@ function random_quote_func($atts) {
 				}
 				$message .= '</div>';
 			}			
-			if (1 == $gamebar) {
-				$message .= '<div class="meta-icons iconleiste" style="background-color:'.$accentcolor.'10">';
-				$message .= '<a title="alle Fragen anzeigen" href="'.esc_url(site_url().'/question?orderby=rand&order=rand').'">
-					<i class="fa fa-question-circle"></i></a><span class="greybox">'. wpd_games_bar().'</span>';
-				$message .= '</div><div class="greybox" style="background-color:'.$accentcolor.'19">' . '' . $quizkat.'</div>';
-			} else {
-				if ( function_exists('meta_icons')) $message .= '<div class="meta-icons" style="background-color:'.$accentcolor.'10">
-					'. meta_icons(0).'</div>';
-			}		
+			if ( function_exists('meta_icons')) $message .= '<div class="meta-icons" style="background-color:'.$accentcolor.'10">'. meta_icons(0).'</div>';
+			else $message .= '<div class="greybox" style="background-color:'.$accentcolor.'19">' . '' . $quizkat.'</div>';
 			$message .= '</header>';
 			$message .= '<h2 class="entry-title"><a title="' . __('answer question', 'WPdoodlez') . '" href="'.get_post_permalink().'">'.get_the_title();
 			$message .= '&nbsp; ' . $herkunftsland[0].'</a></h2>';
 			$message .= '<div class="entry-content">'.get_the_content().'</div>';
+			if (1 == $gamebar) {
+				$message .= '<div style="text-align:center;background-color:'.$accentcolor.'10">';
+				$message .= wpd_games_bar();
+				$message .= '</div>';
+			}		
+
 		  } // while Schleife Ende
 		}
 		wp_reset_query();  
@@ -1475,9 +1476,9 @@ function wpdoo_number_format_short( $n ) {
 }
 
 
-// Einzelanzeige
+// Einzelanzeige Quiz
 function quiz_show_form( $content ) {
-	if (get_post_type() == 'question') {
+	if (get_post_type() == 'question' && !isset($_GET['crossword']) ) {
 		// Beenden, wenn nonce nicht stimmt.
 		if (!empty($_POST) && empty($_POST['tname']) ) {
 			if ( !wp_verify_nonce( $_POST['quiz_nonce'], 'quiz_submit' ) ) return "Nonce not valid";
@@ -2791,5 +2792,267 @@ function xwordshuffle() {
 }
 
 //   ----------------------------- wortpuzzle module ended -------------------------------------
+
+//   ----------------------------- rebus module begin -------------------------------------
+
+	function convertUmlaute($word) {
+		$replacements = [
+			"Ä" => "AE",
+			"ä" => "ae",
+			"Ö" => "OE",
+			"ö" => "oe",
+			"Ü" => "UE",
+			"ü" => "ue",
+			"ß" => "ss"
+		];
+		return strtr($word, $replacements);
+	}
+
+	function createRebus($word) {
+		// Array für mehrere mögliche Bilder, ihre Bedeutungen und Unicode-Zeichen
+		$imageMeanings = [
+			"A" => [["Apfel", "🍎"], ["Anker", "⚓"], ["Ameise", "🐜"], ["Auto", "🚗"], ["Alpaka", "🦙"],["Aepfel", "🍎"], ["Aehre", "🌾"], ["Aequator", "🌍"]],
+			"B" => [["Buch", "📖"], ["Ball", "⚽"], ["Blume", "🌺"], ["Baum", "🌳"], ["Baer", "🐻"]],
+			"C" => [["Clown", "🤡"], ["Computer", "💻"], ["Citrone", "🍋"], ["Couch", "🛋️"], ["Chamaeleon", "🦎"]],
+			"D" => [["Diamant", "💎"], ["Drache", "🐉"], ["Dino", "🦖"], ["Delfin", "🐬"], ["Dose", "🥫"]],
+			"E" => [["Eule", "🦉"], ["Ei", "🥚"], ["Erdbeere", "🍓"], ["Edelstein", "💍"], ["Elch", "🦌"]],
+			"F" => [["Fisch", "🐟"], ["Flasche", "🍾"], ["Fuchs", "🦊"], ["Fahrrad", "🚲"], ["Feuer", "🔥"]],
+			"G" => [["Gitarre", "🎸"], ["Globus", "🌍"], ["Gabel", "🍴"], ["Gans", "🦢"], ["Gorilla", "🦍"]],
+			"H" => [["Haus", "🏠"], ["Hammer", "🔨"], ["Hut", "🎩"], ["Hund", "🐶"], ["Herz", "❤️"]],
+			"I" => [["Igel", "🦔"], ["Insel", "🏝️"], ["Iglu", "❄️"], ["Indigener", "ᐂ"], ["Instrument", "🎷"]],
+			"J" => [["Jacke", "🧥"], ["Juwel", "💍"], ["Joghurt", "🥛"], ["Jet", "✈️"], ["Jaguar", "🐆"]],
+			"K" => [["Katze", "🐱"], ["Kuchen", "🍰"], ["Krabbe", "🦀"], ["Keks", "🍪"], ["Kaktus", "🌵"]],
+			"L" => [["Lampe", "💡"], ["Loewe", "🦁"], ["Loeffel", "🥄"], ["Laterne", "🎃"], ["Lorbeer", "🌿"]],
+			"M" => [["Mond", "🌙"], ["Melone", "🍉"], ["Maus", "🐭"], ["Mikrofon", "🎤"], ["Meerjungfrau", "🧜"]],
+			"N" => [["Nase", "👃"], ["Nacht", "🌌"], ["Nuss", "🌰"], ["Nebel", "🌫️"], ["Nilpferd", "🦛"]],
+			"O" => [["Orange", "🍊"], ["Obst", "🍓"], ["Ofen", "🍞"], ["Oktopus", "🐙"], ["Orchester", "🎻"],["Oel", "🛢️"], ["Oesterreich", "🎿"], ["Oeffnung", "🚪"]],
+			"P" => [["Pferd", "🐴"], ["Papagei", "🦜"], ["Pizza", "🍕"], ["Pfanne", "🍳"], ["Palme", "🌴"]],
+			"Q" => [["Qualle", "🐙"], ["Quark", "🍶"], ["Quarz", "⛏️"], ["Quitte", "🍐"], ["Quad", "🛺"]],
+			"R" => [["Rose", "🌹"], ["Regenschirm", "☂️"], ["Roboter", "🤖"], ["Rucksack", "🎒"], ["Regenbogen", "🌈"]],
+			"S" => [["Sonne", "☀️"], ["Schiff", "🚢"], ["Schlange", "🐍"], ["Schneemann", "⛄"], ["Sessel", "🪑"]],
+			"T" => [["Tasse", "☕"], ["Tisch", "🪑"], ["Tiger", "🐯"], ["Traktor", "🚜"], ["Trommel", "🥁"]],
+			"U" => [["Uhr", "⏰"], ["Unicorn", "🦄"], ["Unterwasserwelt", "🐠"], ["Ulme", "🌳"], ["Uhu", "🦉"],["Ueberraschung", "🎉"], ["Uebung", "🏋️"], ["Uebersetzer", "🌐"]],
+			"V" => [["Vogel", "🐦"], ["Vanille", "🌸"], ["Vulkan", "🌋"], ["Violine", "🎻"], ["Vampir", "🧛"]],
+			"W" => [["Wal", "🐋"], ["Wolke", "☁️"], ["Waffel", "🧇"], ["Walnuss", "🌰"], ["Wasserfall", "🌊"]],
+			"X" => [["X-Ray", "❌"], ["Xylophon", "🎵"], ["Xenon-Lampe", "💡"]],
+			"Y" => [["Yak", "🐂"], ["Yeti", "🧌"], ["Yoga", "🧘"], ["Yoyo", "🪀"], ["Yacht", "🛥️"]],
+			"Z" => [["Zebra", "🦓"], ["Zauberstab", "✨"], ["Zitrone", "🍋"], ["Zwiebel", "🧅"], ["Zoo", "🐾"]]
+		];
+
+		$rebus = [];
+		$decodedWords = [];
+		$letters = str_split(strtoupper($word));
+		foreach ($letters as $letter) {
+			if ($letter === " ") {
+				$rebus[] = '<span style="font-size:2.4em;margin-right:1em">␣</span>';
+			} elseif (array_key_exists($letter, $imageMeanings)) {
+				$options = $imageMeanings[$letter];
+				$randomChoice = $options[array_rand($options)];
+				// Zufällige zusätzliche Buchstaben generieren
+				$additionalChars = chr(rand(65, 90)) . chr(rand(65, 90)); // Zwei zufällige Buchstaben (A-Z)
+				// Zusätzliche Buchstaben mitten in das Originalwort einfügen
+				$middle = floor(strlen($randomChoice[0]) / 2);
+				$wordWithAdditionalChars = substr($randomChoice[0], 0, $middle) . $additionalChars . substr($randomChoice[0], $middle);
+				// Das gesamte Wort mit den eingefügten Buchstaben durchmischen
+				$scrambledImage = str_shuffle($wordWithAdditionalChars);
+				$rebus[] = '<span style="font-size:2em;margin-right:2em;white-space:nowrap">' . $randomChoice[1] . ' ' . strtoupper($scrambledImage) . '</span>';
+				$decodedWords[] = $randomChoice[1].' '.strtoupper($randomChoice[0]);
+			} else {
+				$rebus[] = $letter;
+			}
+		}
+		return ["rebus" => $rebus, "decoded" => $decodedWords];
+	}
+
+function xrebus() {
+    $html = wpd_games_bar();
+	$html .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
+		add_query_arg( array('crossword'=>6), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
+
+	if ($_SERVER["REQUEST_METHOD"] == "POST") {
+		$word = esc_html(trim($_POST['xwort']));
+		$hint = esc_html(trim($_POST['xhint']));
+		$userInput = strtoupper(trim($_POST['loesung']));
+		$isCorrect = (int) ($userInput == strtoupper($word) ) ?? 0;
+	} else {
+		// Zufalls-Antwort aus Quizfragen
+		$args=array(
+		  'orderby'=> 'rand',
+		  'order'=> 'rand',
+		  'post_type' => 'question',
+		  'post_status' => 'publish',
+		  'posts_per_page' => -1,
+		  'showposts' => -1,
+		);
+		$my_query = new WP_Query($args);
+		$rows=array();
+		if( $my_query->have_posts() ) {
+		  while ($my_query->have_posts()) : $my_query->the_post(); 
+			$answers = get_post_custom_values('quizz_answer');
+					$crossant = preg_replace("/[^A-Za-zäüöÄÖÜß ]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
+					$crossfrag = get_the_content();
+					if( strlen($crossant) <= 40 && strlen($crossant) >= 8 ) {
+						$element = array( "word" => $crossant, "clue" => $crossfrag );
+						$rows[] = $element;
+					}	
+		  endwhile;
+		}
+		wp_reset_query();  
+		// Aufruf Beispiel XXXXX hier Quizantwort einsetzen
+		$word = convertUmlaute($rows[0]['word']); // Dein Satz, umgewandelt in AE statt Umlaute
+		$hint = $rows[0]['clue'];
+	}
+	$rebusData = createRebus($word);
+	// Ausgabe des Rebus
+	$html .= '<p>Gesucht wird ein Wort oder ein Satz bestehend aus '.strlen($word).' Buchstaben (inkl. Leerzeichen) und '.str_word_count($word).' Wörtern.
+		Die Emojis können einen Hinweis geben, müssen aber nicht. Die vermischten Wörter enthalten jeweils zwei zusätzliche falsche
+		Buchstaben und sollen ebenfalls erraten werden.</p><div class="headline"><i class="fa fa-lg fa-lightbulb-o"></i> '.$hint.'</div>';
+	$html .= implode(" ", $rebusData["rebus"]);
+	$html .= '<p><form method="post"><label for="loesung">Dein Lösungswort oder Satz:</label>
+		<input type="text" id="loesung" name="loesung" required>
+		<input type="hidden" id="xwort" name="xwort" value="'.$word.'">
+		<input type="hidden" id="xhint" name="xhint" value="'.$hint.'">
+		<button type="submit">Prüfen</button>';
+	$html .= wp_nonce_field( 'rebus_submit', 'rebus_nonce', 1, 0 );
+	$html .= '</form></p>';
+	if (isset($isCorrect)) {
+		$html .= '<h6>'.__('result','WPdoodlez').'</h6><p>';
+		$html .= '<p>';
+		if ($isCorrect == 1) {
+			$html .= '✅ '.__('correct answer','WPdoodlez').'</p>';
+			$html .= '<p><strong>Entschlüsselte Wörter:</strong> ' . implode(", ", $rebusData["decoded"]) . '</p>
+				<p><strong>Lösung:</strong> ' . $word . '</p>';
+		} else {
+			$html .= '❌ '.__('wrong answer','WPdoodlez').' '.__('try again','WPdoodlez').'</p>';
+		}
+	}
+	return $html;
+	
+}
+//   ----------------------------- rebus module ended -------------------------------------
+
+//   ----------------------------- Silbenrätsel module begin -------------------------------------
+
+function generateRandomWords($numWords, $words) {
+    shuffle($words);
+    return array_slice($words, 0, $numWords);
+}
+
+function splitIntoSyllables($word) {
+    // Einfache Silbentrennung basierend auf Vokalen
+    return preg_split('/(?<=[aeiou])/', $word, -1, PREG_SPLIT_NO_EMPTY);
+}
+
+function xsillableshuffle() {
+	$html = wpd_games_bar();
+	$html .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
+		add_query_arg( array('crossword'=>7), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
+    $html .= '<style>#words{margin-top:1em}
+	.syllable{background-color:#eee8;border:1px solid #ccc;cursor:pointer;display:inline-block;font-size:1.2em;margin:5px;padding:10px}
+	.syllable.strikethrough{background-color:#8888;color:#aaa;text-decoration:line-through}
+	.dropzone{background-color:#eee8;border:1px solid #aaa;font-size:1.2em;min-width:200px;padding:10px}</style>';
+		// Zufalls-Antwort aus Quizfragen
+		$args=array(
+		  'orderby'=> 'rand',
+		  'order'=> 'rand',
+		  'post_type' => 'question',
+		  'post_status' => 'publish',
+		  'posts_per_page' => -1,
+		  'showposts' => -1,
+		);
+   $my_query = new WP_Query($args);
+	$rows=array();
+    if( $my_query->have_posts() ) {
+      while ($my_query->have_posts()) : $my_query->the_post(); 
+		$answers = get_post_custom_values('quizz_answer');
+		$crossohneleer =  (strpos($answers[0], ' ') == false);
+		if ($crossohneleer) {
+				$crossant = preg_replace("/[^A-Za-zäüöÄÖÜß]/", '', esc_html(umlauteumwandeln($answers[0]) ) );
+				$crossfrag = get_the_content();
+				if( strlen($crossant) <= 12 && strlen($crossant) >= 4 &&
+				    strlen($crossfrag) <= 40 && strlen($crossfrag) >= 5 ) {
+					$element = array( "word" => $crossant, "clue" => $crossfrag );
+					$rows[] = $element;
+				}	
+		}	
+      endwhile;
+    }
+    wp_reset_query();  
+	// Wörter und Hints bauen
+	foreach ($rows as $row) {
+		$wort = $row['word'];
+		$words[] = $wort;
+		$hints[$wort] = $row['clue'];
+	}	
+	/*
+	//Lösungswörter Beispiele
+	$words = [ "Berlin", "Hamburg" ];
+	// Hinweise
+	$hints = [ "Berlin" => "Die Hauptstadt von Deutschland.", "Hamburg" => "Eine große Hafenstadt im Norden Deutschlands."	];
+	*/
+
+	$randomWords = generateRandomWords(10, $words);
+	$syllables = [];
+	foreach ($randomWords as $word) {
+		$syllables = array_merge($syllables, splitIntoSyllables($word));
+	}
+	sort($syllables);
+	// Hauptprogramm Silben
+	$html .= '<div id="syllables">';
+	foreach ($syllables as $syllable) {
+	$html .= '<div class="syllable" draggable="true" ondragstart="drag(event)">' . $syllable .'</div>';
+	}
+	$html .= '</div><div id="words">';
+	foreach ($randomWords as $ctr => $word) {
+		$html .= '<div class="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)" data-word="'. $word .'"></div>
+			<div class="hintbox">' .($ctr + 1) . '. ' . $hints[$word] . '</div>';
+	}
+	$html .= '</div><button onclick="checkAnswers()">Auswerten und Lösung anzeigen</button><div id="results"></div>';
+	$html .= '<script>
+		function allowDrop(event) {
+			event.preventDefault();
+		}
+		function drag(event) {
+			event.dataTransfer.setData("text", event.target.innerText);
+		}
+		function drop(event) {
+			event.preventDefault();
+			var data = event.dataTransfer.getData("text");
+			event.target.innerText += data;
+			var syllables = document.querySelectorAll(".syllable");
+			syllables.forEach(function(syllable) {
+				if (syllable.innerText === data) {
+					syllable.classList.add("strikethrough");
+				}
+			});
+		}
+	 function checkAnswers() {
+		var dropzones = document.querySelectorAll(".dropzone");
+		var results = document.getElementById("results");
+		var correctCount = 0;
+		var incorrectCount = 0;
+		results.innerHTML = "<h2>Auswertung</h2>";
+		dropzones.forEach(function(dropzone) {
+			var word = dropzone.getAttribute("data-word");
+			if (dropzone.innerText === word) {
+				correctCount++;
+				results.innerHTML += "<div>Richtig: " + word + "</div>";
+			} else {
+				incorrectCount++;
+				results.innerHTML += "<div style=\'color:red\'>Falsch: " + word + " (Deine Antwort: " + dropzone.innerText + ")</div>";
+			}
+		});
+		var total = correctCount + incorrectCount;
+		var percentage = (correctCount / total) * 100;
+		results.innerHTML += "<p>Richtige Antworten: " + correctCount + ", ";
+		results.innerHTML += "Falsche Antworten: " + incorrectCount + ". ";
+		results.innerHTML += "Erreichter Prozentsatz: " + percentage.toFixed(2) + "%</p>";
+	}
+
+	</script>';
+	return $html;
+}
+//   ----------------------------- Silbenrätsel module ended -------------------------------------
+
 
 ?>
