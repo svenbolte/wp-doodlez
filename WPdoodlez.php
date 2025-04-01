@@ -380,7 +380,7 @@ function wpdoo_post_custom_columns($column) {
   switch ($column) {
     case "Shortcode":
 		echo '<input type="text" title="id=&quot;' . esc_attr( $post->ID ) . '&quot;" class="copy-to-clipboard" value="[wpdoodlez_sc id=&quot;' . esc_attr( $post->ID ) . '&quot;]" readonly>';
-		echo '<p class="newlabel yellow" style="display: none;">' . __( 'Shortcode copied to clipboard.', 'WPdoodlez' ) . '</p>';
+		echo '<p class="newlabel" style="background-color:#fe8;display:none">' . __( 'Shortcode copied to clipboard.', 'WPdoodlez' ) . '</p>';
 		break;
   }
 }
@@ -1682,7 +1682,7 @@ function quiz_show_form( $content ) {
 		}	
 		$copyfrage = '  ' . wp_strip_all_tags( preg_replace("/[?,:]()/", '', get_the_title() ).'  '.$copytags.' eine Frage aus '. $herkunftsland[0] .'  '. preg_replace("/[?,:()]/", '',get_the_content() ).' ? '.preg_replace("/[?:()]/", '.',$pollyans ));
 		$letztefrage .= $listyle.'<input name="clippy" title="Frage in Zwischenablage kopieren" style="cursor:pointer;background-color:'.$accentcolor.';color:white;margin-top:5px;vertical-align:top;width:49px;height:20px;font-size:9px;padding:0" type="text" class="copy-to-clipboard" value="'.$copyfrage.'">';
-		$letztefrage .= '<p class="newlabel yellow" style="display: none;">Frage in Zwischenablage kopiert</p></li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
+		$letztefrage .= '<p class="newlabel" style="background-color:#fe8;display:none">Frage in Zwischenablage kopiert</p></li>' . $listyle. '<a title="'. __('overview','WPdoodlez').'" href="'.get_home_url().'/question?orderby=rand&order=rand"><i class="fa fa-list"></i></a>';
 		// wenn current theme penguin, dann link zu umfragen
 		$wpxtheme = wp_get_theme(); 
 		if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
