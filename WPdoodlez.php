@@ -759,7 +759,7 @@ function wpd_exportteilnehmer() {
 				}	
 			}
 			// print_r($csvhead);   // CSV Tabellenkopf schreiben
-			fputcsv( $output, $csvhead, ';');
+			fputcsv( $output, $csvhead, ';', escape: "");
 			// Tabellenzeilen
 			$votes = get_option( 'wpdoodlez_' . md5( AUTH_KEY . get_the_ID() ), array() );
 			foreach ( $votes as $name => $vote ) {
@@ -788,7 +788,7 @@ function wpd_exportteilnehmer() {
 						}
 					}
 				}	
-				fputcsv( $output, $csvout, ';');
+				fputcsv( $output, $csvout, ';', escape: "");
 				// print_r($csvout);
 			}
 			fclose($output);
@@ -1291,7 +1291,7 @@ function exportposts() {
 		header('Content-Type: text/csv; charset=utf-8');
 		header("Content-Disposition: attachment; filename=\"" . $filename . ".csv\";" );
 		header("Content-Transfer-Encoding: binary");	
-		fputcsv( $output, array('id','datum','charakter','land','titel','seitjahr','bemerkungen','antwortb','antwortc','antwortd','zusatzinfo','quizkat','ISO','Bild'), ';');
+		fputcsv( $output, array('id','datum','charakter','land','titel','seitjahr','bemerkungen','antwortb','antwortc','antwortd','zusatzinfo','quizkat','ISO','Bild'), ';', escape: "");
 		while ($query->have_posts()): $query->the_post();
 			$herkunftsland = get_post_custom_values('quizz_herkunftsland');
 			$hkiso = get_post_custom_values('quizz_iso');
