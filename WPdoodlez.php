@@ -1229,7 +1229,7 @@ function importposts() {
 		$fullimport = 0;
 	}
 	if ( false !== $handle ) {
-		while (($data = fgetcsv($handle, 2000, ";")) !== FALSE) {
+		while (($data = fgetcsv($handle, 2000, ";", escape: "")) !== FALSE) {
 			if ( $row > 1 && !empty($data[1]) ) {
 				// id; datum; charakter; land; titel; seitjahr; antwort; antwortb; antwortc; antwortd; zusatzinfo; kategorie;iso;bild
 				$num = count($data);
