@@ -133,9 +133,7 @@ function wpdoodlez_stats_func($atts) {
 						}	
 					}
 					if (isset($vote['zeit'])) {
-						$diff = time() - $vote['zeit'];
-						if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "yellow"; } else { $newcolor = "white"; }
-						$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ).' '.ago($vote['zeit']).'</abbr></br>';
+						$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'">' . colordatebox( $vote['zeit'], NULL, NULL, 1 ) . '</abbr></br>';
 						if ($cct == 1 ) $firstvote = $votezeit;
 					} else { $votezeit=''; $firstvote=''; }
 					if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
@@ -198,7 +196,7 @@ function wpdoodlez_stats_func($atts) {
 					$output .= '<tr>';
 					$output .=  '<td style="text-align:left">'.$name.'</td>'; 
 					$output .=  '<td style="text-align:left"><abbr>'; 
-					if (isset($vote['zeit'])) $votezeit = wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ); else $votezeit='';
+					if (isset($vote['zeit'])) $votezeit = colordatebox ( $vote['zeit'], NULL, NULL, 1 ); else $votezeit='';
 					if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
 					// Wenn ipflag plugin aktiv und user angemeldet
 					$output .=  ' ' . $votezeit.'</abbr></td>';
@@ -542,9 +540,7 @@ function get_doodlez_content($chartan) {
 					}	
 				}
 				if (isset($vote['zeit'])) {
-					$diff = time() - $vote['zeit'];
-					if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "yellow"; } else { $newcolor = "white"; }
-					$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'" class="newlabel '.$newcolor.'">'.wp_date(get_option('date_format').' '.get_option('time_format'), $vote['zeit'] ).' '.ago($vote['zeit']).'</abbr></br>';
+					$votezeit = '<abbr title="'.__( 'vote', 'WPdoodlez' ).' '.$cct.'">'. colordatebox($vote['zeit'], NULL, NULL, 1 ) . '</abbr></br>';
 					if ($cct == 1 ) $firstvote = $votezeit;
 				} else { $votezeit=''; $firstvote=''; }
 				if (isset($vote['ipaddr'])) $voteip = $vote['ipaddr']; else $voteip='';
@@ -2496,7 +2492,7 @@ function xwordhangman() {
 
 class Sudoku {
     private $_matrix;
-    public function __construct(array $matrix = null) {
+    public function __construct(?array $matrix = null) {
         if (!isset($matrix)) {
             $this->_matrix = $this->_getEmptyMatrix();
         } else {
