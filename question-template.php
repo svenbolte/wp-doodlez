@@ -33,6 +33,9 @@ get_header();
 			if (3 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('hangman','WPdoodlez').'</h1>';
 			if (4 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('Sudoku','WPdoodlez').'</h1>';
 			if (5 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('Shuffle','WPdoodlez').'</h1>';
+			if (6 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('Rebus','WPdoodlez').'</h1>';
+			if (7 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('syllable puzzle','WPdoodlez').'</h1>';
+			if (8 == esc_html($_GET['crossword'])) echo '<h1 class="entry-title">'. __('car quartet','WPdoodlez').'</h1>';
 		} else {
 			if ( is_single() ) {
 				the_title( '<h1 class="entry-title">', '</h1>' );
@@ -67,6 +70,9 @@ get_header();
 				if (3 == esc_html($_GET['crossword'])) echo xwordhangman();
 				if (4 == esc_html($_GET['crossword'])) echo xsudoku();
 				if (5 == esc_html($_GET['crossword'])) echo xwordshuffle();
+				if (6 == esc_html($_GET['crossword'])) echo xrebus();
+				if (7 == esc_html($_GET['crossword'])) echo xsillableshuffle();
+				if (8 == esc_html($_GET['crossword'])) echo xautoquartett();
 			} else the_content( );
 		?>
 		</div><!-- .entry-content -->

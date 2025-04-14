@@ -920,6 +920,7 @@ function wpd_games_bar() {
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-map-signs"></i> '. __('Shuffle','WPdoodlez').'</a></li>';
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>6), get_post_permalink() ).'"><i class="fa fa-recycle"></i> '. __('Rebus','WPdoodlez').'</a></li>';
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>7), get_post_permalink() ).'"><i class="fa fa-gg"></i> '. __('syllable puzzle','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>8), get_post_permalink() ).'"><i class="fa fa-car"></i> '. __('car quartet','WPdoodlez').'</a></li>';
 	$spiele .= '</ul>';
 	return $spiele;
 }
@@ -3049,6 +3050,558 @@ function xsillableshuffle() {
 	return $html;
 }
 //   ----------------------------- Silbenrätsel module ended -------------------------------------
+
+// --------------------------------- Autoquartett Spiel PHP Wordpress --------------------------------------------------------
+function xautoquartett() {
+	// Gesamt-Array aller Autodaten inkl. PBs Autodatenbank
+	$kartenfull = [
+		[ "baujahr" => 2024,"name" => "BMW i7 xDrive 60","ps" => 536,"vmax" => 240,"verbrauch" => 18.4,"beschleunigung" => 4.7,"gewicht" => 2715,"hubraum" => 0,"zylinder" => 0,"preis" => 135900,],
+		[ "baujahr" => 2024,"name" => "VW Golf 8 GTD Kombi schwarz","ps" => 200,"vmax" => 240,"verbrauch" => 5.0,"beschleunigung" => 7.1,"gewicht" => 1440,"hubraum" => 1968,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2024,"name" => "Mercedes A180","ps" => 136,"vmax" => 215,"verbrauch" => 5.5,"beschleunigung" => 9.2,"gewicht" => 1353,"hubraum" => 1332,"zylinder" => 4,"preis" => 38000,],
+		[ "baujahr" => 2024,"name" => "Mercedes CLE 450 4matic Cabrio (A236)","ps" => 381,"vmax" => 250,"verbrauch" => 7.9,"beschleunigung" => 4.7,"gewicht" => 2005,"hubraum" => 2999,"zylinder" => 6,"preis" => 89000,],
+		[ "baujahr" => 2024,"name" => "Mercedes EQB 350","ps" => 292,"vmax" => 160,"verbrauch" => 17.3,"beschleunigung" => 6.2,"gewicht" => 2175,"hubraum" => 0,"zylinder" => 0,"preis" => 58000,],
+		[ "baujahr" => 2023,"name" => "Mercedes CLE 450 4matic Coupe (C236)","ps" => 381,"vmax" => 250,"verbrauch" => 7.8,"beschleunigung" => 4.4,"gewicht" => 1945,"hubraum" => 2999,"zylinder" => 6,"preis" => 85500,],
+		[ "baujahr" => 2023,"name" => "Mercedes AMG GLC 200 4Matic Coupe (X 253/C 253)","ps" => 197,"vmax" => 215,"verbrauch" => 7.1,"beschleunigung" => 7.9,"gewicht" => 1818,"hubraum" => 1991,"zylinder" => 4,"preis" => 65000,],
+		[ "baujahr" => 2023,"name" => "Mercedes AMG GLC 43 4Matic Coupe (X 253/C 253)","ps" => 390,"vmax" => 250,"verbrauch" => 10.2,"beschleunigung" => 4.9,"gewicht" => 1888,"hubraum" => 2996,"zylinder" => 6,"preis" => 85000,],
+		[ "baujahr" => 2023,"name" => "Mercedes Hyper-Screen","ps" => 0,"vmax" => 0,"verbrauch" => 0,"beschleunigung" => 0,"gewicht" => 0,"hubraum" => 0,"zylinder" => 0,"preis" => 5000,],
+		[ "baujahr" => 2023,"name" => "Maybach 65 S-Klasse","ps" => 630,"vmax" => 250,"verbrauch" => 12.7,"beschleunigung" => 4.1,"gewicht" => 2285,"hubraum" => 5980,"zylinder" => 12,"preis" => 220000,],
+		[ "baujahr" => 2023,"name" => "Maybach GLS600 4-matic SUV","ps" => 550,"vmax" => 250,"verbrauch" => 12.9,"beschleunigung" => 4.9,"gewicht" => 2818,"hubraum" => 3982,"zylinder" => 8,"preis" => 170000,],
+		[ "baujahr" => 2023,"name" => "Mercedes E300e Plugin Hybrid","ps" => 313,"vmax" => 234,"verbrauch" => "0.6-0.9","beschleunigung" => 6.5,"gewicht" => 2265,"hubraum" => 1999,"zylinder" => 4,"preis" => 88000,],
+		[ "baujahr" => 2023,"name" => "Mercedes E220d Plugin Hybrid","ps" => 194,"vmax" => 240,"verbrauch" => "1.2-1.6","beschleunigung" => 7.9,"gewicht" => 1985,"hubraum" => 1950,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2023,"name" => "Mercedes EQS 580 SUV","ps" => 523,"vmax" => 210,"verbrauch" => 20.0,"beschleunigung" => 4.3,"gewicht" => 2735,"hubraum" => 0,"zylinder" => 0,"preis" => 167000,],
+		[ "baujahr" => 2023,"name" => "Mercedes EQE 450+ SUV","ps" => 408,"vmax" => 210,"verbrauch" => 18.7,"beschleunigung" => 5.6,"gewicht" => 2650,"hubraum" => 0,"zylinder" => 0,"preis" => 88200,],
+		[ "baujahr" => 2023,"name" => "Mercedes EQB 250","ps" => 190,"vmax" => 160,"verbrauch" => 17.3,"beschleunigung" => 9.2,"gewicht" => 2175,"hubraum" => 0,"zylinder" => 0,"preis" => 52000,],
+		[ "baujahr" => 2023,"name" => "BMW iX xDrive 50","ps" => 516,"vmax" => 200,"verbrauch" => 21.0,"beschleunigung" => 4.6,"gewicht" => 2585,"hubraum" => 0,"zylinder" => 0,"preis" => 96000,],
+		[ "baujahr" => 2023,"name" => "NIO ET7 schwarz","ps" => 653,"vmax" => 200,"verbrauch" => 19.0,"beschleunigung" => 3.8,"gewicht" => 2379,"hubraum" => 0,"zylinder" => 0,"preis" => 75000,],
+		[ "baujahr" => 2023,"name" => "NIO EL7 grau SUV (100 kWh)","ps" => 653,"vmax" => 200,"verbrauch" => 18.3,"beschleunigung" => 3.9,"gewicht" => 2500,"hubraum" => 0,"zylinder" => 0,"preis" => 90000,],
+		[ "baujahr" => 2023,"name" => "NIO ET5 blau (100 kWh)","ps" => 490,"vmax" => 200,"verbrauch" => 16.2,"beschleunigung" => 4.0,"gewicht" => 2350,"hubraum" => 0,"zylinder" => 0,"preis" => 67000,],
+		[ "baujahr" => 2023,"name" => "Smart One","ps" => 272,"vmax" => 180,"verbrauch" => 17.4,"beschleunigung" => 6.7,"gewicht" => 1820,"hubraum" => 0,"zylinder" => 0,"preis" => 35000,],
+		[ "baujahr" => 2023,"name" => "Mercedes SL500 Roadster (R231MJ17 Facelift)","ps" => 455,"vmax" => 250,"verbrauch" => 9.8,"beschleunigung" => 4.3,"gewicht" => 1845,"hubraum" => 4663,"zylinder" => 8,"preis" => 120000,],
+		[ "baujahr" => 2023,"name" => "Mercedes GLE 400d","ps" => 330,"vmax" => 245,"verbrauch" => 7.1,"beschleunigung" => 5.7,"gewicht" => 2295,"hubraum" => 2925,"zylinder" => 6,"preis" => 80000,],
+		[ "baujahr" => 2023,"name" => "Mercedes GLB200","ps" => 163,"vmax" => 207,"verbrauch" => 6.0,"beschleunigung" => 9.1,"gewicht" => 1749,"hubraum" => 1332,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2022,"name" => "Mercedes A180","ps" => 136,"vmax" => 215,"verbrauch" => 5.5,"beschleunigung" => 9.2,"gewicht" => 1353,"hubraum" => 1332,"zylinder" => 4,"preis" => 36000,],
+		[ "baujahr" => 2022,"name" => "Mercedes AMG GT Black series Coupe","ps" => 720,"vmax" => 325,"verbrauch" => 14.1,"beschleunigung" => 3.1,"gewicht" => 1615,"hubraum" => 3982,"zylinder" => 8,"preis" => 190000,],
+		[ "baujahr" => 2022,"name" => "Mercedes EQS 450+","ps" => 333,"vmax" => 210,"verbrauch" => 19.0,"beschleunigung" => 6.2,"gewicht" => 2480,"hubraum" => 0,"zylinder" => 0,"preis" => 105000,],
+		[ "baujahr" => 2022,"name" => "Mercedes AMG SL63","ps" => 577,"vmax" => 315,"verbrauch" => 13.5,"beschleunigung" => 3.6,"gewicht" => 1970,"hubraum" => 3982,"zylinder" => 8,"preis" => 170000,],
+		[ "baujahr" => 2022,"name" => "Mercedes EQS 350","ps" => 288,"vmax" => 210,"verbrauch" => 17.1,"beschleunigung" => 6.6,"gewicht" => 2465,"hubraum" => 0,"zylinder" => 0,"preis" => 98000,],
+		[ "baujahr" => 2022,"name" => "Mercedes AMG SL 63","ps" => 577,"vmax" => 315,"verbrauch" => 13.5,"beschleunigung" => 3.6,"gewicht" => 1970,"hubraum" => 3982,"zylinder" => 8,"preis" => 170000,],
+		[ "baujahr" => 2022,"name" => "Mercedes EQE 350+","ps" => 292,"vmax" => 210,"verbrauch" => 17.1,"beschleunigung" => 6.5,"gewicht" => 5280,"hubraum" => 0,"zylinder" => 0,"preis" => 75000,],
+		[ "baujahr" => 2022,"name" => "Mercedes EQS 450+","ps" => 333,"vmax" => 210,"verbrauch" => 19.0,"beschleunigung" => 6.2,"gewicht" => 2480,"hubraum" => 0,"zylinder" => 0,"preis" => 142000,],
+		[ "baujahr" => 2022,"name" => "Mercedes GLA200d (GLA MJ 2022)","ps" => 150,"vmax" => 208,"verbrauch" => 5.3,"beschleunigung" => 8.6,"gewicht" => 1718,"hubraum" => 1950,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2021,"name" => "Mercedes B250e EQdrive Plugin-Hybrid (B-Klasse MJ 2021)","ps" => 218,"vmax" => 235,"verbrauch" => 1.2,"beschleunigung" => 6.8,"gewicht" => 1723,"hubraum" => 1332,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2021,"name" => "Mercedes GLA250e EQdrive Plugin-Hybrid (GLA MJ 2020)","ps" => 218,"vmax" => 235,"verbrauch" => 1.6,"beschleunigung" => 7.1,"gewicht" => 1735,"hubraum" => 1332,"zylinder" => 4,"preis" => 48000,],
+		[ "baujahr" => 2021,"name" => "Mercedes B250e EQdrive Plugin-Hybrid (B-Klasse MJ 2019)","ps" => 218,"vmax" => 235,"verbrauch" => 1.2,"beschleunigung" => 6.8,"gewicht" => 1723,"hubraum" => 1332,"zylinder" => 4,"preis" => 43000,],
+		[ "baujahr" => 2020,"name" => "Mercedes A180","ps" => 136,"vmax" => 215,"verbrauch" => 5.5,"beschleunigung" => 9.2,"gewicht" => 1353,"hubraum" => 1332,"zylinder" => 4,"preis" => 34000,],
+		[ "baujahr" => 2020,"name" => "Mercedes A180","ps" => 136,"vmax" => 215,"verbrauch" => 5.5,"beschleunigung" => 9.2,"gewicht" => 1353,"hubraum" => 1332,"zylinder" => 4,"preis" => 33000,],
+		[ "baujahr" => 2019,"name" => "Mercedes AMG E 53 4MATIC+ Cabrio","ps" => 435,"vmax" => 250,"verbrauch" => 8.9,"beschleunigung" => 4.5,"gewicht" => 2173,"hubraum" => 2999,"zylinder" => 6,"preis" => 85000,],
+		[ "baujahr" => 2019,"name" => "Mercedes AMG E53 4MATIC+ Coupe","ps" => 435,"vmax" => 250,"verbrauch" => 8.6,"beschleunigung" => 4.5,"gewicht" => 1972,"hubraum" => 2999,"zylinder" => 6,"preis" => 82000,],
+		[ "baujahr" => 2019,"name" => "BMW 840d Cabrio","ps" => 340,"vmax" => 250,"verbrauch" => 6.2,"beschleunigung" => 5.2,"gewicht" => 2048,"hubraum" => 2993,"zylinder" => 6,"preis" => 105000,],
+		[ "baujahr" => 2019,"name" => "BMW i3 Elektromobil","ps" => 170,"vmax" => 150,"verbrauch" => 13.1,"beschleunigung" => 7.3,"gewicht" => 1345,"hubraum" => 0,"zylinder" => 0,"preis" => 40000,],
+		[ "baujahr" => 2019,"name" => "Tesla Model 3 AWD Long Range","ps" => 441,"vmax" => 233,"verbrauch" => 14,"beschleunigung" => 4.4,"gewicht" => 1906,"hubraum" => 0,"zylinder" => 0,"preis" => 55000,],
+		[ "baujahr" => 2019,"name" => "BMW 750iL Limousine","ps" => 530,"vmax" => 250,"verbrauch" => 9.5,"beschleunigung" => 4.0,"gewicht" => 2045,"hubraum" => 4395,"zylinder" => 8,"preis" => 100000,],
+		[ "baujahr" => 2019,"name" => "Mercedes E 300 de (T-Modell)","ps" => 313,"vmax" => 250,"verbrauch" => 1.6,"beschleunigung" => 5.9,"gewicht" => 2025,"hubraum" => 1993,"zylinder" => 4,"preis" => 60000,],
+		[ "baujahr" => 2019,"name" => "Mercedes C180 C-Klasse Coupe","ps" => 156,"vmax" => 223,"verbrauch" => 7.0,"beschleunigung" => 8.9,"gewicht" => 1480,"hubraum" => 1497,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2019,"name" => "Mercedes E-Klasse Cabrio E53 AMG","ps" => 435,"vmax" => 250,"verbrauch" => 8.9,"beschleunigung" => 4.5,"gewicht" => 2173,"hubraum" => 2999,"zylinder" => 6,"preis" => 88000,],
+		[ "baujahr" => 2019,"name" => "Mercedes GLE 400","ps" => 333,"vmax" => 247,"verbrauch" => 8.5,"beschleunigung" => 6.0,"gewicht" => 2450,"hubraum" => 2996,"zylinder" => 6,"preis" => 70000,],
+		[ "baujahr" => 2019,"name" => "BMW 320d Limousine","ps" => 190,"vmax" => 240,"verbrauch" => 4.0,"beschleunigung" => 6.8,"gewicht" => 1495,"hubraum" => 1995,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2019,"name" => "BMW M850i Cabrio","ps" => 530,"vmax" => 250,"verbrauch" => 10.0,"beschleunigung" => 4.1,"gewicht" => 2125,"hubraum" => 4395,"zylinder" => 8,"preis" => 125000,],
+		[ "baujahr" => 2018,"name" => "Mercedes C-Klasse Cabriolet (A205), C200","ps" => 184,"vmax" => 235,"verbrauch" => 6.6,"beschleunigung" => 8.5,"gewicht" => 1663,"hubraum" => 1497,"zylinder" => 4,"preis" => 55640,],
+		[ "baujahr" => 2018,"name" => "BMW 440i xDrive Cabrio","ps" => 320,"vmax" => 250,"verbrauch" => 7.9,"beschleunigung" => 5.4,"gewicht" => 1964,"hubraum" => 2998,"zylinder" => 6,"preis" => 78900,],
+		[ "baujahr" => 2018,"name" => "BMW 650i Xdrive Cabrio","ps" => 449,"vmax" => 250,"verbrauch" => 9.3,"beschleunigung" => 4.5,"gewicht" => 2055,"hubraum" => 4395,"zylinder" => 8,"preis" => 100000,],
+		[ "baujahr" => 2018,"name" => "Opel Astra ST Kombi (Modell 2018)","ps" => 110,"vmax" => 195,"verbrauch" => 4.5,"beschleunigung" => 11.4,"gewicht" => 1428,"hubraum" => 1598,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2018,"name" => "BMW i3S Elektromobil","ps" => 184,"vmax" => 160,"verbrauch" => 14.0,"beschleunigung" => 6.9,"gewicht" => 1365,"hubraum" => 0,"zylinder" => 0,"preis" => 77600,],
+		[ "baujahr" => 2018,"name" => "BMW 650i Cabrio","ps" => 449,"vmax" => 250,"verbrauch" => 9.3,"beschleunigung" => 4.5,"gewicht" => 2055,"hubraum" => 4395,"zylinder" => 8,"preis" => 95000,],
+		[ "baujahr" => 2018,"name" => "BMW i3 Elektromobil","ps" => 170,"vmax" => 150,"verbrauch" => 13.1,"beschleunigung" => 7.3,"gewicht" => 1345,"hubraum" => 0,"zylinder" => 0,"preis" => 42500,],
+		[ "baujahr" => 2018,"name" => "BMW X4 M4.0i","ps" => 360,"vmax" => 250,"verbrauch" => 8.9,"beschleunigung" => 4.8,"gewicht" => 1940,"hubraum" => 2998,"zylinder" => 6,"preis" => 70000,],
+		[ "baujahr" => 2018,"name" => "BMW i3 mit Range Extender","ps" => 170,"vmax" => 150,"verbrauch" => 0.6,"beschleunigung" => 8.1,"gewicht" => 1421,"hubraum" => 647,"zylinder" => 2,"preis" => 45500,],
+		[ "baujahr" => 2018,"name" => "Mercedes C180 C-Klasse-Coupe","ps" => 156,"vmax" => 223,"verbrauch" => 7.0,"beschleunigung" => 8.9,"gewicht" => 1480,"hubraum" => 1497,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2017,"name" => "BMW 740iL","ps" => 326,"vmax" => 250,"verbrauch" => 7.9,"beschleunigung" => 5.6,"gewicht" => 1940,"hubraum" => 2998,"zylinder" => 6,"preis" => 90000,],
+		[ "baujahr" => 2017,"name" => "BMW 650i Cabrio","ps" => 449,"vmax" => 250,"verbrauch" => 9.3,"beschleunigung" => 4.5,"gewicht" => 2055,"hubraum" => 4395,"zylinder" => 8,"preis" => 90000,],
+		[ "baujahr" => 2017,"name" => "BMW 650i Cabrio","ps" => 449,"vmax" => 250,"verbrauch" => 9.3,"beschleunigung" => 4.5,"gewicht" => 2055,"hubraum" => 4395,"zylinder" => 8,"preis" => 98000,],
+		[ "baujahr" => 2017,"name" => "BMW i3 mit Range Extender","ps" => 170,"vmax" => 150,"verbrauch" => 0.6,"beschleunigung" => 8.1,"gewicht" => 1421,"hubraum" => 647,"zylinder" => 2,"preis" => 45500,],
+		[ "baujahr" => 2017,"name" => "BMW M4 Cabrio 2017","ps" => 431,"vmax" => 250,"verbrauch" => 9.5,"beschleunigung" => 4.6,"gewicht" => 1825,"hubraum" => 2979,"zylinder" => 6,"preis" => 85000,],
+		[ "baujahr" => 2017,"name" => "Mercedes E300 Cabrio (A238) schwarz","ps" => 245,"vmax" => 250,"verbrauch" => 7.6,"beschleunigung" => 6.6,"gewicht" => 1873,"hubraum" => 1991,"zylinder" => 4,"preis" => 68000,],
+		[ "baujahr" => 2017,"name" => "Mercedes E-Klasse Coupe 2017 (C238)","ps" => 329,"vmax" => 210,"verbrauch" => 10.7,"beschleunigung" => 5.5,"gewicht" => 1723,"hubraum" => 2996,"zylinder" => 6,"preis" => 65000,],
+		[ "baujahr" => 2017,"name" => "BMW i3 Elektromobil","ps" => 170,"vmax" => 150,"verbrauch" => 13.1,"beschleunigung" => 7.3,"gewicht" => 1345,"hubraum" => 0,"zylinder" => 0,"preis" => 42000,],
+		[ "baujahr" => 2017,"name" => "Mercedes GLE 350d Coupe","ps" => 258,"vmax" => 226,"verbrauch" => 6.9,"beschleunigung" => 7.0,"gewicht" => 2250,"hubraum" => 2987,"zylinder" => 6,"preis" => 75000,],
+		[ "baujahr" => 2017,"name" => "BMW 760il xdrive","ps" => 610,"vmax" => 250,"verbrauch" => 12.5,"beschleunigung" => 3.7,"gewicht" => 2255,"hubraum" => 6592,"zylinder" => 12,"preis" => 150000,],
+		[ "baujahr" => 2017,"name" => "Mercedes AMG GT Roadster","ps" => 530,"vmax" => 310,"verbrauch" => 12.7,"beschleunigung" => 3.8,"gewicht" => 1723,"hubraum" => 3982,"zylinder" => 8,"preis" => 145000,],
+		[ "baujahr" => 2017,"name" => "Mercedes E-Klasse (W213) 350e","ps" => 286,"vmax" => 250,"verbrauch" => 2.1,"beschleunigung" => 6.2,"gewicht" => 2025,"hubraum" => 1991,"zylinder" => 4,"preis" => 62000,],
+		[ "baujahr" => 2017,"name" => "Mercedes GLE500e","ps" => 442,"vmax" => 245,"verbrauch" => 3.3,"beschleunigung" => 5.3,"gewicht" => 2465,"hubraum" => 2996,"zylinder" => 6,"preis" => 80000,],
+		[ "baujahr" => 2017,"name" => "Bentley Continental GT Coupe (Mansouri Tuning)","ps" => 672,"vmax" => 322,"verbrauch" => 14.0,"beschleunigung" => 4.5,"gewicht" => 2320,"hubraum" => 5998,"zylinder" => 12,"preis" => 320000,],
+		[ "baujahr" => 2017,"name" => "BMW 640d Coupe","ps" => 313,"vmax" => 250,"verbrauch" => 5.5,"beschleunigung" => 5.4,"gewicht" => 1865,"hubraum" => 2993,"zylinder" => 6,"preis" => 80000,],
+		[ "baujahr" => 2017,"name" => "VW Passat 4Motion TDI schwarz","ps" => 200,"vmax" => 228,"verbrauch" => 6.0,"beschleunigung" => 7.2,"gewicht" => 1709,"hubraum" => 1968,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2017,"name" => "Mercedes GLC 250","ps" => 211,"vmax" => 223,"verbrauch" => 6.5,"beschleunigung" => 7.3,"gewicht" => 1810,"hubraum" => 1991,"zylinder" => 4,"preis" => 50000,],
+		[ "baujahr" => 2016,"name" => "Mercedes AMG C63S Cabriolet","ps" => 503,"vmax" => 250,"verbrauch" => 10.4,"beschleunigung" => 4.1,"gewicht" => 1925,"hubraum" => 3982,"zylinder" => 8,"preis" => 95000,],
+		[ "baujahr" => 2016,"name" => "Opel Meriva","ps" => 140,"vmax" => 196,"verbrauch" => 6.4,"beschleunigung" => 10.3,"gewicht" => 1428,"hubraum" => 1598,"zylinder" => 4,"preis" => 20000,],
+		[ "baujahr" => 2016,"name" => "Mercedes SLC 180 Roadster","ps" => 156,"vmax" => 226,"verbrauch" => 5.6,"beschleunigung" => 7.9,"gewicht" => 1435,"hubraum" => 1595,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2016,"name" => "Mercedes C-Klasse Cabriolet (A205)","ps" => 184,"vmax" => 235,"verbrauch" => 6.6,"beschleunigung" => 8.5,"gewicht" => 1663,"hubraum" => 1991,"zylinder" => 4,"preis" => 50000,],
+		[ "baujahr" => 2016,"name" => "Mercedes E-Klasse T-Modell Kombi","ps" => 194,"vmax" => 240,"verbrauch" => 5.0,"beschleunigung" => 7.7,"gewicht" => 1845,"hubraum" => 1950,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2016,"name" => "Mercedes G-Klasse G500","ps" => 422,"vmax" => 210,"verbrauch" => 13.8,"beschleunigung" => 5.9,"gewicht" => 2468,"hubraum" => 3982,"zylinder" => 8,"preis" => 115000,],
+		[ "baujahr" => 2016,"name" => "Mercedes GLC Coupe SUV","ps" => 211,"vmax" => 223,"verbrauch" => 7.0,"beschleunigung" => 7.3,"gewicht" => 1710,"hubraum" => 1991,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2016,"name" => "Bentley Bentayga SUV First Edition","ps" => 600,"vmax" => 301,"verbrauch" => 13.1,"beschleunigung" => 4.1,"gewicht" => 2440,"hubraum" => 5998,"zylinder" => 12,"preis" => 250000,],
+		[ "baujahr" => 2016,"name" => "BMW 740iL Modell 2016","ps" => 326,"vmax" => 250,"verbrauch" => 7.5,"beschleunigung" => 5.2,"gewicht" => 1825,"hubraum" => 2998,"zylinder" => 6,"preis" => 88000,],
+		[ "baujahr" => 2016,"name" => "BMW i3 Elektromobil mit Range Extender 3-Zyl. Benzingenerator","ps" => 170,"vmax" => 150,"verbrauch" => "13.1 + 0.6","beschleunigung" => 8.1,"gewicht" => 1421,"hubraum" => 647,"zylinder" => 2,"preis" => 42500,],
+		[ "baujahr" => 2016,"name" => "BMW X5 4.0e SUV","ps" => 313,"vmax" => 210,"verbrauch" => 3.3,"beschleunigung" => 7.1,"gewicht" => 2327,"hubraum" => 1997,"zylinder" => 4,"preis" => 75000,],
+		[ "baujahr" => 2016,"name" => "Tesla Model S P90d","ps" => 700,"vmax" => 250,"verbrauch" => 20.0,"beschleunigung" => 3.3,"gewicht" => 2251,"hubraum" => 0,"zylinder" => 0,"preis" => 120000,],
+		[ "baujahr" => 2016,"name" => "VW Golf 7 Kombi bluemotion silber","ps" => 130,"vmax" => 210,"verbrauch" => 4.9,"beschleunigung" => 9.1,"gewicht" => 1295,"hubraum" => 1498,"zylinder" => 4,"preis" => 23000,],
+		[ "baujahr" => 2016,"name" => "Mercedes E-Klasse (W213) 220d","ps" => 194,"vmax" => 240,"verbrauch" => 3.9,"beschleunigung" => 7.3,"gewicht" => 1768,"hubraum" => 1950,"zylinder" => 4,"preis" => 48000,],
+		[ "baujahr" => 2016,"name" => "Mercedes S63 AMG-S Cabrio","ps" => 612,"vmax" => 250,"verbrauch" => 10.1,"beschleunigung" => 3.5,"gewicht" => 2110,"hubraum" => 3982,"zylinder" => 8,"preis" => 180000,],
+		[ "baujahr" => 2016,"name" => "Mercedes SL63 AMG-S","ps" => 585,"vmax" => 250,"verbrauch" => 11.9,"beschleunigung" => 4.1,"gewicht" => 1845,"hubraum" => 5461,"zylinder" => 8,"preis" => 160000,],
+		[ "baujahr" => 2016,"name" => "VW Sharan (Modellpflege 2014)","ps" => 150,"vmax" => 200,"verbrauch" => 6.4,"beschleunigung" => 10.3,"gewicht" => 1780,"hubraum" => 1968,"zylinder" => 4,"preis" => 35000,],
+		[ "baujahr" => 2015,"name" => "Mercedes GLE Coupe AMG 63 S-Modell","ps" => 585,"vmax" => 250,"verbrauch" => 11.9,"beschleunigung" => 4.2,"gewicht" => 2345,"hubraum" => 5461,"zylinder" => 8,"preis" => 130000,],
+		[ "baujahr" => 2015,"name" => "Mercedes GLC 220d SUV","ps" => 194,"vmax" => 219,"verbrauch" => 5.2,"beschleunigung" => 8.0,"gewicht" => 2000,"hubraum" => 1993,"zylinder" => 4,"preis" => 48000,],
+		[ "baujahr" => 2015,"name" => "BMW 650i Cabrio Facelift 2015","ps" => 450,"vmax" => 250,"verbrauch" => 9.5,"beschleunigung" => 4.6,"gewicht" => 2055,"hubraum" => 4395,"zylinder" => 8,"preis" => 92000,],
+		[ "baujahr" => 2015,"name" => "BMW 650i Grand Coupe Facelift 2015","ps" => 450,"vmax" => 250,"verbrauch" => 9.5,"beschleunigung" => 4.6,"gewicht" => 2055,"hubraum" => 4395,"zylinder" => 8,"preis" => 95000,],
+		[ "baujahr" => 2015,"name" => "BMW i3 Elektromobil mit Range Extender 3-Zyl. Benzingenerator","ps" => 170,"vmax" => 150,"verbrauch" => "13.1 + 0.6","beschleunigung" => 8.1,"gewicht" => 1421,"hubraum" => 647,"zylinder" => 2,"preis" => 46500,],
+		[ "baujahr" => 2015,"name" => "Mercedes C180 C-Klasse Coupe","ps" => 156,"vmax" => 225,"verbrauch" => 5.9,"beschleunigung" => 8.5,"gewicht" => 1405,"hubraum" => 1595,"zylinder" => 4,"preis" => 38000,],
+		[ "baujahr" => 2015,"name" => "Segway Elektroroller","ps" => 5,"vmax" => 90,"verbrauch" => 3.6,"beschleunigung" => 4.0,"gewicht" => 115,"hubraum" => 0,"zylinder" => 0,"preis" => 7000,],
+		[ "baujahr" => 2015,"name" => "VW Passat 2015 2.0 TDI silber","ps" => 150,"vmax" => 220,"verbrauch" => 4.0,"beschleunigung" => 8.7,"gewicht" => 1495,"hubraum" => 1968,"zylinder" => 4,"preis" => 32000,],
+		[ "baujahr" => 2015,"name" => "Mercedes C220T Bluetec","ps" => 170,"vmax" => 234,"verbrauch" => 4.0,"beschleunigung" => 8.1,"gewicht" => 1550,"hubraum" => 2143,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2015,"name" => "VW Touran (Modellpflege 2012)","ps" => 140,"vmax" => 200,"verbrauch" => 5.4,"beschleunigung" => 10.2,"gewicht" => 1595,"hubraum" => 1968,"zylinder" => 4,"preis" => 28000,],
+		[ "baujahr" => 2015,"name" => "Seat Ibiza","ps" => 95,"vmax" => 186,"verbrauch" => 5.1,"beschleunigung" => 10.9,"gewicht" => 1165,"hubraum" => 999,"zylinder" => 3,"preis" => 16000,],
+		[ "baujahr" => 2015,"name" => "Mercedes E-Klasse Cabrio (A207 Mopf)","ps" => 170,"vmax" => 230,"verbrauch" => 4.7,"beschleunigung" => 8.8,"gewicht" => 1770,"hubraum" => 2143,"zylinder" => 4,"preis" => 60000,],
+		[ "baujahr" => 2015,"name" => "Mercedes AMG GT S-Modell 2015 first Edition","ps" => 510,"vmax" => 310,"verbrauch" => 9.4,"beschleunigung" => 3.8,"gewicht" => 1645,"hubraum" => 3982,"zylinder" => 8,"preis" => 140000,],
+		[ "baujahr" => 2014,"name" => "Mercedes GLA 45 AMG","ps" => 360,"vmax" => 250,"verbrauch" => 7.5,"beschleunigung" => 4.8,"gewicht" => 1585,"hubraum" => 1991,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2014,"name" => "Smart FourFour Prime (Modell 2014 auf Basis des Renault Twingo)","ps" => 90,"vmax" => 165,"verbrauch" => 4.2,"beschleunigung" => 11.2,"gewicht" => 975,"hubraum" => 898,"zylinder" => 3,"preis" => 12000,],
+		[ "baujahr" => 2014,"name" => "Smart FourTwo (Modell 2014 auf Basis des Renault Twingo)","ps" => 90,"vmax" => 155,"verbrauch" => 4.1,"beschleunigung" => 10.4,"gewicht" => 880,"hubraum" => 898,"zylinder" => 3,"preis" => 12500,],
+		[ "baujahr" => 2014,"name" => "Mercedes AMG GT S-Modell 2015","ps" => 510,"vmax" => 310,"verbrauch" => 9.4,"beschleunigung" => 3.8,"gewicht" => 1645,"hubraum" => 3982,"zylinder" => 8,"preis" => 135000,],
+		[ "baujahr" => 2014,"name" => "Morgan Plus 4 Roadster","ps" => 154,"vmax" => 190,"verbrauch" => 7.0,"beschleunigung" => 7.5,"gewicht" => 927,"hubraum" => 1999,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2014,"name" => "BMW i3 electric drive","ps" => 170,"vmax" => 150,"verbrauch" => 13.1,"beschleunigung" => 7.3,"gewicht" => 1345,"hubraum" => 0,"zylinder" => 0,"preis" => 41500,],
+		[ "baujahr" => 2014,"name" => "BMW i8 electric drive","ps" => 362,"vmax" => 250,"verbrauch" => 2.1,"beschleunigung" => 4.4,"gewicht" => 1560,"hubraum" => 1499,"zylinder" => 3,"preis" => 125000,],
+		[ "baujahr" => 2014,"name" => "Ferrari California 30","ps" => 490,"vmax" => 312,"verbrauch" => 13.1,"beschleunigung" => 3.8,"gewicht" => 1735,"hubraum" => 4297,"zylinder" => 8,"preis" => 180000,],
+		[ "baujahr" => 1955,"name" => "Mercedes 190 SL Oldtimer (W121B)","ps" => 105,"vmax" => 172,"verbrauch" => 10.0,"beschleunigung" => 13.0,"gewicht" => 1140,"hubraum" => 1897,"zylinder" => 4,"preis" => 250000,],
+		[ "baujahr" => 2014,"name" => "Mercedes C-Klasse T-Modell","ps" => 184,"vmax" => 235,"verbrauch" => 6.6,"beschleunigung" => 8.5,"gewicht" => 1663,"hubraum" => 1991,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2014,"name" => "Mercedes CLS63 AMG (Mopf 2014)","ps" => 557,"vmax" => 250,"verbrauch" => 9.9,"beschleunigung" => 4.2,"gewicht" => 1870,"hubraum" => 5461,"zylinder" => 8,"preis" => 120000,],
+		[ "baujahr" => 2014,"name" => "Mercedes S63AMG S-Klasse Coupe","ps" => 612,"vmax" => 250,"verbrauch" => 10.1,"beschleunigung" => 3.5,"gewicht" => 2110,"hubraum" => 3982,"zylinder" => 8,"preis" => 170000,],
+		[ "baujahr" => 2014,"name" => "BMW 650i Coupe x-drive (2014er Modell)","ps" => 450,"vmax" => 250,"verbrauch" => 9.2,"beschleunigung" => 4.4,"gewicht" => 1930,"hubraum" => 4395,"zylinder" => 8,"preis" => 85000,],
+		[ "baujahr" => 2014,"name" => "BMW 435 ci Cabrio (2014er Modell)","ps" => 306,"vmax" => 250,"verbrauch" => 7.5,"beschleunigung" => 5.5,"gewicht" => 1760,"hubraum" => 2979,"zylinder" => 6,"preis" => 60000,],
+		[ "baujahr" => 2014,"name" => "Mercedes ML 250 Bluetec","ps" => 204,"vmax" => 210,"verbrauch" => 6.0,"beschleunigung" => 9.0,"gewicht" => 2135,"hubraum" => 2143,"zylinder" => 4,"preis" => 50000,],
+		[ "baujahr" => 2014,"name" => "Mercedes GLA 200 CDI","ps" => 136,"vmax" => 205,"verbrauch" => 4.5,"beschleunigung" => 9.9,"gewicht" => 1505,"hubraum" => 2143,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2014,"name" => "Mercedes E220CDI Avantgarde","ps" => 170,"vmax" => 227,"verbrauch" => 4.7,"beschleunigung" => 8.4,"gewicht" => 1735,"hubraum" => 2143,"zylinder" => 4,"preis" => 50000,],
+		[ "baujahr" => 2014,"name" => "Porsche 911 Carrera 4S Cabrio","ps" => 400,"vmax" => 296,"verbrauch" => 9.1,"beschleunigung" => 4.3,"gewicht" => 1570,"hubraum" => 3800,"zylinder" => 6,"preis" => 100000,],
+		[ "baujahr" => 2014,"name" => "VW Golf 7 TDI bluemotion schwarz","ps" => 110,"vmax" => 200,"verbrauch" => 3.2,"beschleunigung" => 10.5,"gewicht" => 1320,"hubraum" => 1598,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2014,"name" => "VW Golf Plus","ps" => 105,"vmax" => 185,"verbrauch" => 5.9,"beschleunigung" => 12.1,"gewicht" => 1400,"hubraum" => 1598,"zylinder" => 4,"preis" => 35200,],
+		[ "baujahr" => 2014,"name" => "Mercedes C-Klasse 2014","ps" => 156,"vmax" => 225,"verbrauch" => 5,"beschleunigung" => 8.5,"gewicht" => 1445,"hubraum" => 1595,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2014,"name" => "Mercedes GLA 200 CDI 4-matic","ps" => 136,"vmax" => 205,"verbrauch" => 4.9,"beschleunigung" => 10,"gewicht" => 1555,"hubraum" => 2143,"zylinder" => 4,"preis" => 42500,],
+		[ "baujahr" => 2014,"name" => "Mercedes S350 Bluetec","ps" => 258,"vmax" => 250,"verbrauch" => 5.9,"beschleunigung" => 6.8,"gewicht" => 2020,"hubraum" => 2987,"zylinder" => 6,"preis" => 82500,],
+		[ "baujahr" => 2014,"name" => "Mercedes SLS GT Final Edition","ps" => 591,"vmax" => 320,"verbrauch" => 13.2,"beschleunigung" => 3.7,"gewicht" => 1620,"hubraum" => 6208,"zylinder" => 8,"preis" => 186000,],
+		[ "baujahr" => 2014,"name" => "Jaguar F-Type S Roadster","ps" => 380,"vmax" => 275,"verbrauch" => 8.8,"beschleunigung" => 4.9,"gewicht" => 1597,"hubraum" => 2995,"zylinder" => 6,"preis" => 120000,],
+		[ "baujahr" => 2014,"name" => "Audi A3 Sportsback","ps" => 150,"vmax" => 224,"verbrauch" => 4.1,"beschleunigung" => 8.2,"gewicht" => 1250,"hubraum" => 1968,"zylinder" => 4,"preis" => 32400,],
+		[ "baujahr" => 2013,"name" => "Audi A3 TDI 2.0 schwarz","ps" => 150,"vmax" => 224,"verbrauch" => 4.1,"beschleunigung" => 8.2,"gewicht" => 1250,"hubraum" => 1968,"zylinder" => 4,"preis" => 35200,],
+		[ "baujahr" => 2013,"name" => "Audi A4 Avant","ps" => 150,"vmax" => 210,"verbrauch" => 5.8,"beschleunigung" => 9.1,"gewicht" => 1500,"hubraum" => 1968,"zylinder" => 4,"preis" => 36500,],
+		[ "baujahr" => 2013,"name" => "BMW X6 4.0d","ps" => 306,"vmax" => 236,"verbrauch" => 7.7,"beschleunigung" => 6.5,"gewicht" => 2185,"hubraum" => 2993,"zylinder" => 6,"preis" => 102000,],
+		[ "baujahr" => 2013,"name" => "BMW 650i Cabrio","ps" => 450,"vmax" => 250,"verbrauch" => 8.8,"beschleunigung" => 4.6,"gewicht" => 1980,"hubraum" => 4395,"zylinder" => 8,"preis" => 105200,],
+		[ "baujahr" => 2013,"name" => "Nissan Leaf Voll Elektromobil","ps" => 109,"vmax" => 144,"verbrauch" => 0,"beschleunigung" => 11.5,"gewicht" => 1521,"hubraum" => 0,"zylinder" => 0,"preis" => 35000,],
+		[ "baujahr" => 2013,"name" => "Audi R8 quattro V10 Spyder","ps" => 525,"vmax" => 313,"verbrauch" => 13.8,"beschleunigung" => 3.8,"gewicht" => 1720,"hubraum" => 5204,"zylinder" => 10,"preis" => 135200,],
+		[ "baujahr" => 2013,"name" => "BMW 320i Limousine","ps" => 184,"vmax" => 235,"verbrauch" => 6,"beschleunigung" => 7.3,"gewicht" => 1430,"hubraum" => 1997,"zylinder" => 4,"preis" => 32800,],
+		[ "baujahr" => 2013,"name" => "Audi A6 Avant quattro TDI s-line","ps" => 245,"vmax" => 250,"verbrauch" => 5.9,"beschleunigung" => 6.1,"gewicht" => 1800,"hubraum" => 2967,"zylinder" => 6,"preis" => 88500,],
+		[ "baujahr" => 2013,"name" => "Audi A4 Avant","ps" => 150,"vmax" => 210,"verbrauch" => 5.8,"beschleunigung" => 9.1,"gewicht" => 1500,"hubraum" => 1968,"zylinder" => 4,"preis" => 45200,],
+		[ "baujahr" => 2013,"name" => "Mercedes B-Klasse 180CDI","ps" => 109,"vmax" => 190,"verbrauch" => 4.4,"beschleunigung" => 11.3,"gewicht" => 1395,"hubraum" => 1461,"zylinder" => 4,"preis" => 29500,],
+		[ "baujahr" => 2013,"name" => "VW Cross Touran MJ2013 TDI 2.0 candyweiss","ps" => 140,"vmax" => 200,"verbrauch" => 5.7,"beschleunigung" => 10.1,"gewicht" => 1600,"hubraum" => 1968,"zylinder" => 4,"preis" => 28500,],
+		[ "baujahr" => 2013,"name" => "VW Touran MJ2012 TDI bluemotion silbermetallic","ps" => 105,"vmax" => 185,"verbrauch" => 4.6,"beschleunigung" => 12.8,"gewicht" => 1500,"hubraum" => 1598,"zylinder" => 4,"preis" => 28000,],
+		[ "baujahr" => 2013,"name" => "Mercedes SLK200 (R172) MJ 2013","ps" => 184,"vmax" => 240,"verbrauch" => 6.1,"beschleunigung" => 7,"gewicht" => 1495,"hubraum" => 1796,"zylinder" => 4,"preis" => 65000,],
+		[ "baujahr" => 2013,"name" => "BMW 530d Xdrive Touring","ps" => 258,"vmax" => 250,"verbrauch" => 5.7,"beschleunigung" => 5.8,"gewicht" => 1800,"hubraum" => 2993,"zylinder" => 6,"preis" => 72100,],
+		[ "baujahr" => 2013,"name" => "Mercedes CLA 250 Sport","ps" => 211,"vmax" => 240,"verbrauch" => 6.2,"beschleunigung" => 6.7,"gewicht" => 1465,"hubraum" => 1991,"zylinder" => 4,"preis" => 38500,],
+		[ "baujahr" => 2013,"name" => "Mercedes E-Klasse Facelift E250CDI (W212)","ps" => 204,"vmax" => 240,"verbrauch" => 4.9,"beschleunigung" => 7.5,"gewicht" => 1700,"hubraum" => 2143,"zylinder" => 4,"preis" => 62200,],
+		[ "baujahr" => 2013,"name" => "Mercedes SL500 Roadster (R231MJ13)","ps" => 435,"vmax" => 250,"verbrauch" => 9.1,"beschleunigung" => 4.6,"gewicht" => 1800,"hubraum" => 4663,"zylinder" => 8,"preis" => 103000,],
+		[ "baujahr" => 2013,"name" => "Subaru Forester SUV","ps" => 150,"vmax" => 192,"verbrauch" => 6.5,"beschleunigung" => 10.4,"gewicht" => 1560,"hubraum" => 1995,"zylinder" => 4,"preis" => 52400,],
+		[ "baujahr" => 2013,"name" => "VW Passat Kombi Mj 2012 silber","ps" => 140,"vmax" => 210,"verbrauch" => 5.4,"beschleunigung" => 9.8,"gewicht" => 1500,"hubraum" => 1968,"zylinder" => 4,"preis" => 55000,],
+		[ "baujahr" => 2013,"name" => "BMW 330d sport (F30)","ps" => 258,"vmax" => 250,"verbrauch" => 5.4,"beschleunigung" => 5.6,"gewicht" => 1600,"hubraum" => 2993,"zylinder" => 6,"preis" => 72000,],
+		[ "baujahr" => 2013,"name" => "BMW X1 1.8d xdrive","ps" => 143,"vmax" => 205,"verbrauch" => 5.6,"beschleunigung" => 9.6,"gewicht" => 1500,"hubraum" => 1995,"zylinder" => 4,"preis" => 48000,],
+		[ "baujahr" => 2013,"name" => "VW Passat Kombi Mj 2012 schwarz","ps" => 140,"vmax" => 210,"verbrauch" => 5.4,"beschleunigung" => 9.8,"gewicht" => 1500,"hubraum" => 1968,"zylinder" => 4,"preis" => 47500,],
+		[ "baujahr" => 2013,"name" => "Ford C-Max braun","ps" => 125,"vmax" => 195,"verbrauch" => 6,"beschleunigung" => 11.4,"gewicht" => 1400,"hubraum" => 1596,"zylinder" => 4,"preis" => 38900,],
+		[ "baujahr" => 2012,"name" => "BMW 520d (MJ2012)","ps" => 184,"vmax" => 230,"verbrauch" => 4.5,"beschleunigung" => 8.1,"gewicht" => 1700,"hubraum" => 1995,"zylinder" => 4,"preis" => 81000,],
+		[ "baujahr" => 2012,"name" => "Mercedes C180 T-Modell MOPF 2011","ps" => 156,"vmax" => 223,"verbrauch" => 6.5,"beschleunigung" => 8.5,"gewicht" => 1550,"hubraum" => 1595,"zylinder" => 4,"preis" => 46700,],
+		[ "baujahr" => 2012,"name" => "Audi A6 (MJ2012) avant 2.0 TDI Kombi","ps" => 177,"vmax" => 222,"verbrauch" => 4.9,"beschleunigung" => 8.7,"gewicht" => 1700,"hubraum" => 1968,"zylinder" => 4,"preis" => 78200,],
+		[ "baujahr" => 2012,"name" => "Volvo V70 T4","ps" => 180,"vmax" => 215,"verbrauch" => 7.5,"beschleunigung" => 8.5,"gewicht" => 1600,"hubraum" => 1596,"zylinder" => 4,"preis" => 51200,],
+		[ "baujahr" => 2012,"name" => "Smart Fortwo Cabrio","ps" => 71,"vmax" => 145,"verbrauch" => 4.2,"beschleunigung" => 13.7,"gewicht" => 900,"hubraum" => 999,"zylinder" => 3,"preis" => 10000,],
+		[ "baujahr" => 2012,"name" => "Mercedes A200 (Modell 2012)","ps" => 156,"vmax" => 224,"verbrauch" => 5.4,"beschleunigung" => 8.3,"gewicht" => 1400,"hubraum" => 1595,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2012,"name" => "Mercedes CLS Shooting Brake 350 CDI","ps" => 265,"vmax" => 250,"verbrauch" => 6,"beschleunigung" => 6.6,"gewicht" => 1900,"hubraum" => 2987,"zylinder" => 6,"preis" => 48900,],
+		[ "baujahr" => 2012,"name" => "Mercedes B-Klasse (Modell2012)","ps" => 122,"vmax" => 190,"verbrauch" => 5.9,"beschleunigung" => 10.4,"gewicht" => 1450,"hubraum" => 1595,"zylinder" => 4,"preis" => 32000,],
+		[ "baujahr" => 2012,"name" => "BMW X1 2.3d xdrive","ps" => 204,"vmax" => 230,"verbrauch" => 5.7,"beschleunigung" => 7.6,"gewicht" => 1600,"hubraum" => 1995,"zylinder" => 4,"preis" => 31200,],
+		[ "baujahr" => 2012,"name" => "Renault Twizy","ps" => 17,"vmax" => 80,"verbrauch" => 6.1,"beschleunigung" => 6.1,"gewicht" => 450,"hubraum" => 0,"zylinder" => 0,"preis" => 19999,],
+		[ "baujahr" => 2012,"name" => "Skoda Superb Kombi","ps" => 170,"vmax" => 220,"verbrauch" => 5.9,"beschleunigung" => 8.6,"gewicht" => 1600,"hubraum" => 1968,"zylinder" => 4,"preis" => 41900,],
+		[ "baujahr" => 2012,"name" => "Mercedes C180 Coupe (C204)","ps" => 156,"vmax" => 223,"verbrauch" => 6.5,"beschleunigung" => 8.5,"gewicht" => 1550,"hubraum" => 1595,"zylinder" => 4,"preis" => 44000,],
+		[ "baujahr" => 2012,"name" => "Mercedes CLS 350 CDI","ps" => 265,"vmax" => 250,"verbrauch" => 6,"beschleunigung" => 6.6,"gewicht" => 1900,"hubraum" => 2987,"zylinder" => 6,"preis" => 55000,],
+		[ "baujahr" => 2012,"name" => "Audi A6 (MJ2012) quattro 3.0 TDI Limousine","ps" => 245,"vmax" => 250,"verbrauch" => 5.9,"beschleunigung" => 6.1,"gewicht" => 1800,"hubraum" => 2967,"zylinder" => 6,"preis" => 78900,],
+		[ "baujahr" => 2012,"name" => "Mercedes SL (R231) 500","ps" => 435,"vmax" => 250,"verbrauch" => 9.1,"beschleunigung" => 4.6,"gewicht" => 1800,"hubraum" => 4663,"zylinder" => 8,"preis" => 98000,],
+		[ "baujahr" => 2012,"name" => "BMW 530xd (Modell F10)","ps" => 258,"vmax" => 250,"verbrauch" => 5.7,"beschleunigung" => 5.8,"gewicht" => 1800,"hubraum" => 2993,"zylinder" => 6,"preis" => 72000,],
+		[ "baujahr" => 2012,"name" => "Mercedes E500 BlueEfficiency Cabriolet","ps" => 408,"vmax" => 250,"verbrauch" => 9.8,"beschleunigung" => 4.8,"gewicht" => 1900,"hubraum" => 4663,"zylinder" => 8,"preis" => 98000,],
+		[ "baujahr" => 2012,"name" => "Mercedes GLK 350 4matic","ps" => 272,"vmax" => 230,"verbrauch" => 10.7,"beschleunigung" => 6.7,"gewicht" => 1880,"hubraum" => 3498,"zylinder" => 6,"preis" => 50000,],
+		[ "baujahr" => 2012,"name" => "Mercedes SLS AMG Roadster","ps" => 571,"vmax" => 317,"verbrauch" => 13.2,"beschleunigung" => 3.8,"gewicht" => 1695,"hubraum" => 6208,"zylinder" => 8,"preis" => 220000,],
+		[ "baujahr" => 2012,"name" => "Smart for2","ps" => 71,"vmax" => 145,"verbrauch" => 4.2,"beschleunigung" => 13.7,"gewicht" => 750,"hubraum" => 999,"zylinder" => 3,"preis" => 14000,],
+		[ "baujahr" => 2012,"name" => "BMW 520d (F10) Limousine","ps" => 184,"vmax" => 227,"verbrauch" => 4.9,"beschleunigung" => 8.1,"gewicht" => 1620,"hubraum" => 1995,"zylinder" => 4,"preis" => 43000,],
+		[ "baujahr" => 2012,"name" => "VW Touran (MJ2011)","ps" => 140,"vmax" => 200,"verbrauch" => 6.0,"beschleunigung" => 10.2,"gewicht" => 1600,"hubraum" => 1968,"zylinder" => 4,"preis" => 27000,],
+		[ "baujahr" => 2012,"name" => "Audi A6 (MJ2012) quattro 3.0 TDI Limousine","ps" => 245,"vmax" => 250,"verbrauch" => 5.9,"beschleunigung" => 6.2,"gewicht" => 1835,"hubraum" => 2967,"zylinder" => 6,"preis" => 50000,],
+		[ "baujahr" => 2012,"name" => "Audi A4 Limousine","ps" => 150,"vmax" => 210,"verbrauch" => 5.8,"beschleunigung" => 8.6,"gewicht" => 1390,"hubraum" => 1984,"zylinder" => 4,"preis" => 34000,],
+		[ "baujahr" => 2012,"name" => "Mercedes Comand Online NTG4.5 Testbericht","ps" => 0,"vmax" => 0,"verbrauch" => 0,"beschleunigung" => 0,"gewicht" => 0,"hubraum" => 0,"zylinder" => 0,"preis" => 5000,],
+		[ "baujahr" => 2011,"name" => "Mercedes C-Klasse C220CDI Blue-Efficiency (Mopf 2012)","ps" => 170,"vmax" => 229,"verbrauch" => 5.9,"beschleunigung" => 8.5,"gewicht" => 1600,"hubraum" => 2143,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2011,"name" => "Ford Mondeo Turnier","ps" => 150,"vmax" => 210,"verbrauch" => 5.3,"beschleunigung" => 10.2,"gewicht" => 1540,"hubraum" => 1997,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2011,"name" => "Ford Grand C-Max","ps" => 150,"vmax" => 200,"verbrauch" => 6.0,"beschleunigung" => 10.2,"gewicht" => 1600,"hubraum" => 1997,"zylinder" => 4,"preis" => 23000,],
+		[ "baujahr" => 2011,"name" => "Ford S-Max","ps" => 140,"vmax" => 200,"verbrauch" => 6.0,"beschleunigung" => 10.2,"gewicht" => 1600,"hubraum" => 1997,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2011,"name" => "BMW X6 orionsilbermetallic","ps" => 306,"vmax" => 240,"verbrauch" => 10.7,"beschleunigung" => 6.7,"gewicht" => 2185,"hubraum" => 2979,"zylinder" => 6,"preis" => 70000,],
+		[ "baujahr" => 2011,"name" => "Audi A4 Avant schwarz TDI","ps" => 150,"vmax" => 210,"verbrauch" => 5.8,"beschleunigung" => 8.6,"gewicht" => 1390,"hubraum" => 1984,"zylinder" => 4,"preis" => 38000,],
+		[ "baujahr" => 2011,"name" => "BMW X1 1.8 s-drive Sport","ps" => 150,"vmax" => 200,"verbrauch" => 6.0,"beschleunigung" => 10.2,"gewicht" => 1600,"hubraum" => 1997,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2011,"name" => "BMW 650i Cabrio","ps" => 407,"vmax" => 250,"verbrauch" => 10.7,"beschleunigung" => 5.0,"gewicht" => 1940,"hubraum" => 4395,"zylinder" => 8,"preis" => 90000,],
+		[ "baujahr" => 2011,"name" => "Ferrari F430","ps" => 490,"vmax" => 315,"verbrauch" => 13.1,"beschleunigung" => 4.0,"gewicht" => 1450,"hubraum" => 4308,"zylinder" => 8,"preis" => 180000,],
+		[ "baujahr" => 2011,"name" => "VW Golf 6 TDI bluemotion silbermetallic","ps" => 105,"vmax" => 192,"verbrauch" => 4.5,"beschleunigung" => 10.9,"gewicht" => 1347,"hubraum" => 1598,"zylinder" => 4,"preis" => 22000,],
+		[ "baujahr" => 2011,"name" => "Ford Kuga 2,0 TDCI SUV","ps" => 150,"vmax" => 192,"verbrauch" => 5.2,"beschleunigung" => 9.9,"gewicht" => 1702,"hubraum" => 1997,"zylinder" => 4,"preis" => 28000,],
+		[ "baujahr" => 2011,"name" => "BMW 650i Cabrio (F12)","ps" => 407,"vmax" => 250,"verbrauch" => 10.7,"beschleunigung" => 5.0,"gewicht" => 1940,"hubraum" => 4395,"zylinder" => 8,"preis" => 102500,],
+		[ "baujahr" => 2010,"name" => "BMW 325d Limousine","ps" => 218,"vmax" => 245,"verbrauch" => 4.9,"beschleunigung" => 6.8,"gewicht" => 1495,"hubraum" => 1995,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2010,"name" => "BMW X3 2.0d","ps" => 150,"vmax" => 198,"verbrauch" => 7.2,"beschleunigung" => 10.2,"gewicht" => 1720,"hubraum" => 1995,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2010,"name" => "VW Passat 2.0 TSI","ps" => 190,"vmax" => 238,"verbrauch" => 6.3,"beschleunigung" => 7.5,"gewicht" => 1648,"hubraum" => 1984,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2010,"name" => "Mercedes C-Klasse C180CGI T-Modell","ps" => 156,"vmax" => 220,"verbrauch" => 6.4,"beschleunigung" => 8.8,"gewicht" => 1455,"hubraum" => 1497,"zylinder" => 4,"preis" => 36000,],
+		[ "baujahr" => 2010,"name" => "Mercedes E-Klasse (S212) E350 CDI T-Modell","ps" => 231,"vmax" => 235,"verbrauch" => 7.6,"beschleunigung" => 7.5,"gewicht" => 1915,"hubraum" => 2987,"zylinder" => 6,"preis" => 60000,],
+		[ "baujahr" => 2010,"name" => "Mercedes E-Klasse Cabrio E350CDI","ps" => 265,"vmax" => 250,"verbrauch" => 6.2,"beschleunigung" => 6.4,"gewicht" => 1790,"hubraum" => 2987,"zylinder" => 6,"preis" => 65000,],
+		[ "baujahr" => 2010,"name" => "Mercedes E-Klasse Cabrio E500","ps" => 408,"vmax" => 250,"verbrauch" => 9.1,"beschleunigung" => 4.9,"gewicht" => 1870,"hubraum" => 4663,"zylinder" => 8,"preis" => 75000,],
+		[ "baujahr" => 2010,"name" => "Audi A6 quattro 3.0TDI s.Line","ps" => 218,"vmax" => 245,"verbrauch" => 5.0,"beschleunigung" => 6.6,"gewicht" => 1840,"hubraum" => 2967,"zylinder" => 6,"preis" => 58000,],
+		[ "baujahr" => 2010,"name" => "Mercedes E-Klasse Cabrio (A207) 350 CGI","ps" => 299,"vmax" => 250,"verbrauch" => 7.0,"beschleunigung" => 6.1,"gewicht" => 1938,"hubraum" => 1991,"zylinder" => 4,"preis" => 62000,],
+		[ "baujahr" => 2010,"name" => "Mercedes 300 SL (Oldtimer)","ps" => 190,"vmax" => 228,"verbrauch" => 11.6,"beschleunigung" => 9.3,"gewicht" => 1650,"hubraum" => 2960,"zylinder" => 6,"preis" => 750000,],
+		[ "baujahr" => 2010,"name" => "Mercedes E-Klasse Cabrio (A207)","ps" => 265,"vmax" => 250,"verbrauch" => 6.2,"beschleunigung" => 6.4,"gewicht" => 1790,"hubraum" => 2987,"zylinder" => 6,"preis" => 58000,],
+		[ "baujahr" => 2010,"name" => "Mercedes SLS AMG","ps" => 571,"vmax" => 317,"verbrauch" => 13.2,"beschleunigung" => 3.8,"gewicht" => 1620,"hubraum" => 6208,"zylinder" => 8,"preis" => 180000,],
+		[ "baujahr" => 2010,"name" => "Mercedes E-Klasse (W212) E 200 CGI","ps" => 184,"vmax" => 233,"verbrauch" => 6.1,"beschleunigung" => 8.2,"gewicht" => 1595,"hubraum" => 1796,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2010,"name" => "VW Passat Kombi (Modell 2007)","ps" => 140,"vmax" => 200,"verbrauch" => 6.0,"beschleunigung" => 10.2,"gewicht" => 1600,"hubraum" => 1968,"zylinder" => 4,"preis" => 28000,],
+		[ "baujahr" => 2009,"name" => "BMW X5 (Facelift 2007) 3.0D 6Zylinder-Dieselmotor","ps" => 235,"vmax" => 220,"verbrauch" => 8.2,"beschleunigung" => 7.6,"gewicht" => 2145,"hubraum" => 2993,"zylinder" => 6,"preis" => 60000,],
+		[ "baujahr" => 2009,"name" => "Mercedes E 200 CGI (W212)","ps" => 184,"vmax" => 233,"verbrauch" => 6.1,"beschleunigung" => 8.2,"gewicht" => 1595,"hubraum" => 1796,"zylinder" => 4,"preis" => 46000,],
+		[ "baujahr" => 2009,"name" => "Mercedes E220CDI T-Modell (S211Mopf)","ps" => 170,"vmax" => 229,"verbrauch" => 5.9,"beschleunigung" => 8.5,"gewicht" => 1485,"hubraum" => 2148,"zylinder" => 4,"preis" => 48000,],
+		[ "baujahr" => 2009,"name" => "Mercedes E 350 CDI Coupe (C207)","ps" => 231,"vmax" => 250,"verbrauch" => 6.8,"beschleunigung" => 6.7,"gewicht" => 1730,"hubraum" => 2987,"zylinder" => 6,"preis" => 60000,],
+		[ "baujahr" => 2009,"name" => "Mercedes S-Klasse (V221) Mopf 2009","ps" => 388,"vmax" => 250,"verbrauch" => 11.1,"beschleunigung" => 5.4,"gewicht" => 1940,"hubraum" => 5461,"zylinder" => 8,"preis" => 85000,],
+		[ "baujahr" => 2009,"name" => "Volvo V70 (Modell 2009) Kombi","ps" => 205,"vmax" => 225,"verbrauch" => 6.4,"beschleunigung" => 8.2,"gewicht" => 1574,"hubraum" => 2400,"zylinder" => 5,"preis" => 40000,],
+		[ "baujahr" => 2009,"name" => "Mercedes B 180 CDI (MoPf 2009)","ps" => 109,"vmax" => 183,"verbrauch" => 5.2,"beschleunigung" => 11.3,"gewicht" => 1435,"hubraum" => 1991,"zylinder" => 4,"preis" => 27000,],
+		[ "baujahr" => 2009,"name" => "Mercedes E-Klasse Coupe (C207)","ps" => 231,"vmax" => 250,"verbrauch" => 6.8,"beschleunigung" => 6.7,"gewicht" => 1730,"hubraum" => 2987,"zylinder" => 6,"preis" => 58000,],
+		[ "baujahr" => 2009,"name" => "VW Golf 6","ps" => 105,"vmax" => 192,"verbrauch" => 4.5,"beschleunigung" => 10.9,"gewicht" => 1347,"hubraum" => 1598,"zylinder" => 4,"preis" => 19000,],
+		[ "baujahr" => 2009,"name" => "Kia Ceed silber","ps" => 100,"vmax" => 183,"verbrauch" => 5.8,"beschleunigung" => 12.6,"gewicht" => 1200,"hubraum" => 1591,"zylinder" => 4,"preis" => 16000,],
+		[ "baujahr" => 2009,"name" => "Mercedes C220 CDI","ps" => 170,"vmax" => 229,"verbrauch" => 5.9,"beschleunigung" => 8.5,"gewicht" => 1485,"hubraum" => 2148,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2008,"name" => "Mercedes CL 65 AMG","ps" => 612,"vmax" => 250,"verbrauch" => 14.5,"beschleunigung" => 4.4,"gewicht" => 2240,"hubraum" => 5980,"zylinder" => 12,"preis" => 190000,],
+		[ "baujahr" => 2008,"name" => "Mercedes SLK 200Kompressor","ps" => 184,"vmax" => 236,"verbrauch" => 7.7,"beschleunigung" => 7.6,"gewicht" => 1390,"hubraum" => 1796,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2008,"name" => "Mercedes AMG SL63","ps" => 585,"vmax" => 250,"verbrauch" => 11.9,"beschleunigung" => 4.1,"gewicht" => 1845,"hubraum" => 5461,"zylinder" => 8,"preis" => 140000,],
+		[ "baujahr" => 2008,"name" => "Ford S-Max","ps" => 140,"vmax" => 200,"verbrauch" => 6.0,"beschleunigung" => 10.2,"gewicht" => 1600,"hubraum" => 1997,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2008,"name" => "Ford Mondeo Turnier","ps" => 140,"vmax" => 210,"verbrauch" => 5.9,"beschleunigung" => 9.5,"gewicht" => 1540,"hubraum" => 1997,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2008,"name" => "Nissan X-Trail Turbodiesel","ps" => 150,"vmax" => 190,"verbrauch" => 6.4,"beschleunigung" => 10.0,"gewicht" => 1650,"hubraum" => 1995,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2008,"name" => "Mercedes CLS 63 AMG","ps" => 514,"vmax" => 250,"verbrauch" => 14.5,"beschleunigung" => 4.5,"gewicht" => 1885,"hubraum" => 6208,"zylinder" => 8,"preis" => 110000,],
+		[ "baujahr" => 2008,"name" => "Mercedes SL 350 (MOPF 2008)","ps" => 316,"vmax" => 250,"verbrauch" => 10.1,"beschleunigung" => 6.2,"gewicht" => 1825,"hubraum" => 3498,"zylinder" => 6,"preis" => 80000,],
+		[ "baujahr" => 2008,"name" => "Mercedes SLK 280 (MOPF 2008)","ps" => 231,"vmax" => 250,"verbrauch" => 9.4,"beschleunigung" => 6.3,"gewicht" => 1390,"hubraum" => 2996,"zylinder" => 6,"preis" => 50000,],
+		[ "baujahr" => 2008,"name" => "Audi A3 Sportsback","ps" => 200,"vmax" => 238,"verbrauch" => 7.4,"beschleunigung" => 6.9,"gewicht" => 1370,"hubraum" => 1984,"zylinder" => 4,"preis" => 23000,],
+		[ "baujahr" => 2008,"name" => "Mercedes B200","ps" => 136,"vmax" => 196,"verbrauch" => 6.7,"beschleunigung" => 10.1,"gewicht" => 1345,"hubraum" => 2034,"zylinder" => 4,"preis" => 28000,],
+		[ "baujahr" => 2007,"name" => "Peugeot 407 Coupe","ps" => 211,"vmax" => 240,"verbrauch" => 9.5,"beschleunigung" => 8.5,"gewicht" => 1799,"hubraum" => 2946,"zylinder" => 6,"preis" => 35000,],
+		[ "baujahr" => 2007,"name" => "Mercedes SLK200K","ps" => 184,"vmax" => 236,"verbrauch" => 7.7,"beschleunigung" => 7.6,"gewicht" => 1390,"hubraum" => 1796,"zylinder" => 4,"preis" => 38000,],
+		[ "baujahr" => 2007,"name" => "Mercedes C-Klasse C220 CDI (W204 Avantgarde)","ps" => 170,"vmax" => 229,"verbrauch" => 5.9,"beschleunigung" => 8.5,"gewicht" => 1485,"hubraum" => 2148,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2007,"name" => "VW Touareg V10 TDI","ps" => 313,"vmax" => 225,"verbrauch" => 12.8,"beschleunigung" => 7.8,"gewicht" => 2611,"hubraum" => 4921,"zylinder" => 10,"preis" => 70000,],
+		[ "baujahr" => 2007,"name" => "VW Tiguan 2.0 TDI (170 PS)","ps" => 170,"vmax" => 201,"verbrauch" => 6.3,"beschleunigung" => 8.9,"gewicht" => 1606,"hubraum" => 1968,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2007,"name" => "BMW 530d Touring (E61)","ps" => 235,"vmax" => 245,"verbrauch" => 6.6,"beschleunigung" => 6.9,"gewicht" => 1735,"hubraum" => 2993,"zylinder" => 6,"preis" => 82500,],
+		[ "baujahr" => 2007,"name" => "Mercedes C220 CDI (W204) Elegance","ps" => 170,"vmax" => 229,"verbrauch" => 5.9,"beschleunigung" => 8.5,"gewicht" => 1485,"hubraum" => 2148,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2007,"name" => "Mercedes A180CDI","ps" => 109,"vmax" => 186,"verbrauch" => 5.2,"beschleunigung" => 10.8,"gewicht" => 1345,"hubraum" => 1991,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2007,"name" => "Ford Mondeo TDCI","ps" => 140,"vmax" => 210,"verbrauch" => 5.9,"beschleunigung" => 9.5,"gewicht" => 1540,"hubraum" => 1997,"zylinder" => 4,"preis" => 24000,],
+		[ "baujahr" => 2007,"name" => "Mercedes C350 (W204) schwarz","ps" => 272,"vmax" => 250,"verbrauch" => 9.4,"beschleunigung" => 6.4,"gewicht" => 1615,"hubraum" => 3498,"zylinder" => 6,"preis" => 48000,],
+		[ "baujahr" => 2007,"name" => "BMW 335i CoupeCabrio (E93)","ps" => 306,"vmax" => 250,"verbrauch" => 9.1,"beschleunigung" => 5.8,"gewicht" => 1810,"hubraum" => 2979,"zylinder" => 6,"preis" => 55000,],
+		[ "baujahr" => 2007,"name" => "BMW X5 4.8l V8","ps" => 355,"vmax" => 240,"verbrauch" => 12.5,"beschleunigung" => 6.5,"gewicht" => 2260,"hubraum" => 4799,"zylinder" => 8,"preis" => 65000,],
+		[ "baujahr" => 2006,"name" => "BMW 530d","ps" => 231,"vmax" => 242,"verbrauch" => 7.7,"beschleunigung" => 7.0,"gewicht" => 1755,"hubraum" => 2993,"zylinder" => 6,"preis" => 48000,],
+		[ "baujahr" => 2006,"name" => "Mercedes S600(L)","ps" => 530,"vmax" => 250,"verbrauch" => 14.0,"beschleunigung" => 4.6,"gewicht" => 2185,"hubraum" => 5513,"zylinder" => 12,"preis" => 140000,],
+		[ "baujahr" => 2006,"name" => "Skoda Octavia Kombi (Modell 2k5)","ps" => 115,"vmax" => 196,"verbrauch" => 5.7,"beschleunigung" => 11.5,"gewicht" => 1285,"hubraum" => 1598,"zylinder" => 4,"preis" => 22000,],
+		[ "baujahr" => 2006,"name" => "Mercedes CLK 200K Cabrio (A209 Mopf)","ps" => 163,"vmax" => 225,"verbrauch" => 8.8,"beschleunigung" => 9.8,"gewicht" => 1590,"hubraum" => 1796,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2006,"name" => "Mercedes CL500 Coupe","ps" => 306,"vmax" => 250,"verbrauch" => 11.7,"beschleunigung" => 6.3,"gewicht" => 1885,"hubraum" => 4973,"zylinder" => 8,"preis" => 90000,],
+		[ "baujahr" => 2006,"name" => "Mercedes CLK63 AMG","ps" => 481,"vmax" => 250,"verbrauch" => 14.2,"beschleunigung" => 4.6,"gewicht" => 1755,"hubraum" => 6208,"zylinder" => 8,"preis" => 80000,],
+		[ "baujahr" => 2006,"name" => "Mercedes CLK-Cabrio (A209) 200Kompressor","ps" => 163,"vmax" => 225,"verbrauch" => 8.8,"beschleunigung" => 9.8,"gewicht" => 1590,"hubraum" => 1796,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2006,"name" => "Audi Avant 1.9 TDI (Modell 2k5 Facelift) schwarz","ps" => 116,"vmax" => 197,"verbrauch" => 5.7,"beschleunigung" => 11.5,"gewicht" => 1525,"hubraum" => 1896,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2006,"name" => "Mercedes R350 4Matic","ps" => 272,"vmax" => 230,"verbrauch" => 11.4,"beschleunigung" => 8.4,"gewicht" => 2170,"hubraum" => 3498,"zylinder" => 6,"preis" => 50000,],
+		[ "baujahr" => 2005,"name" => "Opel Astra II 1.6 Twinport","ps" => 105,"vmax" => 186,"verbrauch" => 6.6,"beschleunigung" => 14.1,"gewicht" => 1395,"hubraum" => 1598,"zylinder" => 4,"preis" => 17000,],
+		[ "baujahr" => 2005,"name" => "Mercedes C180Kompressor Limousine","ps" => 143,"vmax" => 223,"verbrauch" => 7.9,"beschleunigung" => 9.7,"gewicht" => 1485,"hubraum" => 1796,"zylinder" => 4,"preis" => 35000,],
+		[ "baujahr" => 2005,"name" => "Audi A4 Avant 2.0 TDI grau","ps" => 140,"vmax" => 215,"verbrauch" => 4.7,"beschleunigung" => 9.2,"gewicht" => 1550,"hubraum" => 1968,"zylinder" => 4,"preis" => 38900,],
+		[ "baujahr" => 2005,"name" => "Audi A4 Kombi (Avant)","ps" => 150,"vmax" => 215,"verbrauch" => 4.8,"beschleunigung" => 9.2,"gewicht" => 1550,"hubraum" => 1968,"zylinder" => 4,"preis" => 34000,],
+		[ "baujahr" => 2005,"name" => "Mahindra Ur-Jeep","ps" => 62,"vmax" => 72,"verbrauch" => 7.0,"beschleunigung" => 20.0,"gewicht" => 1375,"hubraum" => 2500,"zylinder" => 4,"preis" => 15000,],
+		[ "baujahr" => 2005,"name" => "Audi A3 Sportback 2.0 TDI","ps" => 150,"vmax" => 216,"verbrauch" => 4.2,"beschleunigung" => 8.7,"gewicht" => 1285,"hubraum" => 1968,"zylinder" => 4,"preis" => 24000,],
+		[ "baujahr" => 2005,"name" => "Audi A4 Limousine (Modell 2005)","ps" => 200,"vmax" => 238,"verbrauch" => 8.8,"beschleunigung" => 7.2,"gewicht" => 1390,"hubraum" => 1984,"zylinder" => 4,"preis" => 32000,],
+		[ "baujahr" => 2005,"name" => "BMW X3 2.0d","ps" => 150,"vmax" => 198,"verbrauch" => 7.2,"beschleunigung" => 10.2,"gewicht" => 1720,"hubraum" => 1995,"zylinder" => 4,"preis" => 35000,],
+		[ "baujahr" => 2005,"name" => "Ford Focus (MJ 2005) Turnier","ps" => 125,"vmax" => 193,"verbrauch" => 7.1,"beschleunigung" => 10.7,"gewicht" => 1310,"hubraum" => 1798,"zylinder" => 4,"preis" => 20000,],
+		[ "baujahr" => 2005,"name" => "Mercedes A180CDI","ps" => 109,"vmax" => 186,"verbrauch" => 5.2,"beschleunigung" => 10.8,"gewicht" => 1345,"hubraum" => 1991,"zylinder" => 4,"preis" => 23000,],
+		[ "baujahr" => 2005,"name" => "Mercedes CLK 55 AMG special Edition (Auflage 100 Stück) für Renneinsatz","ps" => 367,"vmax" => 250,"verbrauch" => 12.4,"beschleunigung" => 5.2,"gewicht" => 1710,"hubraum" => 5439,"zylinder" => 8,"preis" => 200000,],
+		[ "baujahr" => 2005,"name" => "Mercedes E220CDI T-Modell (S211)","ps" => 150,"vmax" => 208,"verbrauch" => 6.9,"beschleunigung" => 10.6,"gewicht" => 1785,"hubraum" => 2148,"zylinder" => 4,"preis" => 45000,],
+		[ "baujahr" => 2005,"name" => "Mercedes ML 320 CDI","ps" => 224,"vmax" => 215,"verbrauch" => 9.4,"beschleunigung" => 8.6,"gewicht" => 2185,"hubraum" => 2987,"zylinder" => 6,"preis" => 55000,],
+		[ "baujahr" => 2005,"name" => "Mercedes R-Klasse (6-Sitzer) 3,5l V6","ps" => 272,"vmax" => 230,"verbrauch" => 11.4,"beschleunigung" => 8.4,"gewicht" => 2170,"hubraum" => 3498,"zylinder" => 6,"preis" => 52000,],
+		[ "baujahr" => 2005,"name" => "Mercedes S-Klasse (V221) S500 ,V8 5.5l","ps" => 388,"vmax" => 250,"verbrauch" => 11.7,"beschleunigung" => 5.4,"gewicht" => 1940,"hubraum" => 5461,"zylinder" => 8,"preis" => 95000,],
+		[ "baujahr" => 2005,"name" => "Mercedes SLK200 Kompressor","ps" => 163,"vmax" => 230,"verbrauch" => 8.7,"beschleunigung" => 7.9,"gewicht" => 1390,"hubraum" => 1796,"zylinder" => 4,"preis" => 38000,],
+		[ "baujahr" => 2005,"name" => "Opel Astra II","ps" => 115,"vmax" => 193,"verbrauch" => 6.8,"beschleunigung" => 11.9,"gewicht" => 1200,"hubraum" => 1598,"zylinder" => 4,"preis" => 15000,],
+		[ "baujahr" => 2005,"name" => "Saab 9-3 Cabrio","ps" => 150,"vmax" => 210,"verbrauch" => 8.5,"beschleunigung" => 10.5,"gewicht" => 1575,"hubraum" => 1998,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2005,"name" => "Volvo S60","ps" => 250,"vmax" => 250,"verbrauch" => 6.2,"beschleunigung" => 6.5,"gewicht" => 1770,"hubraum" => 1969,"zylinder" => 4,"preis" => 35000,],
+		[ "baujahr" => 2005,"name" => "Volvo V50Kombi","ps" => 230,"vmax" => 230,"verbrauch" => 7.4,"beschleunigung" => 6.8,"gewicht" => 1538,"hubraum" => 2521,"zylinder" => 5,"preis" => 30000,],
+		[ "baujahr" => 2005,"name" => "VW Golf 5 1.9 TDI 1.9l 4Zylinder Pumpe-Düse","ps" => 105,"vmax" => 190,"verbrauch" => 5.0,"beschleunigung" => 11.3,"gewicht" => 1260,"hubraum" => 1896,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2004,"name" => "Seat Ibiza 1.9 TDI (Sixt-Mietwagen)","ps" => 100,"vmax" => 190,"verbrauch" => 5.0,"beschleunigung" => 10.8,"gewicht" => 1165,"hubraum" => 1896,"zylinder" => 4,"preis" => 20000,],
+		[ "baujahr" => 2004,"name" => "Mercedes E200 Kompressor","ps" => 184,"vmax" => 236,"verbrauch" => 8.2,"beschleunigung" => 9.1,"gewicht" => 1580,"hubraum" => 1796,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 2004,"name" => "Mercedes CLK500 Cabrio (A209)","ps" => 388,"vmax" => 250,"verbrauch" => 11.6,"beschleunigung" => 5.3,"gewicht" => 1800,"hubraum" => 5461,"zylinder" => 8,"preis" => 80000,],
+		[ "baujahr" => 2004,"name" => "Citroen C3 (Mietwagen)","ps" => 70,"vmax" => 160,"verbrauch" => 5.5,"beschleunigung" => 14.2,"gewicht" => 1050,"hubraum" => 1124,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2004,"name" => "Renault Scenic III","ps" => 110,"vmax" => 185,"verbrauch" => 6.4,"beschleunigung" => 12.3,"gewicht" => 1400,"hubraum" => 1461,"zylinder" => 4,"preis" => 22000,],
+		[ "baujahr" => 2004,"name" => "Mercedes SLK200 Kompr (R171)","ps" => 163,"vmax" => 230,"verbrauch" => 8.7,"beschleunigung" => 7.6,"gewicht" => 1390,"hubraum" => 1796,"zylinder" => 4,"preis" => 38000,],
+		[ "baujahr" => 2004,"name" => "Suzuki Jeep (neues Modell)","ps" => 102,"vmax" => 145,"verbrauch" => 6.8,"beschleunigung" => 14.1,"gewicht" => 1090,"hubraum" => 1462,"zylinder" => 4,"preis" => 18000,],
+		[ "baujahr" => 2004,"name" => "Mercedes C180 T-Modell","ps" => 156,"vmax" => 220,"verbrauch" => 6.4,"beschleunigung" => 8.8,"gewicht" => 1455,"hubraum" => 1497,"zylinder" => 4,"preis" => 36000,],
+		[ "baujahr" => 2004,"name" => "BMW 318iA","ps" => 143,"vmax" => 215,"verbrauch" => 7.1,"beschleunigung" => 9.3,"gewicht" => 1350,"hubraum" => 1796,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2004,"name" => "BMW 530d","ps" => 265,"vmax" => 250,"verbrauch" => 5.4,"beschleunigung" => 5.7,"gewicht" => 1825,"hubraum" => 2993,"zylinder" => 6,"preis" => 45000,],
+		[ "baujahr" => 2004,"name" => "BMW 645ci Cabrio (E64)","ps" => 333,"vmax" => 250,"verbrauch" => 12.8,"beschleunigung" => 6.1,"gewicht" => 1790,"hubraum" => 4398,"zylinder" => 8,"preis" => 80000,],
+		[ "baujahr" => 2004,"name" => "Mercedes SLK200 Kompr (R171)","ps" => 163,"vmax" => 230,"verbrauch" => 8.7,"beschleunigung" => 7.6,"gewicht" => 1390,"hubraum" => 1796,"zylinder" => 4,"preis" => 60000,],
+		[ "baujahr" => 2004,"name" => "Volvo E40 (Firmenwagen)","ps" => 238,"vmax" => 180,"verbrauch" => 16.7,"beschleunigung" => 7.3,"gewicht" => 2065,"hubraum" => 0,"zylinder" => 0,"preis" => 32000,],
+		[ "baujahr" => 2004,"name" => "VW T4 Caravelle 2.5 TDI V6","ps" => 102,"vmax" => 155,"verbrauch" => 9.8,"beschleunigung" => 18.4,"gewicht" => 1985,"hubraum" => 2461,"zylinder" => 5,"preis" => 35000,],
+		[ "baujahr" => 2004,"name" => "VW Touran 2.0 TDI (Mietwagen)","ps" => 140,"vmax" => 200,"verbrauch" => 6.1,"beschleunigung" => 10.2,"gewicht" => 1558,"hubraum" => 1968,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 2003,"name" => "BMW 645ci Coupe","ps" => 333,"vmax" => 250,"verbrauch" => 11.7,"beschleunigung" => 5.6,"gewicht" => 1590,"hubraum" => 4398,"zylinder" => 8,"preis" => 75000,],
+		[ "baujahr" => 2003,"name" => "Mercedes CLK320 Cabrio (A209)","ps" => 218,"vmax" => 240,"verbrauch" => 10.6,"beschleunigung" => 8.1,"gewicht" => 1595,"hubraum" => 3199,"zylinder" => 6,"preis" => 58000,],
+		[ "baujahr" => 2003,"name" => "BMW Z4 3.0i Roadster","ps" => 231,"vmax" => 250,"verbrauch" => 9.1,"beschleunigung" => 5.9,"gewicht" => 1290,"hubraum" => 2979,"zylinder" => 6,"preis" => 40000,],
+		[ "baujahr" => 2003,"name" => "BMW 730i","ps" => 258,"vmax" => 245,"verbrauch" => 11.1,"beschleunigung" => 8.5,"gewicht" => 1700,"hubraum" => 2996,"zylinder" => 6,"preis" => 65000,],
+		[ "baujahr" => 2003,"name" => "VW Passat 1.9 TDI","ps" => 110,"vmax" => 196,"verbrauch" => 5.3,"beschleunigung" => 11.5,"gewicht" => 1289,"hubraum" => 1896,"zylinder" => 4,"preis" => 26000,],
+		[ "baujahr" => 2002,"name" => "VW Passat 1.9 TDI (Firmenwagen)","ps" => 90,"vmax" => 184,"verbrauch" => 5.3,"beschleunigung" => 13.5,"gewicht" => 1280,"hubraum" => 1896,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2002,"name" => "BMW Z3-Roadster 2.0i","ps" => 150,"vmax" => 210,"verbrauch" => 9.2,"beschleunigung" => 8.9,"gewicht" => 1345,"hubraum" => 1991,"zylinder" => 6,"preis" => 30000,],
+		[ "baujahr" => 2002,"name" => "Audi A4 Cabrio 2002 mit Multitronic","ps" => 220,"vmax" => 234,"verbrauch" => 9.7,"beschleunigung" => 7.8,"gewicht" => 1391,"hubraum" => 2976,"zylinder" => 6,"preis" => 38000,],
+		[ "baujahr" => 2002,"name" => "BMW 318ti compact","ps" => 140,"vmax" => 209,"verbrauch" => 8.3,"beschleunigung" => 9.9,"gewicht" => 1255,"hubraum" => 1796,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 2002,"name" => "BMW 523i Touring Automatik","ps" => 177,"vmax" => 224,"verbrauch" => 9.5,"beschleunigung" => 9.5,"gewicht" => 1655,"hubraum" => 2497,"zylinder" => 6,"preis" => 42000,],
+		[ "baujahr" => 2002,"name" => "BMW Mini (Mini One)","ps" => 75,"vmax" => 173,"verbrauch" => 5.4,"beschleunigung" => 13.4,"gewicht" => 1155,"hubraum" => 1499,"zylinder" => 3,"preis" => 28900,],
+		[ "baujahr" => 2002,"name" => "Ferrari F550 Maranello","ps" => 485,"vmax" => 320,"verbrauch" => 22.9,"beschleunigung" => 4.4,"gewicht" => 1690,"hubraum" => 5474,"zylinder" => 12,"preis" => 230000,],
+		[ "baujahr" => 2002,"name" => "Mercedes SL500 (R230)","ps" => 306,"vmax" => 250,"verbrauch" => 12.2,"beschleunigung" => 6.3,"gewicht" => 1825,"hubraum" => 4966,"zylinder" => 8,"preis" => 95000,],
+		[ "baujahr" => 2002,"name" => "Renault Trafic Lieferwagen","ps" => 115,"vmax" => 160,"verbrauch" => 8.0,"beschleunigung" => 15.0,"gewicht" => 1800,"hubraum" => 1995,"zylinder" => 4,"preis" => 27600,],
+		[ "baujahr" => 2002,"name" => "VW Phaeton W12","ps" => 450,"vmax" => 250,"verbrauch" => 14.5,"beschleunigung" => 6.1,"gewicht" => 2317,"hubraum" => 5998,"zylinder" => 12,"preis" => 100000,],
+		[ "baujahr" => 2001,"name" => "Spyker C8 Sportwagen","ps" => 405,"vmax" => 300,"verbrauch" => 13.3,"beschleunigung" => 4.5,"gewicht" => 1275,"hubraum" => 4163,"zylinder" => 8,"preis" => 250000,],
+		[ "baujahr" => 2001,"name" => "Ford Mondeo Kombi","ps" => 150,"vmax" => 215,"verbrauch" => 7.8,"beschleunigung" => 9.3,"gewicht" => 1532,"hubraum" => 1999,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 2001,"name" => "BMW 323i","ps" => 170,"vmax" => 230,"verbrauch" => 8.5,"beschleunigung" => 8.0,"gewicht" => 1490,"hubraum" => 2494,"zylinder" => 6,"preis" => 32000,],
+		[ "baujahr" => 2001,"name" => "BMW 330ci Cabrio (E46)","ps" => 231,"vmax" => 247,"verbrauch" => 9.9,"beschleunigung" => 6.9,"gewicht" => 1560,"hubraum" => 2979,"zylinder" => 6,"preis" => 45000,],
+		[ "baujahr" => 2001,"name" => "Opel Zafira I Minivan","ps" => 147,"vmax" => 200,"verbrauch" => 8.1,"beschleunigung" => 10.5,"gewicht" => 1460,"hubraum" => 1998,"zylinder" => 4,"preis" => 20000,],
+		[ "baujahr" => 2000,"name" => "Mercedes E320CDI W210","ps" => 197,"vmax" => 230,"verbrauch" => 7.8,"beschleunigung" => 8.3,"gewicht" => 1560,"hubraum" => 3222,"zylinder" => 6,"preis" => 55000,],
+		[ "baujahr" => 2000,"name" => "Buick (GM) 3.0l V6 Limousine","ps" => 264,"vmax" => 210,"verbrauch" => 10.2,"beschleunigung" => 7.5,"gewicht" => 1600,"hubraum" => 2997,"zylinder" => 6,"preis" => 30000,],
+		[ "baujahr" => 2000,"name" => "BMW 318i","ps" => 143,"vmax" => 215,"verbrauch" => 7.1,"beschleunigung" => 9.3,"gewicht" => 1350,"hubraum" => 1796,"zylinder" => 4,"preis" => 28000,],
+		[ "baujahr" => 2000,"name" => "BMW 330ci Cabrio","ps" => 231,"vmax" => 247,"verbrauch" => 9.9,"beschleunigung" => 6.9,"gewicht" => 1560,"hubraum" => 2979,"zylinder" => 6,"preis" => 43000,],
+		[ "baujahr" => 2000,"name" => "BMW 535i","ps" => 245,"vmax" => 250,"verbrauch" => 10.5,"beschleunigung" => 7.2,"gewicht" => 1650,"hubraum" => 3498,"zylinder" => 6,"preis" => 82500,],
+		[ "baujahr" => 2000,"name" => "Fiat Brava Station Wagon","ps" => 103,"vmax" => 185,"verbrauch" => 7.5,"beschleunigung" => 12.5,"gewicht" => 1200,"hubraum" => 1581,"zylinder" => 4,"preis" => 18000,],
+		[ "baujahr" => 2000,"name" => "Mercedes A160","ps" => 102,"vmax" => 180,"verbrauch" => 7.2,"beschleunigung" => 10.8,"gewicht" => 1040,"hubraum" => 1598,"zylinder" => 4,"preis" => 20000,],
+		[ "baujahr" => 2000,"name" => "Mercedes C200T","ps" => 163,"vmax" => 225,"verbrauch" => 6.9,"beschleunigung" => 8.5,"gewicht" => 1496,"hubraum" => 1991,"zylinder" => 4,"preis" => 35000,],
+		[ "baujahr" => 2000,"name" => "Mercedes C320","ps" => 218,"vmax" => 234,"verbrauch" => 11.3,"beschleunigung" => 8.0,"gewicht" => 1540,"hubraum" => 3199,"zylinder" => 6,"preis" => 45000,],
+		[ "baujahr" => 2000,"name" => "Mercedes CLK320 (C208) Coupe","ps" => 224,"vmax" => 240,"verbrauch" => 10.1,"beschleunigung" => 7.4,"gewicht" => 1395,"hubraum" => 3199,"zylinder" => 6,"preis" => 50000,],
+		[ "baujahr" => 2000,"name" => "Mercedes CLK320 Cabrio (A208)","ps" => 224,"vmax" => 236,"verbrauch" => 10.6,"beschleunigung" => 8.1,"gewicht" => 1595,"hubraum" => 3199,"zylinder" => 6,"preis" => 55000,],
+		[ "baujahr" => 2000,"name" => "Mercedes E240T S210","ps" => 170,"vmax" => 216,"verbrauch" => 10.1,"beschleunigung" => 10.5,"gewicht" => 1590,"hubraum" => 2397,"zylinder" => 6,"preis" => 76200,],
+		[ "baujahr" => 2000,"name" => "Mercedes E320CDI T-Modell S210 Kombi","ps" => 197,"vmax" => 227,"verbrauch" => 7.9,"beschleunigung" => 8.8,"gewicht" => 1670,"hubraum" => 3199,"zylinder" => 6,"preis" => 57000,],
+		[ "baujahr" => 2000,"name" => "Mercedes S320","ps" => 231,"vmax" => 225,"verbrauch" => 12.8,"beschleunigung" => 8.9,"gewicht" => 1890,"hubraum" => 3199,"zylinder" => 6,"preis" => 70000,],
+		[ "baujahr" => 2000,"name" => "Opel Astra I","ps" => 115,"vmax" => 193,"verbrauch" => 6.8,"beschleunigung" => 11.9,"gewicht" => 1200,"hubraum" => 1598,"zylinder" => 4,"preis" => 15000,],
+		[ "baujahr" => 2000,"name" => "Porsche 911 (996) Carrera","ps" => 300,"vmax" => 280,"verbrauch" => 11.8,"beschleunigung" => 5.2,"gewicht" => 1320,"hubraum" => 3387,"zylinder" => 6,"preis" => 70000,],
+		[ "baujahr" => 2000,"name" => "VW Beetle 2.0 Cabrio","ps" => 115,"vmax" => 185,"verbrauch" => 8.5,"beschleunigung" => 10.9,"gewicht" => 1250,"hubraum" => 1984,"zylinder" => 4,"preis" => 36000,],
+		[ "baujahr" => 2000,"name" => "VW Golf IV TDI","ps" => 110,"vmax" => 195,"verbrauch" => 5.0,"beschleunigung" => 11.3,"gewicht" => 1260,"hubraum" => 1896,"zylinder" => 4,"preis" => 27000,],
+		[ "baujahr" => 1999,"name" => "Nissan Almera Kombi","ps" => 90,"vmax" => 175,"verbrauch" => 7.5,"beschleunigung" => 12.5,"gewicht" => 1190,"hubraum" => 1497,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 1999,"name" => "Mercedes CLK230 Kompressor Cabriolet","ps" => 193,"vmax" => 230,"verbrauch" => 10.1,"beschleunigung" => 9.1,"gewicht" => 1450,"hubraum" => 2295,"zylinder" => 4,"preis" => 48000,],
+		[ "baujahr" => 1999,"name" => "Rover 75/2.6","ps" => 177,"vmax" => 215,"verbrauch" => 10.5,"beschleunigung" => 9.5,"gewicht" => 1445,"hubraum" => 2497,"zylinder" => 6,"preis" => 35000,],
+		[ "baujahr" => 1999,"name" => "Ford Focus","ps" => 100,"vmax" => 186,"verbrauch" => 6.4,"beschleunigung" => 12.1,"gewicht" => 1330,"hubraum" => 1596,"zylinder" => 4,"preis" => 30000,],
+		[ "baujahr" => 1999,"name" => "Renault Clio II","ps" => 75,"vmax" => 170,"verbrauch" => 6.0,"beschleunigung" => 13.0,"gewicht" => 975,"hubraum" => 1149,"zylinder" => 4,"preis" => 18000,],
+		[ "baujahr" => 1998,"name" => "Ford Ka","ps" => 60,"vmax" => 150,"verbrauch" => 6.5,"beschleunigung" => 14.0,"gewicht" => 800,"hubraum" => 1299,"zylinder" => 4,"preis" => 10000,],
+		[ "baujahr" => 1997,"name" => "Toyota Land Cruiser","ps" => 204,"vmax" => 175,"verbrauch" => 12.0,"beschleunigung" => 11.0,"gewicht" => 2150,"hubraum" => 4164,"zylinder" => 6,"preis" => 40000,],
+		[ "baujahr" => 1997,"name" => "Opel Corsa 2","ps" => 60,"vmax" => 150,"verbrauch" => 6.5,"beschleunigung" => 14.0,"gewicht" => 800,"hubraum" => 1196,"zylinder" => 4,"preis" => 11000,],
+		[ "baujahr" => 1997,"name" => "BMW 316i compact","ps" => 102,"vmax" => 188,"verbrauch" => 7.5,"beschleunigung" => 12.3,"gewicht" => 1215,"hubraum" => 1596,"zylinder" => 4,"preis" => 22000,],
+		[ "baujahr" => 1997,"name" => "Mercedes SLK200 (R170)","ps" => 136,"vmax" => 208,"verbrauch" => 9.1,"beschleunigung" => 9.7,"gewicht" => 1170,"hubraum" => 1998,"zylinder" => 4,"preis" => 40000,],
+		[ "baujahr" => 1996,"name" => "Audi A4 1.8","ps" => 125,"vmax" => 200,"verbrauch" => 7.1,"beschleunigung" => 10.9,"gewicht" => 1390,"hubraum" => 1781,"zylinder" => 4,"preis" => 42000,],
+		[ "baujahr" => 1995,"name" => "Jaguar XJS","ps" => 241,"vmax" => 241,"verbrauch" => 15.9,"beschleunigung" => 7.9,"gewicht" => 1825,"hubraum" => 3980,"zylinder" => 6,"preis" => 60000,],
+		[ "baujahr" => 1993,"name" => "VW Golf III GL","ps" => 75,"vmax" => 175,"verbrauch" => 7.5,"beschleunigung" => 12.5,"gewicht" => 960,"hubraum" => 1595,"zylinder" => 4,"preis" => 15000,],
+		[ "baujahr" => 1992,"name" => "BMW 316i compact","ps" => 102,"vmax" => 188,"verbrauch" => 7.5,"beschleunigung" => 12.3,"gewicht" => 1215,"hubraum" => 1596,"zylinder" => 4,"preis" => 20000,],
+		[ "baujahr" => 1991,"name" => "Mercedes S430 (W140)","ps" => 279,"vmax" => 245,"verbrauch" => 11.6,"beschleunigung" => 7.3,"gewicht" => 2190,"hubraum" => 4196,"zylinder" => 8,"preis" => 80000,],
+		[ "baujahr" => 1990,"name" => "Mercedes 300 SL Roadster (R129)","ps" => 190,"vmax" => 228,"verbrauch" => 11.6,"beschleunigung" => 9.3,"gewicht" => 1650,"hubraum" => 2960,"zylinder" => 6,"preis" => 75000,],
+		[ "baujahr" => 1990,"name" => "BMW 320i","ps" => 129,"vmax" => 201,"verbrauch" => 7.3,"beschleunigung" => 10.2,"gewicht" => 1290,"hubraum" => 1991,"zylinder" => 6,"preis" => 30000,],
+		[ "baujahr" => 1989,"name" => "VW Golf II Sondermodell Boston","ps" => 75,"vmax" => 175,"verbrauch" => 7.5,"beschleunigung" => 12.5,"gewicht" => 950,"hubraum" => 1595,"zylinder" => 4,"preis" => 12000,],
+		[ "baujahr" => 1988,"name" => "Mercedes 190E (W201)","ps" => 122,"vmax" => 195,"verbrauch" => 8.9,"beschleunigung" => 10.5,"gewicht" => 1170,"hubraum" => 1997,"zylinder" => 4,"preis" => 25000,],
+		[ "baujahr" => 1987,"name" => "Seat Marbella","ps" => 40,"vmax" => 140,"verbrauch" => 6.1,"beschleunigung" => 20.0,"gewicht" => 720,"hubraum" => 903,"zylinder" => 4,"preis" => 6000,],
+		[ "baujahr" => 1985,"name" => "VW Polo 2","ps" => 55,"vmax" => 150,"verbrauch" => 7.0,"beschleunigung" => 15.5,"gewicht" => 725,"hubraum" => 1272,"zylinder" => 4,"preis" => 8000,],
+		[ "baujahr" => 1985,"name" => "Toyota Corolla","ps" => 75,"vmax" => 160,"verbrauch" => 7.5,"beschleunigung" => 13.0,"gewicht" => 900,"hubraum" => 1295,"zylinder" => 4,"preis" => 10000,],
+		[ "baujahr" => 1984,"name" => "Ford Fiesta","ps" => 60,"vmax" => 150,"verbrauch" => 6.5,"beschleunigung" => 14.0,"gewicht" => 800,"hubraum" => 1117,"zylinder" => 4,"preis" => 7000,],
+		[ "baujahr" => 1980,"name" => "Suzuki Jeep","ps" => 45,"vmax" => 110,"verbrauch" => 8.0,"beschleunigung" => 20.0,"gewicht" => 900,"hubraum" => 970,"zylinder" => 4,"preis" => 8000,],
+		[ "baujahr" => 1978,"name" => "Mercedes 280 SL (R107)","ps" => 185,"vmax" => 200,"verbrauch" => 10.5,"beschleunigung" => 9.0,"gewicht" => 1500,"hubraum" => 2746,"zylinder" => 6,"preis" => 40000,],
+		[ "baujahr" => 1974,"name" => "VW Polo 1","ps" => 45,"vmax" => 135,"verbrauch" => 7.6,"beschleunigung" => 21.2,"gewicht" => 685,"hubraum" => 895,"zylinder" => 4,"preis" => 6000,],
+		[ "baujahr" => 1972,"name" => "Triumph Spitfire Roadster","ps" => 75,"vmax" => 160,"verbrauch" => 8.0,"beschleunigung" => 12.5,"gewicht" => 735,"hubraum" => 1296,"zylinder" => 4,"preis" => 15000,],
+		[ "baujahr" => 1970,"name" => "Mercedes 250 Strich 8","ps" => 130,"vmax" => 175,"verbrauch" => 11.0,"beschleunigung" => 12.0,"gewicht" => 1420,"hubraum" => 2496,"zylinder" => 6,"preis" => 20000,],
+		// ab hier KI-generierte Sportwagen, oben PB Auto Datenbank
+		[ "name" => "Ferrari FF","ps" => 660,"vmax" => 330,"verbrauch" => 14,"preis" => 250000,"beschleunigung" => 3,"baujahr" => 2020,"gewicht" => 1877,"hubraum" => 6213,"zylinder" => 6,],
+		[ "name" => "Porsche Carrera 4S","ps" => 550,"vmax" => 310,"verbrauch" => 12,"preis" => 180000,"beschleunigung" => 3.5,"baujahr" => 2019,"gewicht" => 1997,"hubraum" => 4455,"zylinder" => 6,],
+		[ "name" => "Lamborghini Gallardo","ps" => 700,"vmax" => 340,"verbrauch" => 16,"preis" => 300000,"beschleunigung" => 2.9,"baujahr" => 2021,"gewicht" => 2166,"hubraum" => 4743,"zylinder" => 8,],
+		[ "name" => "Bugatti Chiron","ps" => 1500,"vmax" => 420,"verbrauch" => 20,"preis" => 2000000,"beschleunigung" => 2.4,"baujahr" => 2022,"gewicht" => 1280,"hubraum" => 4382,"zylinder" => 4,],
+		[ "name" => "BMW M5","ps" => 625,"vmax" => 305,"verbrauch" => 11,"preis" => 120000,"beschleunigung" => 3.3,"baujahr" => 2018,"gewicht" => 1001,"hubraum" => 3102,"zylinder" => 6,],
+		[ "name" => "Audi R8","ps" => 610,"vmax" => 330,"verbrauch" => 13,"preis" => 170000,"beschleunigung" => 3.2,"baujahr" => 2020,"gewicht" => 1544,"hubraum" => 5204,"zylinder" => 10,],
+		[ "name" => "Mercedes AMG GT","ps" => 585,"vmax" => 318,"verbrauch" => 12,"preis" => 160000,"beschleunigung" => 3.6,"baujahr" => 2019,"gewicht" => 1635,"hubraum" => 3982,"zylinder" => 8,],
+		[ "name" => "McLaren 720S","ps" => 720,"vmax" => 341,"verbrauch" => 14,"preis" => 250000,"beschleunigung" => 2.8,"baujahr" => 2021,"gewicht" => 1419,"hubraum" => 3994,"zylinder" => 8,],
+		[ "name" => "AstonMartin DBS","ps" => 725,"vmax" => 340,"verbrauch" => 15,"preis" => 280000,"beschleunigung" => 3.4,"baujahr" => 2020,"gewicht" => 1700,"hubraum" => 5200,"zylinder" => 12,],
+		[ "name" => "Chevrolet Corvette Z06","ps" => 650,"vmax" => 315,"verbrauch" => 13,"preis" => 120000,"beschleunigung" => 3,"baujahr" => 2018,"gewicht" => 1607,"hubraum" => 6162,"zylinder" => 8,],
+		[ "name" => "Dodge Challenger SRT Hellcat","ps" => 717,"vmax" => 320,"verbrauch" => 18,"preis" => 90000,"beschleunigung" => 3.6,"baujahr" => 2019,"gewicht" => 1950,"hubraum" => 6166,"zylinder" => 8,],
+		[ "name" => "Ford Mustang Shelby GT500","ps" => 760,"vmax" => 330,"verbrauch" => 17,"preis" => 95000,"beschleunigung" => 3.5,"baujahr" => 2020,"gewicht" => 1880,"hubraum" => 5262,"zylinder" => 8,],
+		[ "name" => "Nissan GT-R","ps" => 600,"vmax" => 315,"verbrauch" => 13,"preis" => 110000,"beschleunigung" => 2.9,"baujahr" => 2021,"gewicht" => 1720,"hubraum" => 3799,"zylinder" => 6,],
+		[ "name" => "Tesla Model S Plaid","ps" => 1020,"vmax" => 322,"verbrauch" => 0,"preis" => 130000,"beschleunigung" => 2.1,"baujahr" => 2022,"gewicht" => 2162,"hubraum" => 0,"zylinder" => 0,],
+		[ "name" => "Koenigsegg Jesko","ps" => 1280,"vmax" => 480,"verbrauch" => 21,"preis" => 3000000,"beschleunigung" => 2.5,"baujahr" => 2022,"gewicht" => 1420,"hubraum" => 5000,"zylinder" => 8,],
+		[ "name" => "Pagani Huayra","ps" => 730,"vmax" => 370,"verbrauch" => 16,"preis" => 2700000,"beschleunigung" => 2.9,"baujahr" => 2020,"gewicht" => 1350,"hubraum" => 5980,"zylinder" => 12,],
+		[ "name" => "AlfaRomeo Giulia Quadrifoglio","ps" => 510,"vmax" => 307,"verbrauch" => 10,"preis" => 85000,"beschleunigung" => 3.9,"baujahr" => 2018,"gewicht" => 1520,"hubraum" => 2891,"zylinder" => 6,],
+		[ "name" => "Lexus LFA","ps" => 560,"vmax" => 325,"verbrauch" => 13,"preis" => 375000,"beschleunigung" => 3.7,"baujahr" => 2012,"gewicht" => 1480,"hubraum" => 4805,"zylinder" => 10,],
+		[ "name" => "Jaguar F-Type SVR","ps" => 575,"vmax" => 322,"verbrauch" => 12,"preis" => 140000,"beschleunigung" => 3.5,"baujahr" => 2019,"gewicht" => 1705,"hubraum" => 5000,"zylinder" => 8,],
+		[ "name" => "Cadillac CTS-V","ps" => 640,"vmax" => 322,"verbrauch" => 14,"preis" => 95000,"beschleunigung" => 3.7,"baujahr" => 2018,"gewicht" => 1830,"hubraum" => 6200,"zylinder" => 8,],
+		[ "name" => "Maserati GranTurismo","ps" => 460,"vmax" => 301,"verbrauch" => 15,"preis" => 130000,"beschleunigung" => 4.7,"baujahr" => 2017,"gewicht" => 1880,"hubraum" => 4691,"zylinder" => 8,],
+		[ "name" => "Infiniti Q60 Red Sport","ps" => 400,"vmax" => 250,"verbrauch" => 10,"preis" => 65000,"beschleunigung" => 4.5,"baujahr" => 2020,"gewicht" => 1790,"hubraum" => 2997,"zylinder" => 6,],
+		[ "name" => "VW Golf R","ps" => 320,"vmax" => 270,"verbrauch" => 8,"preis" => 45000,"beschleunigung" => 4.8,"baujahr" => 2022,"gewicht" => 1550,"hubraum" => 1984,"zylinder" => 4,],
+		[ "name" => "Subaru WRX STI","ps" => 310,"vmax" => 255,"verbrauch" => 9,"preis" => 40000,"beschleunigung" => 5.1,"baujahr" => 2019,"gewicht" => 1570,"hubraum" => 2457,"zylinder" => 4,],
+		[ "name" => "Mitsubishi Lancer Evo X","ps" => 300,"vmax" => 240,"verbrauch" => 10,"preis" => 39000,"beschleunigung" => 5.3,"baujahr" => 2017,"gewicht" => 1565,"hubraum" => 1998,"zylinder" => 4,],
+		[ "name" => "Honda Civic Type R","ps" => 320,"vmax" => 272,"verbrauch" => 7,"preis" => 38000,"beschleunigung" => 5,"baujahr" => 2021,"gewicht" => 1450,"hubraum" => 1996,"zylinder" => 4,],
+		[ "name" => "Hyundai i30 N","ps" => 280,"vmax" => 250,"verbrauch" => 8,"preis" => 35000,"beschleunigung" => 5.5,"baujahr" => 2020,"gewicht" => 1420,"hubraum" => 1998,"zylinder" => 4,],
+		[ "name" => "Seat Leon Cupra","ps" => 290,"vmax" => 250,"verbrauch" => 7,"preis" => 34000,"beschleunigung" => 5.7,"baujahr" => 2019,"gewicht" => 1445,"hubraum" => 1984,"zylinder" => 4,],
+		[ "name" => "Renault Megane RS","ps" => 300,"vmax" => 255,"verbrauch" => 8,"preis" => 33000,"beschleunigung" => 5.8,"baujahr" => 2021,"gewicht" => 1430,"hubraum" => 1798,"zylinder" => 4,],
+		[ "name" => "Peugeot 308 GTi","ps" => 270,"vmax" => 250,"verbrauch" => 7,"preis" => 32000,"beschleunigung" => 6,"baujahr" => 2018,"gewicht" => 1380,"hubraum" => 1598,"zylinder" => 4,],
+		[ "name" => "Opel Astra OPC","ps" => 280,"vmax" => 250,"verbrauch" => 8,"preis" => 31000,"beschleunigung" => 6.1,"baujahr" => 2017,"gewicht" => 1440,"hubraum" => 1998,"zylinder" => 4,],
+		[ "name" => "Skoda Octavia RS","ps" => 245,"vmax" => 250,"verbrauch" => 6,"preis" => 30000,"beschleunigung" => 6.2,"baujahr" => 2020,"gewicht" => 1420,"hubraum" => 1984,"zylinder" => 4,],
+		[ "name" => "Hyundai i30 N","ps" => 280,"vmax" => 250,"verbrauch" => 8,"preis" => 35000,"beschleunigung" => 5.5,"baujahr" => 2020,"gewicht" => 1420,"hubraum" => 1998,"zylinder" => 4,],
+		[ "name" => "Seat Leon Cupra","ps" => 290,"vmax" => 250,"verbrauch" => 7,"preis" => 34000,"beschleunigung" => 5.7,"baujahr" => 2019,"gewicht" => 1445,"hubraum" => 1984,"zylinder" => 4,],
+		[ "name" => "Renault Megane RS","ps" => 300,"vmax" => 255,"verbrauch" => 8,"preis" => 33000,"beschleunigung" => 5.8,"baujahr" => 2021,"gewicht" => 1430,"hubraum" => 1798,"zylinder" => 4,],
+		[ "name" => "Peugeot 308 GTi","ps" => 270,"vmax" => 250,"verbrauch" => 7,"preis" => 32000,"beschleunigung" => 6,"baujahr" => 2018,"gewicht" => 1380,"hubraum" => 1598,"zylinder" => 4,],
+		[ "name" => "Opel Astra OPC","ps" => 280,"vmax" => 250,"verbrauch" => 8,"preis" => 31000,"beschleunigung" => 6.1,"baujahr" => 2017,"gewicht" => 1440,"hubraum" => 1998,"zylinder" => 4,],
+		[ "name" => "Skoda Octavia RS","ps" => 245,"vmax" => 250,"verbrauch" => 6,"preis" => 30000,"beschleunigung" => 6.2,"baujahr" => 2020,"gewicht" => 1420,"hubraum" => 1984,"zylinder" => 4,],
+		[ "name" => "Toyota Supra GR","ps" => 340,"vmax" => 250,"verbrauch" => 7,"preis" => 50000,"beschleunigung" => 4.3,"baujahr" => 2021,"gewicht" => 1495,"hubraum" => 2998,"zylinder" => 6,],
+		[ "name" => "Mazda RX-7 Spirit R","ps" => 280,"vmax" => 250,"verbrauch" => 11,"preis" => 35000,"beschleunigung" => 5.1,"baujahr" => 2002,"gewicht" => 1280,"hubraum" => 1308,"zylinder" => 2,],
+		[ "name" => "BMW i8","ps" => 374,"vmax" => 250,"verbrauch" => 2.1,"preis" => 150000,"beschleunigung" => 4.4,"baujahr" => 2019,"gewicht" => 1485,"hubraum" => 1499,"zylinder" => 3,],
+		[ "name" => "Lotus Evora GT","ps" => 416,"vmax" => 300,"verbrauch" => 10,"preis" => 98000,"beschleunigung" => 3.8,"baujahr" => 2020,"gewicht" => 1420,"hubraum" => 3456,"zylinder" => 6,],
+		[ "name" => "Lucid Air Dream Edition","ps" => 1111,"vmax" => 270,"verbrauch" => 0,"preis" => 169000,"beschleunigung" => 2.5,"baujahr" => 2022,"gewicht" => 2185,"hubraum" => 0,"zylinder" => 0,],
+		[ "name" => "Rimac Nevera","ps" => 1914,"vmax" => 412,"verbrauch" => 0,"preis" => 2000000,"beschleunigung" => 1.85,"baujahr" => 2022,"gewicht" => 2150,"hubraum" => 0,"zylinder" => 0,],
+		[ "name" => "Caterham Seven 620R","ps" => 310,"vmax" => 250,"verbrauch" => 8,"preis" => 60000,"beschleunigung" => 2.8,"baujahr" => 2021,"gewicht" => 610,"hubraum" => 1999,"zylinder" => 4,],
+		[ "name" => "Toyota GR Yaris","ps" => 261,"vmax" => 230,"verbrauch" => 7.6,"preis" => 36000,"beschleunigung" => 5.5,"baujahr" => 2021,"gewicht" => 1280,"hubraum" => 1618,"zylinder" => 3,],
+		[ "name" => "BMW M2 CS","ps" => 450,"vmax" => 280,"verbrauch" => 10.2,"preis" => 95000,"beschleunigung" => 4,"baujahr" => 2020,"gewicht" => 1550,"hubraum" => 2979,"zylinder" => 6,],
+		[ "name" => "VW ID.4 GTX","ps" => 299,"vmax" => 180,"verbrauch" => 0,"preis" => 55000,"beschleunigung" => 6.2,"baujahr" => 2022,"gewicht" => 2100,"hubraum" => 0,"zylinder" => 0,],
+		[ "name" => "Mercedes Benz Patent-Motorwagen","ps" => 0.75,"vmax" => 16,"verbrauch" => 0.9,"preis" => 600,"beschleunigung" => 60,"baujahr" => 1886,"gewicht" => 265,"hubraum" => 954,"zylinder" => 1,],
+		[ "name" => "Mercedes Simplex 40 PS","ps" => 40,"vmax" => 80,"verbrauch" => 20,"preis" => 28000,"beschleunigung" => 30,"baujahr" => 1902,"gewicht" => 1400,"hubraum" => 6785,"zylinder" => 4,],
+		[ "name" => "Mercedes 35 PS (Standuhr)","ps" => 35,"vmax" => 75,"verbrauch" => 18,"preis" => 23000,"beschleunigung" => 25,"baujahr" => 1901,"gewicht" => 1200,"hubraum" => 5913,"zylinder" => 4,],
+		[ "name" => "Mercedes Benz Nürburg 460","ps" => 80,"vmax" => 100,"verbrauch" => 25,"preis" => 50000,"beschleunigung" => 22,"baujahr" => 1928,"gewicht" => 2600,"hubraum" => 4622,"zylinder" => 8,],
+		[ "name" => "Mercedes Benz 770 (Großer Mercedes)","ps" => 150,"vmax" => 160,"verbrauch" => 30,"preis" => 150000,"beschleunigung" => 16,"baujahr" => 1938,"gewicht" => 3400,"hubraum" => 7655,"zylinder" => 8,],
+		[ "name" => "Mercedes Benz SSK","ps" => 200,"vmax" => 190,"verbrauch" => 30,"preis" => 40000,"beschleunigung" => 12,"baujahr" => 1929,"gewicht" => 1700,"hubraum" => 7065,"zylinder" => 6,],
+	];
+
+	// Anzahl der zufällig auszuwählenden Elemente
+	$anzahl_auswahl = 30;
+	$anzahl_karten = count($kartenfull);
+	$karten = [];
+	// Wenn das ursprüngliche Array weniger als 3 Elemente hat, werden alle Elemente ausgewählt.
+	if ($anzahl_karten <= $anzahl_auswahl) {
+		$karten = $karten;
+	} else {
+		// Erstelle ein Array mit den Schlüsseln des ursprünglichen Arrays
+		$schluessel = array_keys($kartenfull);
+		// Mische die Schlüssel zufällig
+		shuffle($schluessel);
+		// Nimm die ersten $anzahl_auswahl Schlüssel
+		$zufaellige_schluessel = array_slice($schluessel, 0, $anzahl_auswahl);
+		// Iteriere durch die zufälligen Schlüssel und füge die entsprechenden Elemente zum neuen Array hinzu
+		foreach ($zufaellige_schluessel as $schluessel) {
+			$karten[] = $kartenfull[$schluessel];
+		}
+	}
+
+
+    // Kriterien, bei denen der niedrigere Wert gewinnt
+    $kleinerIstBesser = ["verbrauch", "beschleunigung", "gewicht"];
+    // Highscore initialisieren
+    $highscoreDatei = plugin_dir_path(__FILE__) . "highscore.txt";
+    if (!file_exists($highscoreDatei)) {
+        file_put_contents($highscoreDatei, "0");
+    }
+    $highscore = (int)file_get_contents($highscoreDatei);
+	// Rundenzähler init
+	$runde = isset($_POST['runde']) ? intval($_POST['runde']) : 1;
+
+    // Daten aus POST laden oder neu starten
+    if (isset($_POST['spieler']) && isset($_POST['computer'])) {
+        $spieler = json_decode(stripslashes($_POST['spieler']), true);
+        $computer = json_decode(stripslashes($_POST['computer']), true);
+        $meldung = "";
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kriterium'])) {
+            $kriterium = $_POST['kriterium'];
+            $spielerkarte = $spieler[0];
+            $computerskarte = $computer[0];
+			$marke = strtoupper(strtok(htmlspecialchars($computerskarte['name']), ' '));
+			$computerskarte_anzeige = "<strong>Letzte Karte des Computers:</strong>
+				<span class=\"headline\">" . htmlspecialchars(@$computerskarte['name']). "</span> &nbsp; "
+				. do_shortcode('[carlogo brand="'.$marke.'"]') . "<table>
+				<tr><td>PS:</td><td>" . number_format($computerskarte['ps'], 0, ',', '.') . "</td></tr>
+				<tr><td>Vmax:</td><td>" . $computerskarte['vmax'] . " km/h</td></tr>
+				<tr><td>Verbrauch:</td><td>" . $computerskarte['verbrauch'] . " l/100 km</td></tr>
+				<tr><td>Preis:</td><td>" . number_format($computerskarte['preis'], 0, ',', '.') . " €</td></tr>
+				<tr><td>0-100 km/h:</td><td>" . $computerskarte['beschleunigung'] . " s</td></tr>
+				<tr><td>Baujahr:</td><td>" . $computerskarte['baujahr'] . " ".ago(mktime(2,0,0,1,1,$computerskarte['baujahr']))."</td></tr>
+				<tr><td>Gewicht:</td><td>" . number_format($computerskarte['gewicht'], 0, ',', '.') . " kg</td></tr>
+				<tr><td>Hubraum:</td><td>" . number_format($computerskarte['hubraum'], 0, ',', '.') . " cm³</td></tr>
+				<tr><td>Zylinder:</td><td>" . $computerskarte['zylinder'] . "</td></tr>
+				</table>";
+            $spielerwert = $spielerkarte[$kriterium];
+            $computerswert = $computerskarte[$kriterium];
+            if (in_array($kriterium, $kleinerIstBesser)) {
+                $spielerGewinnt = $spielerwert < $computerswert;
+                $computerGewinnt = $spielerwert > $computerswert;
+            } else {
+                $spielerGewinnt = $spielerwert > $computerswert;
+                $computerGewinnt = $spielerwert < $computerswert;
+            }
+            if ($spielerGewinnt) {
+                $meldung = "Du gewinnst die Runde!";
+                array_push($spieler, $computerskarte, $spielerkarte);
+            } elseif ($computerGewinnt) {
+                $meldung = "Computer gewinnt die Runde.";
+                array_push($computer, $spielerkarte, $computerskarte);
+            } else {
+                $meldung = "Unentschieden. Beide behalten ihre Karten.";
+                array_push($spieler, array_shift($spieler));
+                array_push($computer, array_shift($computer));
+            }
+            array_shift($spieler);
+            array_shift($computer);
+			$meldung .= " #". ($runde - 1);
+        }
+    } else {
+        if (count($karten) % 2 !== 0) {
+            array_pop($karten);
+        }
+        shuffle($karten);
+        $spieler = array_slice($karten, 0, count($karten)/2);
+        $computer = array_slice($karten, count($karten)/2);
+        $meldung = "Neues Spiel gestartet.";
+    }
+
+    // Spielende prüfen
+    if (count($spieler) === 0 || count($computer) === 0) {
+        $gewinner = count($spieler) === 0 ? "Computer" : "Du";
+        // Highscore prüfen
+        if ($gewinner === "Du" && count($computer) === 0) {
+            $runde = count($karten);
+            if ($runde > $highscore) {
+                file_put_contents($highscoreDatei, $runde);
+                $meldung = "Neuer Highscore: $runde Karten!";
+            } else {
+                $meldung = "Gewonnen! Dein Highscore bleibt bei $highscore Karten.";
+            }
+        }
+        return "<h1>Spiel vorbei Gewinner: $gewinner</h1><p>$meldung</p>
+		<p>Rundenstats: Du - ".count($spieler)." Computer: ".count($computer)."</p>
+		<form method='post'><button>Neustart</button></form>";
+    }
+
+    // HTML Ausgabe für das Spiel
+    $marke = @strtoupper(strtok(htmlspecialchars($spieler[0]['name']), ' '));
+	$output = "<strong>Deine aktuelle Karte:</strong> ";
+	$output .= '<span class="headline">' . @htmlspecialchars($spieler[0]['name']). '</span> &nbsp; ';
+    $output .= do_shortcode('[carlogo brand="'.$marke.'"]');
+    $output .= "<form method='post'>";
+	$output .= "<table>";
+    $output .= "<tr><td style='width:20%;max-width:20%'><button style='' name='kriterium' value='ps'>PS</button></td><td>PS:</td><td>" . number_format($spieler[0]['ps'], 0, ',', '.') . "</td></tr>";
+    $output .= "<tr><td><button name='kriterium' value='vmax'>Vmax</button></td><td>Vmax:</td><td>" . $spieler[0]['vmax'] . " km/h</td></tr>";
+    $output .= "<tr><td><button title='geringer ist besser' style='background-color:#a228' name='kriterium' value='verbrauch'>Verbrauch</button></td><td>Verbrauch:</td><td>" . $spieler[0]['verbrauch'] . " l/100 km</td></tr>";
+    $output .= "<tr><td><button name='kriterium' value='preis'>Preis</button></td><td>Preis:</td><td>" . number_format($spieler[0]['preis'], 0, ',', '.') . " €</td></tr>";
+    $output .= "<tr><td><button title='geringer ist besser' style='background-color:#a228' name='kriterium' value='beschleunigung'>Beschleunigung</button></td><td>0-100 km/h:</td><td>" . $spieler[0]['beschleunigung'] . " s</td></tr>";
+    $output .= "<tr><td><button name='kriterium' value='baujahr'>Baujahr</button></td><td>Baujahr:</td><td>" . $spieler[0]['baujahr'] . " ".ago(mktime(2,0,0,1,1,$spieler[0]['baujahr']))."</td></tr>";
+    $output .= "<tr><td><button title='geringer ist besser' style='background-color:#a228' name='kriterium' value='gewicht'>Gewicht</button></td><td>Gewicht:</td><td>" . number_format($spieler[0]['gewicht'], 0, ',', '.') . " kg</td></tr>";
+    $output .= "<tr><td><button name='kriterium' value='hubraum'>Hubraum</button></td><td>Hubraum:</td><td>" . number_format($spieler[0]['hubraum'], 0, ',', '.') . " cm³</td></tr>";
+    $output .= "<tr><td><button name='kriterium' value='zylinder'>Zylinder</button></td><td>Zylinder:</td><td>" . $spieler[0]['zylinder'] . "</td></tr>";
+    $output .= "</table>";
+    $output .= "<input type='hidden' name='spieler' value='" . esc_attr(json_encode($spieler)) . "'>";
+    $output .= "<input type='hidden' name='computer' value='" . esc_attr(json_encode($computer)) . "'>";
+	$output .= '<input type="hidden" name="runde" value='. ($runde + 1) .'">';
+	$output .= "</form>";
+    $output .= '<div class="headline" style="margin-top:1em">'. $meldung;
+    $output .= " - Du: " . count($spieler) . " Karten, Computer: " . count($computer) . " Karten.</div>";
+	if (isset($computerskarte_anzeige)) {
+		$output .= $computerskarte_anzeige;
+	}
+    $output .= "<p><strong>Highscore:</strong> $highscore Karten</p>";
+    return $output;
+}
+
+// --------------------------------- Autoquartett Spiel Ende --------------------------------------------------------
 
 
 ?>
