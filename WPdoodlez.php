@@ -2841,7 +2841,7 @@ function xwordshuffle() {
 		$letters = str_split(strtoupper($word));
 		foreach ($letters as $letter) {
 			if ($letter === " ") {
-				$rebus[] = '<span style="font-size:2.4em;margin-right:1em">␣</span>';
+				$rebus[] = '<span style="font-size:2.1em;margin-right:1em">␣</span>';
 			} elseif (array_key_exists($letter, $imageMeanings)) {
 				$options = $imageMeanings[$letter];
 				$randomChoice = $options[array_rand($options)];
@@ -2945,9 +2945,9 @@ function xsillableshuffle() {
 	$html .= '<ul class="footer-menu" style="display:inline-block"><li><a title="'.__('new game','WPdoodlez').'" href="' .
 		add_query_arg( array('crossword'=>7), get_post_permalink() ).'"><i class="fa fa-exchange"></i> '. __('start new game','WPdoodlez').'</a></li></ul>';
     $html .= '<style>#words{margin-top:1em}
-	.syllable{background-color:#eee8;border:1px solid #ccc;cursor:pointer;display:inline-block;font-size:1.2em;margin:5px;padding:10px}
+	.syllable{background-color:#eee8;border:1px solid #ccc;cursor:pointer;display:inline-block;font-size:1.1em;margin:5px;padding:8px}
 	.syllable.strikethrough{background-color:#8888;color:#aaa;text-decoration:line-through}
-	.dropzone{background-color:#eee8;border:1px solid #aaa;font-size:1.2em;min-width:200px;padding:10px}</style>';
+.dropzone{background-color:#eee8;border:1px solid #aaa;font-size:1.2em;min-width:200px;padding:10px}.hintbox{margin-bottom:4px;border:1px dotted #888}</style>';
 		// Zufalls-Antwort aus Quizfragen
 		$args=array(
 		  'orderby'=> 'rand',
@@ -3499,7 +3499,7 @@ function xautoquartett() {
 				$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$computerskarte['bild'];
 				$bildshow = '<a href="'.$bildlink.'"><img title="'.$computerskarte['bild'].'" src="'.$bildlink.'"></a>';
 			} else $bildshow='';
-			$computerskarte_anzeige = "<strong>Letzte Karte des Computers:</strong>
+			$computerskarte_anzeige = "<strong>💻 Letzte Karte des Computers:</strong>
 				<span class=\"headline\">" . htmlspecialchars($computerskarte['name']). "</span> &nbsp; "
 				. do_shortcode('[carlogo brand="'.$marke.'"]') . "<table>
 				<tr><td>PS:</td><td>" . number_format($computerskarte['ps'], 0, ',', '.')
@@ -3524,13 +3524,13 @@ function xautoquartett() {
                 $computerGewinnt = $spielerwert < $computerswert;
             }
             if ($spielerGewinnt) {
-                $meldung = "Du gewinnst die Runde!";
+                $meldung = "👨 Du gewinnst die Runde!";
                 array_push($spieler, $computerskarte, $spielerkarte);
             } elseif ($computerGewinnt) {
-                $meldung = "Computer gewinnt die Runde.";
+                $meldung = "💻 Computer gewinnt die Runde.";
                 array_push($computer, $spielerkarte, $computerskarte);
             } else {
-                $meldung = "Unentschieden. Beide behalten ihre Karten.";
+                $meldung = "👨💻 Unentschieden. Beide behalten ihre Karten.";
                 array_push($spieler, array_shift($spieler));
                 array_push($computer, array_shift($computer));
             }
@@ -3550,7 +3550,7 @@ function xautoquartett() {
 
     // Spielende prüfen
     if (count($spieler) === 0 || count($computer) === 0) {
-        $gewinner = count($spieler) === 0 ? "Computer" : "Spieler";
+        $gewinner = count($spieler) === 0 ? "💻 Computer" : "👨 Spieler";
         // Highscore prüfen
 		$meldung = wp_date('D d. F Y H:i:s',time()).' - '.$gewinner.' hat gewonnen. Spieler: '.count($spieler).', Computer: '.count($computer).' Karten nach '.$runde.' Runden.';
 		update_option( 'autoquartett_score', $meldung );
@@ -3567,34 +3567,35 @@ function xautoquartett() {
 		$bildlink = $upload_dir['baseurl'].'/quizbilder/'.$spieler[0]['bild'];
 		$bildshow = '<a href="'.$bildlink.'"><img title="'.$spieler[0]['bild'].'" src="'.$bildlink.'"></a>';
 	} else $bildshow='';
-	$output = "<strong>Deine aktuelle Karte:</strong> ";
+	$output = "<strong>👨 Deine aktuelle Karte:</strong> ";
 	$output .= '<span class="headline">' . @htmlspecialchars($spieler[0]['name']). '</span> &nbsp; ';
     $output .= do_shortcode('[carlogo brand="'.$marke.'"]');
     $output .= "<form method='post'>";
 	$output .= "<table>";
-    $output .= "<tr><td style='width:20%;max-width:20%'><button style='' name='kriterium' value='ps'>PS</button></td><td>"
+    $output .= "<tr><td style='width:20%;max-width:20%'><button style='line-height:0' name='kriterium' value='ps'>PS</button></td><td>"
 		. number_format($spieler[0]['ps'], 0, ',', '.') 
 		." (". number_format(($spieler[0]['ps']*.7355), 0, ',', '.')
 		. " kW)</td><td rowspan=9>".$bildshow."</td></tr>";
-    $output .= "<tr><td><button name='kriterium' value='vmax'>Vmax</button></td><td>" . $spieler[0]['vmax'] . " km/h max.</td></tr>";
-    $output .= "<tr><td><button title='geringer ist besser' style='background-color:#a228' name='kriterium' value='verbrauch'>Verbrauch</button></td><td>" . $spieler[0]['verbrauch'] . " l/100 km</td></tr>";
-    $output .= "<tr><td><button name='kriterium' value='preis'>Preis</button></td><td>" . number_format($spieler[0]['preis'], 0, ',', '.') . " € Liste</td></tr>";
-    $output .= "<tr><td><button title='geringer ist besser' style='background-color:#a228' name='kriterium' value='beschleunigung'>Beschleunigung</button></td><td>" . $spieler[0]['beschleunigung'] . " s (0-100 km/h)</td></tr>";
-    $output .= "<tr><td><button name='kriterium' value='baujahr'>Baujahr</button></td><td>" . $spieler[0]['baujahr'] . " ".ago(mktime(2,0,0,1,1,$spieler[0]['baujahr']))."</td></tr>";
-    $output .= "<tr><td><button title='geringer ist besser' style='background-color:#a228' name='kriterium' value='gewicht'>Gewicht</button></td><td>" . number_format($spieler[0]['gewicht'], 0, ',', '.') . " kg</td></tr>";
-    $output .= "<tr><td><button name='kriterium' value='hubraum'>Hubraum</button></td><td>" . number_format($spieler[0]['hubraum'], 0, ',', '.') . " cm³</td></tr>";
-    $output .= "<tr><td><button name='kriterium' value='zylinder'>Zylinder</button></td><td>" . $spieler[0]['zylinder'] . "</td></tr>";
+    $output .= "<tr><td><button style='line-height:0' name='kriterium' value='vmax'>Vmax</button></td><td>" . $spieler[0]['vmax'] . " km/h max.</td></tr>";
+    $output .= "<tr><td><button style='line-height:0;background-color:#a228' title='geringer ist besser' name='kriterium' value='verbrauch'>Verbrauch</button></td><td>" . $spieler[0]['verbrauch'] . " l/100 km</td></tr>";
+    $output .= "<tr><td><button style='line-height:0' name='kriterium' value='preis'>Preis</button></td><td>" . number_format($spieler[0]['preis'], 0, ',', '.') . " € Liste</td></tr>";
+    $output .= "<tr><td><button style='line-height:0;background-color:#a228' title='geringer ist besser' name='kriterium' value='beschleunigung'>Beschleunigung</button></td><td>" . $spieler[0]['beschleunigung'] . " s (0-100 km/h)</td></tr>";
+    $output .= "<tr><td><button style='line-height:0' name='kriterium' value='baujahr'>Baujahr</button></td><td>" . $spieler[0]['baujahr'] . " ".ago(mktime(2,0,0,1,1,$spieler[0]['baujahr']))."</td></tr>";
+    $output .= "<tr><td><button style='line-height:0;background-color:#a228' title='geringer ist besser' name='kriterium' value='gewicht'>Gewicht</button></td><td>" . number_format($spieler[0]['gewicht'], 0, ',', '.') . " kg</td></tr>";
+    $output .= "<tr><td><button style='line-height:0' name='kriterium' value='hubraum'>Hubraum</button></td><td>" . number_format($spieler[0]['hubraum'], 0, ',', '.') . " cm³</td></tr>";
+    $output .= "<tr><td><button style='line-height:0' name='kriterium' value='zylinder'>Zylinder</button></td><td>" . $spieler[0]['zylinder'] . "</td></tr>";
     $output .= "</table>";
     $output .= "<input type='hidden' name='spieler' value='" . esc_attr(json_encode($spieler)) . "'>";
     $output .= "<input type='hidden' name='computer' value='" . esc_attr(json_encode($computer)) . "'>";
 	$output .= '<input type="hidden" name="runde" value='. ($runde + 1) .'">';
 	$output .= "</form>";
     $output .= '<div class="headline" style="margin-top:1em">'. $meldung;
-    $output .= " - Du: " . count($spieler) . " Karten, Computer: " . count($computer) . " Karten.</div>";
+    $output .= " - 👨 Du: " . count($spieler) . " Karten, 💻 Computer: " . count($computer) . " Karten.</div>";
 	if (isset($computerskarte_anzeige)) {
 		$output .= $computerskarte_anzeige;
 	}
-    $output .= "<p><strong>Letzer Spielstand:</strong> $highscore</p>";
+    $output .= "<p style='margin-top:2em'><strong>Letzer Spielstand:</strong> $highscore</p>";
+	$output .= wpd_games_bar();
     return $output;
 }
 
