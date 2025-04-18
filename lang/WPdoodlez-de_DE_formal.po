@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WPdoodlez\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 16:48+0000\n"
-"PO-Revision-Date: 2025-04-14 17:13+0000\n"
+"PO-Revision-Date: 2025-04-18 08:48+0000\n"
 "Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch (Sie)\n"
 "Language: de_DE_formal\n"
@@ -189,6 +189,10 @@ msgstr "CSV-Export"
 msgid "firstname lastname"
 msgstr "Vorname Nachname"
 
+#: WPdoodlez.php:3557
+msgid "game over"
+msgstr "Spiel beendet"
+
 #: WPdoodlez.php:638
 msgid "Go!"
 msgstr "Los!"
@@ -340,6 +344,10 @@ msgstr ""
 "oder Worträtselspiel auf Ihrer WordPress-Seite platzieren (mit CSV-Import "
 "für Fragen)"
 
+#: WPdoodlez.php:923
+msgid "play car quartet"
+msgstr "Autoquartett spielen"
+
 #: WPdoodlez.php:916
 msgid "play crossword"
 msgstr "Kreuzworträtsel lösen"
@@ -348,15 +356,23 @@ msgstr "Kreuzworträtsel lösen"
 msgid "play hangman"
 msgstr "Hangman spielen"
 
+#: WPdoodlez.php:921
+msgid "play rebus"
+msgstr "Rebus spielen"
+
 #: WPdoodlez.php:919
 msgid "play sudoku"
 msgstr "Sudoku spielen"
+
+#: WPdoodlez.php:922
+msgid "play syllables"
+msgstr "Silbenrätsel spielen"
 
 #: WPdoodlez.php:917
 msgid "play word puzzle"
 msgstr "Wortsuche spielen"
 
-#: WPdoodlez.php:920 WPdoodlez.php:921 WPdoodlez.php:922 WPdoodlez.php:923
+#: WPdoodlez.php:920
 msgid "play word shuffle"
 msgstr "Buchstaben sortieren spielen"
 
@@ -500,7 +516,7 @@ msgid "solution"
 msgstr "Lösung anzeigen"
 
 #: WPdoodlez.php:2268 WPdoodlez.php:2368 WPdoodlez.php:2474 WPdoodlez.php:2658
-#: WPdoodlez.php:2737 WPdoodlez.php:2867 WPdoodlez.php:2946
+#: WPdoodlez.php:2737 WPdoodlez.php:2867 WPdoodlez.php:2946 WPdoodlez.php:3558
 msgid "start new game"
 msgstr "Neues Spiel starten"
 

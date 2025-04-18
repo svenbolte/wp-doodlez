@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Doodlez\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-14 17:13+0000\n"
+"POT-Creation-Date: 2025-04-18 08:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -183,6 +183,10 @@ msgstr ""
 msgid "firstname lastname"
 msgstr ""
 
+#: WPdoodlez.php:3557
+msgid "game over"
+msgstr ""
+
 #: WPdoodlez.php:638
 msgid "Go!"
 msgstr ""
@@ -326,6 +330,10 @@ msgid ""
 "game on your wordpress site (with csv import for questions)"
 msgstr ""
 
+#: WPdoodlez.php:923
+msgid "play car quartet"
+msgstr ""
+
 #: WPdoodlez.php:916
 msgid "play crossword"
 msgstr ""
@@ -334,15 +342,23 @@ msgstr ""
 msgid "play hangman"
 msgstr ""
 
+#: WPdoodlez.php:921
+msgid "play rebus"
+msgstr ""
+
 #: WPdoodlez.php:919
 msgid "play sudoku"
+msgstr ""
+
+#: WPdoodlez.php:922
+msgid "play syllables"
 msgstr ""
 
 #: WPdoodlez.php:917
 msgid "play word puzzle"
 msgstr ""
 
-#: WPdoodlez.php:920 WPdoodlez.php:921 WPdoodlez.php:922 WPdoodlez.php:923
+#: WPdoodlez.php:920
 msgid "play word shuffle"
 msgstr ""
 
@@ -481,7 +497,7 @@ msgid "solution"
 msgstr ""
 
 #: WPdoodlez.php:2268 WPdoodlez.php:2368 WPdoodlez.php:2474 WPdoodlez.php:2658
-#: WPdoodlez.php:2737 WPdoodlez.php:2867 WPdoodlez.php:2946
+#: WPdoodlez.php:2737 WPdoodlez.php:2867 WPdoodlez.php:2946 WPdoodlez.php:3558
 msgid "start new game"
 msgstr ""
 

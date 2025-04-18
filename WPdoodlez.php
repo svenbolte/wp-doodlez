@@ -918,9 +918,9 @@ function wpd_games_bar() {
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play hangman','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>3), get_post_permalink() ).'"><i class="fa fa-universal-access"></i> '. __('hangman','WPdoodlez').'</a></li>';
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play sudoku','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>4), get_post_permalink() ).'"><i class="fa fa-table"></i> '. __('Sudoku','WPdoodlez').'</a></li>';
 	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>5), get_post_permalink() ).'"><i class="fa fa-map-signs"></i> '. __('Shuffle','WPdoodlez').'</a></li>';
-	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>6), get_post_permalink() ).'"><i class="fa fa-recycle"></i> '. __('Rebus','WPdoodlez').'</a></li>';
-	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>7), get_post_permalink() ).'"><i class="fa fa-gg"></i> '. __('syllable puzzle','WPdoodlez').'</a></li>';
-	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play word shuffle','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>8), get_post_permalink() ).'"><i class="fa fa-car"></i> '. __('car quartet','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play rebus','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>6), get_post_permalink() ).'"><i class="fa fa-recycle"></i> '. __('Rebus','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play syllables','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>7), get_post_permalink() ).'"><i class="fa fa-gg"></i> '. __('syllable puzzle','WPdoodlez').'</a></li>';
+	$spiele .= '<li><a style="padding:2px 5px" title="'.__('play car quartet','WPdoodlez').'" href="'.add_query_arg( array('crossword'=>8), get_post_permalink() ).'"><i class="fa fa-car"></i> '. __('car quartet','WPdoodlez').'</a></li>';
 	$spiele .= '</ul>';
 	return $spiele;
 }
@@ -3554,8 +3554,10 @@ function xautoquartett() {
         // Highscore prüfen
 		$meldung = wp_date('D d. F Y H:i:s',time()).' - '.$gewinner.' hat gewonnen. Spieler: '.count($spieler).', Computer: '.count($computer).' Karten nach '.$runde.' Runden.';
 		update_option( 'autoquartett_score', $meldung );
-        return "<h6>Spiel vorbei<h6><p>$meldung</p>
-		<form method='post'><button>Neustart</button></form>";
+		$endoutput  = '<div style="position:relative"><div><img src="'.plugin_dir_url(__FILE__).'/lightbulb-1000-300.jpg" style="width:100%"></div>';
+		$endoutput .= '<div class="middle" style="opacity:1;position:absolute;top:50%;bottom:50%;width:100%;text-align:center;color:white;font-size:4em;z-index:99999">'.__('game over','WPdoodlez') .'</div></div>';
+		$endoutput  .= "<p class='headline' style='text-align:center;margin:2em'>$meldung</p><form method='post'><button>". __('start new game','WPdoodlez') ."</button></form>";       
+		return $endoutput;
     }
 
     // HTML Ausgabe für das Spiel

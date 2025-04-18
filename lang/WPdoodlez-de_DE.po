@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: WPdoodlez\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 16:48+0000\n"
-"PO-Revision-Date: 2025-04-14 17:14+0000\n"
+"PO-Revision-Date: 2025-04-18 08:58+0000\n"
 "Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Poedit-SearchPath-1: WPdoodlez.php\n"
 "X-Poedit-SearchPath-2: wpdoodlez_post_type.php\n"
 "X-Poedit-SearchPathExcluded-0: lang\n"
-"X-Loco-Version: 2.7.2; wp-6.7.2\n"
+"X-Loco-Version: 2.7.2; wp-6.8\n"
 "X-Loco-Fallback: de_DE_formal\n"
 "X-Loco-Template: lang/WPdoodlez-de_DE_formal.po\n"
 "X-Loco-Template-Mode: PO,JSON"
@@ -192,6 +192,10 @@ msgstr "CSV-Export"
 msgid "firstname lastname"
 msgstr "Vorname Nachname"
 
+#: WPdoodlez.php:3557
+msgid "game over"
+msgstr "Spiel beendet"
+
 #: WPdoodlez.php:638
 msgid "Go!"
 msgstr "Los!"
@@ -343,6 +347,10 @@ msgstr ""
 "oder Worträtselspiel auf Ihrer WordPress-Seite platzieren (mit CSV-Import "
 "für Fragen)"
 
+#: WPdoodlez.php:923
+msgid "play car quartet"
+msgstr "Autoquartett spielen"
+
 #: WPdoodlez.php:916
 msgid "play crossword"
 msgstr "Kreuzworträtsel lösen"
@@ -351,15 +359,23 @@ msgstr "Kreuzworträtsel lösen"
 msgid "play hangman"
 msgstr "Hangman spielen"
 
+#: WPdoodlez.php:921
+msgid "play rebus"
+msgstr "Rebus spielen"
+
 #: WPdoodlez.php:919
 msgid "play sudoku"
 msgstr "Sudoku spielen"
+
+#: WPdoodlez.php:922
+msgid "play syllables"
+msgstr "Silbenrätsel spielen"
 
 #: WPdoodlez.php:917
 msgid "play word puzzle"
 msgstr "Wortsuche spielen"
 
-#: WPdoodlez.php:920 WPdoodlez.php:921 WPdoodlez.php:922 WPdoodlez.php:923
+#: WPdoodlez.php:920
 msgid "play word shuffle"
 msgstr "Buchstaben sortieren spielen"
 
@@ -503,7 +519,7 @@ msgid "solution"
 msgstr "Lösung anzeigen"
 
 #: WPdoodlez.php:2268 WPdoodlez.php:2368 WPdoodlez.php:2474 WPdoodlez.php:2658
-#: WPdoodlez.php:2737 WPdoodlez.php:2867 WPdoodlez.php:2946
+#: WPdoodlez.php:2737 WPdoodlez.php:2867 WPdoodlez.php:2946 WPdoodlez.php:3558
 msgid "start new game"
 msgstr "Neues Spiel starten"
 
